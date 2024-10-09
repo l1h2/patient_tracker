@@ -1,0 +1,140 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import '../bloc/patients_bloc.dart';
+import '../widgets/edit_name_modal.dart';
+
+import '/config/locator/setup.dart';
+import '/config/routes/router.gr.dart';
+import '/src/core/models/company_model.dart';
+import '/src/core/models/patient_model.dart';
+import '/src/core/repositories/user_repository.dart';
+import '/src/core/widgets/entity_list.dart';
+import '/src/core/widgets/error_widgets.dart';
+import '/src/core/widgets/main_app_bar.dart';
+import '/src/core/widgets/scrollable_scaffold.dart';
+import '/src/features/home/presentation/bloc/home_bloc.dart';
+
+@RoutePage()
+class PatientsScreen extends StatelessWidget {
+  PatientsScreen({super.key, required Company company})
+      : _patients = locator<UserRepository>().getPatients(company),
+        _company = locator<UserRepository>().getCompany(company.id)!;
+
+  final Company _company;
+  final List<Patient> _patients;
+
+  final _searchController = TextEditingController();
+  final _editNameController = TextEditingController();
+  final String _userId = locator<UserRepository>().getUser()!.id;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+    final StackRouter router = AutoRouter.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
+    final double padding = screenSize.width * 0.05;
+    final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
+
+    return BlocConsumer<PatientsBloc, PatientsState>(
+      listener: (context, state) {
+        if (state is FoundPatients) {
+          _patients.clear();
+          _patients.addAll(state.patients);
+        } else if (state is PatientsFailure) {
+          ErrorScaffoldMessenger.of(context).showSnackBar(
+            state.error,
+            theme,
+          );
+        }
+      },
+      builder: (context, state) {
+        return BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, homeState) {
+            return ModalProgressHUD(
+              inAsyncCall: homeState is SearchingCompanies,
+              child: ScrollableScaffold(
+                appBar: MainAppBar(
+                  title: _company.name,
+                  actionButton: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => editNameDialog(
+                        userId: _userId,
+                        context: context,
+                        company: _company,
+                        controller: _editNameController,
+                      ),
+                    ),
+                  ),
+                ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () => router.push(
+                    AddPatientRoute(company: _company),
+                  ),
+                  child: const Icon(Icons.add),
+                ),
+                content: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    padding,
+                    10,
+                    padding,
+                    padding * 2,
+                  ),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: locale.search,
+                          prefixIcon: const Icon(Icons.search),
+                        ),
+                        style: theme.textTheme.labelMedium,
+                      ),
+                      const SizedBox(height: 20),
+                      if (state is SearchingPatients)
+                        const CupertinoActivityIndicator(radius: 16)
+                      else if (_patients.isEmpty)
+                        Column(
+                          children: [
+                            Text(
+                              locale.noPatients,
+                              style: theme.textTheme.headlineSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 42),
+                            OutlinedButton(
+                              child: Text(locale.refresh),
+                              onPressed: () => patientsBloc.add(
+                                GetPatients(_userId, _company),
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (_patients.isNotEmpty)
+                        EntityList(
+                          items: _patients,
+                          searchController: _searchController,
+                          getName: (patient) => patient.name,
+                          onItemTap: (patient) => router.push(
+                            RecordsRoute(company: _company, patient: patient),
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}

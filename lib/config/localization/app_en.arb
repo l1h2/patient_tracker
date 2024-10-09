@@ -1,0 +1,247 @@
+{
+  "@@locale": "en",
+  "login": "Login",
+  "@login": {
+    "description": "Login"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email"
+  },
+  "loginAction": "Login",
+  "@loginAction": {
+    "description": "Login Action"
+  },
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot Password"
+  },
+  "sentLink": "Reset link sent to {email}",
+  "@sentLink": {
+    "description": "Sent Link",
+    "placeholders": {
+      "email": {
+        "type": "String",
+        "example": "email@*****",
+        "description": "Email"
+      }
+    }
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh"
+  },
+  "companies": "Companies",
+  "@companies": {
+    "description": "Companies"
+  },
+  "addCompany": "Add Company",
+  "@addCompany": {
+    "description": "Add Company"
+  },
+  "noCompanies": "No companies found. Add a new company or refresh the page",
+  "@noCompanies": {
+    "description": "No Companies"
+  },
+  "companyUpdated": "Company updated successfully",
+  "@companyUpdated": {
+    "description": "Company Updated"
+  },
+  "companyName": "Company name",
+  "@companyName": {
+    "description": "Company Name"
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Name"
+  },
+  "editName": "Edit Name",
+  "@editName": {
+    "description": "Edit Name"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save"
+  },
+  "patients": "Patients",
+  "@patients": {
+    "description": "Patients"
+  },
+  "addPatient": "Add Patient",
+  "@addPatient": {
+    "description": "Add Patient"
+  },
+  "noPatients": "No patients found. Add a new patient or refresh the page",
+  "@noPatients": {
+    "description": "No Patients"
+  },
+  "patientName": "Patient name",
+  "@patientName": {
+    "description": "Patient Name"
+  },
+  "addPatientSuccess": "Patient added successfully",
+  "@addPatientSuccess": {
+    "description": "Add Patient Success"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add"
+  },
+  "addCompanySuccess": "Company added successfully",
+  "@addCompanySuccess": {
+    "description": "Add Company Success"
+  },
+  "clients": "Clients",
+  "@clients": {
+    "description": "Clients"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings"
+  },
+  "changePassword": "Change Password",
+  "@changePassword": {
+    "description": "Change Password"
+  },
+  "changePasswordText": "Please enter your new password",
+  "@changePasswordText": {
+    "description": "Change Password Text"
+  },
+  "changePasswordAction": "Save New Password",
+  "@changePasswordAction": {
+    "description": "Change Password Action"
+  },
+  "currentPassword": "Current password",
+  "@currentPassword": {
+    "description": "Current Password"
+  },
+  "newPassword": "New password",
+  "@newPassword": {
+    "description": "New Password"
+  },
+  "confirmPassword": "Confirm password",
+  "@confirmPassword": {
+    "description": "Confirm Password"
+  },
+  "invalidPassword": "Invalid password",
+  "@invalidPassword": {
+    "description": "Invalid Password"
+  },
+  "passwordChanged": "Password changed successfully",
+  "@passwordChanged": {
+    "description": "Password Changed"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "passwordRecovery": "Password Recovery",
+  "@passwordRecovery": {
+    "description": "Password Recovery"
+  },
+  "passwordRecoveryText": "Please, enter your email to reset your password",
+  "@passwordRecoveryText": {
+    "description": "Password Recovery Text"
+  },
+  "resetPassword": "Reset Password",
+  "@resetPassword": {
+    "description": "Reset Password"
+  },
+  "logoutConfirmation": "Are you sure you want to logout?",
+  "@logoutConfirmation": {
+    "description": "Logout Confirmation"
+  },
+  "logoutConfirmAction": "Logout",
+  "@logoutConfirmAction": {
+    "description": "Logout confirmation text"
+  },
+  "invalidCredentials": "Incorrect email or password",
+  "@invalidCredentials": {
+    "description": "Invalid Credentials"
+  },
+  "unchangedError": "New value can't be the same as the current value",
+  "@unchangedError": {
+    "description": "Unchanged Error"
+  },
+  "fieldEmptyError": "{field} can't be empty",
+  "@fieldEmptyError": {
+    "description": "Field Empty Error",
+    "placeholders": {
+      "field": {
+        "type": "String",
+        "example": "Email",
+        "description": "Field Name"
+      }
+    }
+  },
+  "fieldInvalidFormatError": "Invalid {field} format",
+  "@fieldInvalidFormatError": {
+    "description": "Field Invalid Format Error",
+    "placeholders": {
+      "field": {
+        "type": "String",
+        "example": "Email",
+        "description": "Field Name"
+      }
+    }
+  },
+  "passwordMinLengthError": "Password must have at least {num_chars} characters",
+  "@passwordMinLengthError": {
+    "description": "Password Min Length Error",
+    "placeholders": {
+      "num_chars": {
+        "type": "int",
+        "example": "8",
+        "description": "Number of Characters"
+      }
+    }
+  },
+  "passwordNumberError": "Password must have at least one number",
+  "@passwordNumberError": {
+    "description": "Password Number Error"
+  },
+  "passwordUppercaseError": "Password must have at least one uppercase letter",
+  "@passwordUppercaseError": {
+    "description": "Password Uppercase Error"
+  },
+  "passwordLowercaseError": "Password must have at least one lowercase letter",
+  "@passwordLowercaseError": {
+    "description": "Password Lowercase Error"
+  },
+  "passwordSpecialCharError": "Password must have at least one special character",
+  "@passwordSpecialCharError": {
+    "description": "Password Special Character Error"
+  },
+  "passwordMatchError": "New password is the same as the current password",
+  "@passwordMatchError": {
+    "description": "Password Match Error"
+  },
+  "passwordMismatchError": "Passwords do not match",
+  "@passwordMismatchError": {
+    "description": "Password Match Error"
+  },
+  "passwordChangeTooManyAttempts": "Too many attempts. Please try again later.",
+  "@passwordChangeTooManyAttempts": {
+    "description": "Password Change Too Many Attempts"
+  },
+  "userNotFound": "User not found",
+  "@userNotFound": {
+    "description": "User Not Found"
+  },
+  "userNotFoundMessage": "User not found.\nPlease check your email and password and try again.",
+  "@userNotFoundMessage": {
+    "description": "User Not Found Message"
+  }
+}
