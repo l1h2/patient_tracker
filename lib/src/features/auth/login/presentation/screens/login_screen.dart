@@ -50,7 +50,7 @@ class LoginScreen extends StatelessWidget {
         return ModalProgressHUD(
           inAsyncCall: state is LoginLoading,
           child: ScrollableScaffold(
-            appBar: OnboardingAppBar(title: locale.login, theme: theme),
+            appBar: OnboardingAppBar(title: locale.login),
             content: Padding(
               padding: EdgeInsets.all(screenSize.width * 0.1),
               child: Form(
@@ -60,7 +60,6 @@ class LoginScreen extends StatelessWidget {
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(hintText: locale.email),
-                      style: theme.textTheme.labelMedium,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) => emailValidator(value, locale),
                     ),
@@ -68,7 +67,6 @@ class LoginScreen extends StatelessWidget {
                     TextFormField(
                       controller: _passwordController,
                       decoration: InputDecoration(hintText: locale.password),
-                      style: theme.textTheme.labelMedium,
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       obscuringCharacter: "●",
@@ -89,16 +87,11 @@ class LoginScreen extends StatelessWidget {
                     ],
                     const SizedBox(height: 20),
                     TextButton(
-                      child: Text(
-                        locale.forgotPassword,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      onPressed: () {
-                        router.push(ForgotPasswordRoute());
-                      },
+                      child: Text(locale.forgotPassword),
+                      onPressed: () => router.push(ForgotPasswordRoute()),
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton(
+                    FilledButton(
                       child: Text(locale.loginAction),
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {

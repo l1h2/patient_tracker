@@ -23,7 +23,7 @@ class ProfileButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: theme.colorScheme.inversePrimary,
+            color: theme.primaryIconTheme.color!,
             width: 2,
           ),
         ),

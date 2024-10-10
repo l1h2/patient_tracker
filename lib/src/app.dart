@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '/config/bloc/main_bloc_provider.dart';
 import '/config/routes/router.dart';
-import '/config/themes/themes.dart';
 
 class MainApp extends StatelessWidget {
   static final _appRouter = AppRouter();
@@ -15,11 +14,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-
     return MainBlocProvider(
       child: MaterialApp.router(
-        theme: getDarkTheme(screenSize).themeData,
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.amber,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        themeMode: ThemeMode.dark,
         routerConfig: _appRouter.config(),
         locale: PlatformDispatcher.instance.locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,

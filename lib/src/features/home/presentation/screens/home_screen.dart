@@ -66,7 +66,6 @@ class HomeScreen extends StatelessWidget {
                     hintText: locale.search,
                     prefixIcon: const Icon(Icons.search),
                   ),
-                  style: theme.textTheme.labelMedium,
                 ),
                 const SizedBox(height: 20),
                 if (state is SearchingCompanies)

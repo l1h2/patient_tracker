@@ -95,6 +95,10 @@
   "@add": {
     "description": "Add"
   },
+  "select": "Select",
+  "@select": {
+    "description": "Select"
+  },
   "addCompanySuccess": "Company added successfully",
   "@addCompanySuccess": {
     "description": "Add Company Success"
@@ -102,6 +106,10 @@
   "clients": "Clients",
   "@clients": {
     "description": "Clients"
+  },
+  "selectYear": "Select Year",
+  "@selectYear": {
+    "description": "Select Year"
   },
   "settings": "Settings",
   "@settings": {
@@ -171,13 +179,9 @@
   "@invalidCredentials": {
     "description": "Invalid Credentials"
   },
-  "unchangedError": "New value can't be the same as the current value",
-  "@unchangedError": {
-    "description": "Unchanged Error"
-  },
-  "fieldEmptyError": "{field} can't be empty",
-  "@fieldEmptyError": {
-    "description": "Field Empty Error",
+  "fieldInvalidFormatError": "Invalid {field} format",
+  "@fieldInvalidFormatError": {
+    "description": "Field Invalid Format Error",
     "placeholders": {
       "field": {
         "type": "String",
@@ -186,9 +190,29 @@
       }
     }
   },
-  "fieldInvalidFormatError": "Invalid {field} format",
-  "@fieldInvalidFormatError": {
-    "description": "Field Invalid Format Error",
+  "unchangedError": "New value can''t be the same as the current value",
+  "@unchangedError": {
+    "description": "Unchanged Error"
+  },
+  "maxLengthError": "{field} can''t have more than {num_chars} characters",
+  "@maxLengthError": {
+    "description": "Max Length Error",
+    "placeholders": {
+      "field": {
+        "type": "String",
+        "example": "Email",
+        "description": "Field Name"
+      },
+      "num_chars": {
+        "type": "int",
+        "example": "8",
+        "description": "Number of Characters"
+      }
+    }
+  },
+  "fieldEmptyError": "{field} can''t be empty",
+  "@fieldEmptyError": {
+    "description": "Field Empty Error",
     "placeholders": {
       "field": {
         "type": "String",

@@ -18,4 +18,19 @@ class PatientsFirebaseService implements PatientsService {
     final List<PatientDocument> patients = await patientsRepo.readPatients();
     return patients.map((patient) => patient.toPatient()).toList();
   }
+
+  @override
+  Future<Patient> updatePatient(
+    String userId,
+    String companyId,
+    Patient patient,
+    String name,
+  ) async {
+    final patientsRepo = PatientsRepository(userId, companyId);
+    await patientsRepo.updatePatient(
+      PatientDocument(id: patient.id, name: name),
+    );
+    patient.name = name;
+    return patient;
+  }
 }

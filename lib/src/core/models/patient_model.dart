@@ -2,7 +2,7 @@ import 'records_model.dart';
 
 class Patient {
   final String id;
-  final String name;
+  String name;
   final Map<String, Records> records;
 
   Patient({

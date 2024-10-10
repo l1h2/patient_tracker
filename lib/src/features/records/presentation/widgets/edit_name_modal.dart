@@ -4,17 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '/src/core/models/company_model.dart';
+import '/src/core/models/patient_model.dart';
 import '/src/core/validators/name_validator.dart';
-import '/src/features/home/presentation/bloc/home_bloc.dart';
+import '/src/features/patients/presentation/bloc/patients_bloc.dart';
 
 void editNameDialog({
   required BuildContext context,
   required String userId,
   required Company company,
+  required Patient patient,
   required TextEditingController controller,
 }) {
   final key = GlobalKey<FormState>();
-  controller.text = company.name;
+  controller.text = patient.name;
 
   showModalBottomSheet(
     context: context,
@@ -22,7 +24,7 @@ void editNameDialog({
     builder: (context) {
       final AppLocalizations locale = AppLocalizations.of(context)!;
       final ThemeData theme = Theme.of(context);
-      final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+      final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
 
       return Padding(
         padding: EdgeInsets.fromLTRB(
@@ -43,13 +45,13 @@ void editNameDialog({
               const SizedBox(height: 12),
               TextFormField(
                 controller: controller,
-                decoration: InputDecoration(hintText: locale.companyName),
+                decoration: InputDecoration(hintText: locale.patientName),
                 textAlign: TextAlign.center,
                 validator: (value) => newNameValidator(
                   value,
-                  company.name,
+                  patient.name,
                   locale,
-                  locale.companyName,
+                  locale.patientName,
                 ),
               ),
               Row(
@@ -63,10 +65,11 @@ void editNameDialog({
                     child: Text(locale.save),
                     onPressed: () {
                       if (key.currentState!.validate()) {
-                        homeBloc.add(
-                          UpdateCompany(
+                        patientsBloc.add(
+                          UpdatePatient(
                             userId: userId,
                             company: company,
+                            patient: patient,
                             name: controller.text,
                           ),
                         );

@@ -16,6 +16,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
   PatientsBloc(this._patientsUseCase) : super(PatientsInitial()) {
     on<AddPatient>(_onAddPatient);
     on<GetPatients>(_onGetPatients);
+    on<UpdatePatient>(_onUpdatePatient);
   }
 
   final PatientsUseCase _patientsUseCase;
@@ -45,6 +46,23 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
         event.company.id,
       );
       _userRepository.updatePatients(event.company, patients);
+      emit(FoundPatients(_userRepository.getPatients(event.company)));
+    } catch (e) {
+      emit(PatientsFailure(e.toString()));
+    }
+  }
+
+  void _onUpdatePatient(
+      UpdatePatient event, Emitter<PatientsState> emit) async {
+    emit(SearchingPatients());
+    try {
+      final Patient patient = await _patientsUseCase.updatePatient(
+        event.userId,
+        event.company.id,
+        event.patient,
+        event.name,
+      );
+      _userRepository.updatePatient(event.company, patient);
       emit(FoundPatients(_userRepository.getPatients(event.company)));
     } catch (e) {
       emit(PatientsFailure(e.toString()));

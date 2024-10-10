@@ -10,7 +10,7 @@ import '../bloc/patients_bloc.dart';
 import '/config/locator/setup.dart';
 import '/src/core/models/company_model.dart';
 import '/src/core/repositories/user_repository.dart';
-import '/src/core/validators/not_empty_validator.dart';
+import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
 
@@ -66,15 +66,14 @@ class AddPatientScreen extends StatelessWidget {
                     TextFormField(
                       controller: _patientNameController,
                       decoration: InputDecoration(hintText: locale.patientName),
-                      style: theme.textTheme.labelMedium,
-                      validator: (value) => notEmptyValidator(
+                      validator: (value) => nameValidator(
                         value,
-                        locale.patientName,
                         locale,
+                        locale.patientName,
                       ),
                     ),
                     const SizedBox(height: 42),
-                    ElevatedButton(
+                    FilledButton(
                       child: Text(locale.add),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {

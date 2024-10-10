@@ -28,6 +28,19 @@ class GetPatients extends PatientsEvent {
   List<Object> get props => [userId, company];
 }
 
-class UpdateCompany extends PatientsEvent {}
+class UpdatePatient extends PatientsEvent {
+  final String userId;
+  final Company company;
+  final Patient patient;
+  final String name;
 
-class FinishCompanyUpdate extends PatientsEvent {}
+  const UpdatePatient({
+    required this.userId,
+    required this.company,
+    required this.patient,
+    required this.name,
+  });
+
+  @override
+  List<Object> get props => [userId, patient, name];
+}

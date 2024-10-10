@@ -1,12 +1,14 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
+import '../bloc/logout_bloc.dart';
+
 import '/config/routes/router.gr.dart';
 import '/src/core/widgets/error_widgets.dart';
-import '../bloc/logout_bloc.dart';
 
 @RoutePage()
 class LogoutScreen extends StatelessWidget {
@@ -48,7 +50,7 @@ class LogoutScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 36),
-                  ElevatedButton(
+                  FilledButton(
                     child: Text(locale.logoutConfirmAction),
                     onPressed: () => logoutBloc.add(LogoutRequest()),
                   ),

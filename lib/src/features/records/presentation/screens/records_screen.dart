@@ -1,77 +1,67 @@
 import 'package:flutter/material.dart';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import 'package:patient_tracker/config/locator/setup.dart';
+import 'package:patient_tracker/src/core/models/records_model.dart';
+import 'package:patient_tracker/src/core/repositories/user_repository.dart';
+import 'package:patient_tracker/src/core/widgets/main_app_bar.dart';
+import 'package:patient_tracker/src/core/widgets/scrollable_scaffold.dart';
+import 'package:patient_tracker/src/features/patients/presentation/bloc/patients_bloc.dart';
+
+import '../widgets/calendar.dart';
+import '../widgets/edit_name_modal.dart';
 
 import '/src/core/models/company_model.dart';
 import '/src/core/models/patient_model.dart';
 
 @RoutePage()
-class RecordsScreen extends StatefulWidget {
-  const RecordsScreen({
+class RecordsScreen extends StatelessWidget {
+  RecordsScreen({
     super.key,
-    required this.company,
-    required this.patient,
-  });
+    required Company company,
+    required Patient patient,
+  })  : _records = locator<UserRepository>().getRecordsList(company, patient),
+        _patient = locator<UserRepository>().getPatient(company, patient.id)!,
+        _company = locator<UserRepository>().getCompany(company.id)!;
 
-  final Company company;
-  final Patient patient;
+  final Company _company;
+  final Patient _patient;
+  final List<Records> _records;
 
-  @override
-  State<RecordsScreen> createState() => _RecordsScreenState();
-}
-
-class _RecordsScreenState extends State<RecordsScreen> {
-  late final ValueNotifier<DateTime> _focusedDay;
-  late DateTime _selectedDay;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusedDay = ValueNotifier(DateTime.now());
-    _selectedDay = DateTime.now();
-  }
-
-  @override
-  void dispose() {
-    _focusedDay.dispose();
-    super.dispose();
-  }
+  final String _userId = locator<UserRepository>().getUser()!.id;
+  final _editNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Records Screen'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2030, 3, 14),
-              focusedDay: _focusedDay.value,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay.value = focusedDay;
-                });
-              },
-              calendarFormat: CalendarFormat.month,
-              onFormatChanged: (format) {
-                // Handle format change if needed
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay.value = focusedDay;
-              },
+    return BlocBuilder<PatientsBloc, PatientsState>(
+      builder: (context, patientsState) {
+        return ModalProgressHUD(
+          inAsyncCall: patientsState is SearchingPatients,
+          child: ScrollableScaffold(
+            appBar: MainAppBar(
+              title: _patient.name,
+              actionButton: IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () => editNameDialog(
+                  context: context,
+                  userId: _userId,
+                  company: _company,
+                  patient: _patient,
+                  controller: _editNameController,
+                ),
+              ),
             ),
-          ],
-        ),
-      ),
+            content: Column(
+              children: [
+                DatePicker(records: _patient.records),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

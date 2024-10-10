@@ -9,7 +9,7 @@ import '../bloc/home_bloc.dart';
 
 import '/config/locator/setup.dart';
 import '/src/core/repositories/user_repository.dart';
-import '/src/core/validators/not_empty_validator.dart';
+import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
 
@@ -63,15 +63,14 @@ class AddCompanyScreen extends StatelessWidget {
                     TextFormField(
                       controller: _companyNameController,
                       decoration: InputDecoration(hintText: locale.companyName),
-                      style: theme.textTheme.labelMedium,
-                      validator: (value) => notEmptyValidator(
+                      validator: (value) => nameValidator(
                         value,
-                        locale.companyName,
                         locale,
+                        locale.companyName,
                       ),
                     ),
                     const SizedBox(height: 42),
-                    ElevatedButton(
+                    FilledButton(
                       child: Text(locale.add),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {

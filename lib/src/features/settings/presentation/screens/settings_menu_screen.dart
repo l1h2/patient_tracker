@@ -44,7 +44,6 @@ class SettingsMenuScreen extends StatelessWidget {
               route: const LogoutRoute(),
               text: locale.logout,
               theme: theme,
-              brandText: true,
             ),
             const Divider(height: 0),
           ],

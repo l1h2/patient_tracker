@@ -4,9 +4,8 @@ class OnboardingAppBar extends SliverAppBar {
   OnboardingAppBar({
     super.key,
     required String title,
-    required ThemeData theme,
   }) : super(
-          title: Text(title.toUpperCase(), style: theme.textTheme.labelLarge),
+          title: Text(title.toUpperCase()),
           floating: true,
         );
 }
@@ -20,6 +19,7 @@ class MainAppBar extends SliverAppBar {
           toolbarHeight: 70,
           floating: true,
           title: Text(title),
+          centerTitle: true,
           actions: [actionButton],
         );
 }

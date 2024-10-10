@@ -1,14 +1,16 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+
+import '../bloc/password_bloc.dart';
 
 import '/src/core/validators/not_empty_validator.dart';
 import '/src/core/validators/password_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
-import '../bloc/password_bloc.dart';
 
 @RoutePage()
 class ChangePasswordScreen extends StatelessWidget {
@@ -75,7 +77,6 @@ class ChangePasswordScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: locale.currentPassword,
                       ),
-                      style: theme.textTheme.labelMedium,
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       obscuringCharacter: "●",
@@ -91,7 +92,6 @@ class ChangePasswordScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: locale.newPassword,
                       ),
-                      style: theme.textTheme.labelMedium,
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       obscuringCharacter: "●",
@@ -107,7 +107,6 @@ class ChangePasswordScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: locale.confirmPassword,
                       ),
-                      style: theme.textTheme.labelMedium,
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       obscuringCharacter: "●",
@@ -118,7 +117,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 36),
-                    ElevatedButton(
+                    FilledButton(
                       child: Text(locale.changePasswordAction),
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {

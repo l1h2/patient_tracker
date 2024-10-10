@@ -49,10 +49,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         return ModalProgressHUD(
           inAsyncCall: state is ForgotPasswordLoading,
           child: ScrollableScaffold(
-            appBar: OnboardingAppBar(
-              title: locale.passwordRecovery,
-              theme: theme,
-            ),
+            appBar: OnboardingAppBar(title: locale.passwordRecovery),
             content: Padding(
               padding: EdgeInsets.all(screenSize.width * 0.1),
               child: Form(
@@ -68,7 +65,6 @@ class ForgotPasswordScreen extends StatelessWidget {
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(hintText: locale.email),
-                      style: theme.textTheme.labelMedium,
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) => emailValidator(value, locale),
                     ),

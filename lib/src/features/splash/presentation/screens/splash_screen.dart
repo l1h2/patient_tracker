@@ -14,7 +14,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     final StackRouter router = AutoRouter.of(context);
     final SplashBloc splashBloc = BlocProvider.of<SplashBloc>(context);
 
@@ -32,7 +31,6 @@ class SplashScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: theme.colorScheme.primary,
           body: Center(
             child: Image.asset(Assets.logoSplash),
           ),
