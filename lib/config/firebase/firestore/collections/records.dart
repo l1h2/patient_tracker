@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '/src/core/models/records_model.dart' as model;
 
 class RecordsDocument {
@@ -45,7 +47,7 @@ class RecordsDocument {
 
   factory RecordsDocument.fromMap(Map<String, dynamic> map) => RecordsDocument(
         id: map[RecordAttrs.id],
-        date: map[RecordAttrs.date],
+        date: (map[RecordAttrs.date] as Timestamp).toDate().toUtc(),
         therapist: map[RecordAttrs.therapist],
         certificate: map[RecordAttrs.certificate],
         patient: map[RecordAttrs.patient],
@@ -63,6 +65,28 @@ class RecordsDocument {
         physiotherapy: Physiotherapy.fromMap(map[RecordAttrs.physiotherapy]),
         intercurrences: map[RecordAttrs.intercurrences],
         comments: map[RecordAttrs.observations],
+      );
+
+  factory RecordsDocument.fromRecords(model.Records records) => RecordsDocument(
+        id: records.id,
+        date: records.date,
+        therapist: records.therapist,
+        certificate: records.certificate,
+        patient: records.patient,
+        isMale: records.isMale,
+        isPhysiotherapy: records.isPhysiotherapy,
+        vitalSigns: VitalSigns.fromModel(records.vitalSigns),
+        warmUp: WarmUp.fromModel(records.warmUp),
+        barrel: Exercises.fromModel(records.barrel),
+        cadillac: Exercises.fromModel(records.cadillac),
+        stepChair: Exercises.fromModel(records.stepChair),
+        reformer: Exercises.fromModel(records.reformer),
+        columpio: Exercises.fromModel(records.columpio),
+        solo: Exercises.fromModel(records.solo),
+        accessories: Accessories.fromModel(records.accessories),
+        physiotherapy: Physiotherapy.fromModel(records.physiotherapy),
+        intercurrences: records.intercurrences,
+        comments: records.comments,
       );
 
   RecordsDocument copyWith({required Map<String, dynamic> newAttrs}) {
@@ -93,7 +117,7 @@ class RecordsDocument {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic>? toMap() {
     final map = {
       RecordAttrs.date: date,
       RecordAttrs.therapist: therapist,
@@ -116,6 +140,8 @@ class RecordsDocument {
     };
 
     map.removeWhere((key, value) => value == null);
+
+    if (map.isEmpty) return null;
     return map;
   }
 
@@ -166,42 +192,50 @@ class RecordAttrs {
 
 class VitalSigns {
   final double? pressure;
-  final double? cardiacFrequency;
+  final double? heartRate;
   final double? oxygenSaturation;
 
   const VitalSigns({
     this.pressure,
-    this.cardiacFrequency,
+    this.heartRate,
     this.oxygenSaturation,
   });
 
   factory VitalSigns.fromMap(Map<String, dynamic> map) => VitalSigns(
         pressure: map[VitalSignsAttrs.pressure],
-        cardiacFrequency: map[VitalSignsAttrs.cardiacFrequency],
+        heartRate: map[VitalSignsAttrs.heartRate],
         oxygenSaturation: map[VitalSignsAttrs.oxygenSaturation],
       );
 
-  Map<String, dynamic> toMap() {
+  factory VitalSigns.fromModel(model.VitalSigns vitalSigns) => VitalSigns(
+        pressure: vitalSigns.pressure,
+        heartRate: vitalSigns.heartRate,
+        oxygenSaturation: vitalSigns.oxygenSaturation,
+      );
+
+  Map<String, dynamic>? toMap() {
     final map = {
       VitalSignsAttrs.pressure: pressure,
-      VitalSignsAttrs.cardiacFrequency: cardiacFrequency,
+      VitalSignsAttrs.heartRate: heartRate,
       VitalSignsAttrs.oxygenSaturation: oxygenSaturation,
     };
 
     map.removeWhere((key, value) => value == null);
+
+    if (map.isEmpty) return null;
     return map;
   }
 
   model.VitalSigns toModel() => model.VitalSigns(
         pressure: pressure,
-        cardiacFrequency: cardiacFrequency,
+        heartRate: heartRate,
         oxygenSaturation: oxygenSaturation,
       );
 }
 
 class VitalSignsAttrs {
   static const String pressure = 'pressure';
-  static const String cardiacFrequency = 'cardiacFrequency';
+  static const String heartRate = 'heartRate';
   static const String respiratoryRate = 'respiratoryRate';
   static const String oxygenSaturation = 'oxygenSaturation';
 }
@@ -227,18 +261,29 @@ class WarmUp {
     this.other,
   });
 
-  factory WarmUp.fromMap(Map<String, dynamic> map) => WarmUp(
-        functionalAerobic: map[WarmUpAttrs.functionalAerobic],
-        plyometricReformer: map[WarmUpAttrs.plyometricReformer],
-        plyometricWall: map[WarmUpAttrs.plyometricWall],
-        swimmingSolo: map[WarmUpAttrs.swimmingSolo],
-        swimmingBarrel: map[WarmUpAttrs.swimmingBarrel],
-        hundredSolo: map[WarmUpAttrs.hundredSolo],
-        hundredReformer: map[WarmUpAttrs.hundredReformer],
-        other: map[WarmUpAttrs.other],
+  factory WarmUp.fromMap(Map<String, dynamic>? map) => WarmUp(
+        functionalAerobic: map?[WarmUpAttrs.functionalAerobic],
+        plyometricReformer: map?[WarmUpAttrs.plyometricReformer],
+        plyometricWall: map?[WarmUpAttrs.plyometricWall],
+        swimmingSolo: map?[WarmUpAttrs.swimmingSolo],
+        swimmingBarrel: map?[WarmUpAttrs.swimmingBarrel],
+        hundredSolo: map?[WarmUpAttrs.hundredSolo],
+        hundredReformer: map?[WarmUpAttrs.hundredReformer],
+        other: map?[WarmUpAttrs.other],
       );
 
-  Map<String, dynamic> toMap() {
+  factory WarmUp.fromModel(model.WarmUp warmUp) => WarmUp(
+        functionalAerobic: warmUp.functionalAerobic,
+        plyometricReformer: warmUp.plyometricReformer,
+        plyometricWall: warmUp.plyometricWall,
+        swimmingSolo: warmUp.swimmingSolo,
+        swimmingBarrel: warmUp.swimmingBarrel,
+        hundredSolo: warmUp.hundredSolo,
+        hundredReformer: warmUp.hundredReformer,
+        other: warmUp.other,
+      );
+
+  Map<String, dynamic>? toMap() {
     final map = {
       WarmUpAttrs.functionalAerobic: functionalAerobic,
       WarmUpAttrs.plyometricReformer: plyometricReformer,
@@ -251,6 +296,8 @@ class WarmUp {
     };
 
     map.removeWhere((key, value) => value == null);
+
+    if (map.isEmpty) return null;
     return map;
   }
 
@@ -288,7 +335,7 @@ class Exercises {
   final bool? strengthMmss;
   final bool? strengthAbd;
   final bool? strengthPara;
-  final bool? mobilityColumn;
+  final bool? mobilitySpine;
   final bool? mobilityShoulder;
   final bool? mobilityHip;
   final bool? mobilityAnkle;
@@ -310,7 +357,7 @@ class Exercises {
     this.strengthMmss,
     this.strengthAbd,
     this.strengthPara,
-    this.mobilityColumn,
+    this.mobilitySpine,
     this.mobilityShoulder,
     this.mobilityHip,
     this.mobilityAnkle,
@@ -322,30 +369,53 @@ class Exercises {
     this.other,
   });
 
-  factory Exercises.fromMap(Map<String, dynamic> map) => Exercises(
-        stretchCadAnt: map[ExercisesAttrs.stretchCadAnt],
-        stretchCadPost: map[ExercisesAttrs.stretchCadPost],
-        stretchCadLat: map[ExercisesAttrs.stretchCadLat],
-        stretchCadCross: map[ExercisesAttrs.stretchCadCross],
-        stretchMmii: map[ExercisesAttrs.stretchMmii],
-        stretchMmss: map[ExercisesAttrs.stretchMmss],
-        strengthMmii: map[ExercisesAttrs.strengthMmii],
-        strengthMmss: map[ExercisesAttrs.strengthMmss],
-        strengthAbd: map[ExercisesAttrs.strengthAbd],
-        strengthPara: map[ExercisesAttrs.strengthPara],
-        mobilityColumn: map[ExercisesAttrs.mobilityColumn],
-        mobilityShoulder: map[ExercisesAttrs.mobilityShoulder],
-        mobilityHip: map[ExercisesAttrs.mobilityHip],
-        mobilityAnkle: map[ExercisesAttrs.mobilityAnkle],
-        mobilityWrist: map[ExercisesAttrs.mobilityWrist],
-        relaxation: map[ExercisesAttrs.relaxation],
-        motorCoordination: map[ExercisesAttrs.motorCoordination],
-        balance: map[ExercisesAttrs.balance],
-        proprioception: map[ExercisesAttrs.proprioception],
-        other: map[ExercisesAttrs.other],
+  factory Exercises.fromMap(Map<String, dynamic>? map) => Exercises(
+        stretchCadAnt: map?[ExercisesAttrs.stretchCadAnt],
+        stretchCadPost: map?[ExercisesAttrs.stretchCadPost],
+        stretchCadLat: map?[ExercisesAttrs.stretchCadLat],
+        stretchCadCross: map?[ExercisesAttrs.stretchCadCross],
+        stretchMmii: map?[ExercisesAttrs.stretchMmii],
+        stretchMmss: map?[ExercisesAttrs.stretchMmss],
+        strengthMmii: map?[ExercisesAttrs.strengthMmii],
+        strengthMmss: map?[ExercisesAttrs.strengthMmss],
+        strengthAbd: map?[ExercisesAttrs.strengthAbd],
+        strengthPara: map?[ExercisesAttrs.strengthPara],
+        mobilitySpine: map?[ExercisesAttrs.mobilitySpine],
+        mobilityShoulder: map?[ExercisesAttrs.mobilityShoulder],
+        mobilityHip: map?[ExercisesAttrs.mobilityHip],
+        mobilityAnkle: map?[ExercisesAttrs.mobilityAnkle],
+        mobilityWrist: map?[ExercisesAttrs.mobilityWrist],
+        relaxation: map?[ExercisesAttrs.relaxation],
+        motorCoordination: map?[ExercisesAttrs.motorCoordination],
+        balance: map?[ExercisesAttrs.balance],
+        proprioception: map?[ExercisesAttrs.proprioception],
+        other: map?[ExercisesAttrs.other],
       );
 
-  Map<String, dynamic> toMap() {
+  factory Exercises.fromModel(model.Exercises exercises) => Exercises(
+        stretchCadAnt: exercises.stretchCadAnt,
+        stretchCadPost: exercises.stretchCadPost,
+        stretchCadLat: exercises.stretchCadLat,
+        stretchCadCross: exercises.stretchCadCross,
+        stretchMmii: exercises.stretchMmii,
+        stretchMmss: exercises.stretchMmss,
+        strengthMmii: exercises.strengthMmii,
+        strengthMmss: exercises.strengthMmss,
+        strengthAbd: exercises.strengthAbd,
+        strengthPara: exercises.strengthPara,
+        mobilitySpine: exercises.mobilitySpine,
+        mobilityShoulder: exercises.mobilityShoulder,
+        mobilityHip: exercises.mobilityHip,
+        mobilityAnkle: exercises.mobilityAnkle,
+        mobilityWrist: exercises.mobilityWrist,
+        relaxation: exercises.relaxation,
+        motorCoordination: exercises.motorCoordination,
+        balance: exercises.balance,
+        proprioception: exercises.proprioception,
+        other: exercises.other,
+      );
+
+  Map<String, dynamic>? toMap() {
     final map = {
       ExercisesAttrs.stretchCadAnt: stretchCadAnt,
       ExercisesAttrs.stretchCadPost: stretchCadPost,
@@ -357,7 +427,7 @@ class Exercises {
       ExercisesAttrs.strengthMmss: strengthMmss,
       ExercisesAttrs.strengthAbd: strengthAbd,
       ExercisesAttrs.strengthPara: strengthPara,
-      ExercisesAttrs.mobilityColumn: mobilityColumn,
+      ExercisesAttrs.mobilitySpine: mobilitySpine,
       ExercisesAttrs.mobilityShoulder: mobilityShoulder,
       ExercisesAttrs.mobilityHip: mobilityHip,
       ExercisesAttrs.mobilityAnkle: mobilityAnkle,
@@ -370,6 +440,8 @@ class Exercises {
     };
 
     map.removeWhere((key, value) => value == null);
+
+    if (map.isEmpty) return null;
     return map;
   }
 
@@ -384,7 +456,7 @@ class Exercises {
         strengthMmss: strengthMmss,
         strengthAbd: strengthAbd,
         strengthPara: strengthPara,
-        mobilityColumn: mobilityColumn,
+        mobilitySpine: mobilitySpine,
         mobilityShoulder: mobilityShoulder,
         mobilityHip: mobilityHip,
         mobilityAnkle: mobilityAnkle,
@@ -408,7 +480,7 @@ class ExercisesAttrs {
   static const String strengthMmss = 'strengthMmss';
   static const String strengthAbd = 'strengthAbd';
   static const String strengthPara = 'strengthPara';
-  static const String mobilityColumn = 'mobilityColumn';
+  static const String mobilitySpine = 'mobilitySpine';
   static const String mobilityShoulder = 'mobilityShoulder';
   static const String mobilityHip = 'mobilityHip';
   static const String mobilityAnkle = 'mobilityAnkle';
@@ -436,8 +508,8 @@ class Accessories {
   final bool? massager;
   final bool? baton;
   final bool? elasticBand;
-  final int? dumbbell;
-  final int? tonningBall;
+  final double? dumbbell;
+  final double? tonningBall;
 
   const Accessories({
     this.ball,
@@ -459,27 +531,47 @@ class Accessories {
     this.tonningBall,
   });
 
-  factory Accessories.fromMap(Map<String, dynamic> map) => Accessories(
-        ball: map[AccessoriesAttrs.ball],
-        bosu: map[AccessoriesAttrs.bosu],
-        comboBox: map[AccessoriesAttrs.comboBox],
-        proprioceptionDisk: map[AccessoriesAttrs.proprioceptionDisk],
-        pushUpSupport: map[AccessoriesAttrs.pushUpSupport],
-        foamRoller: map[AccessoriesAttrs.foamRoller],
-        myofascialRoller: map[AccessoriesAttrs.myofascialRoller],
-        beanBag: map[AccessoriesAttrs.beanBag],
-        pilatesRing: map[AccessoriesAttrs.pilatesRing],
-        pilatesWheel: map[AccessoriesAttrs.pilatesWheel],
-        abdominalWheel: map[AccessoriesAttrs.abdominalWheel],
-        stressBall: map[AccessoriesAttrs.stressBall],
-        massager: map[AccessoriesAttrs.massager],
-        baton: map[AccessoriesAttrs.baton],
-        elasticBand: map[AccessoriesAttrs.elasticBand],
-        dumbbell: map[AccessoriesAttrs.dumbbell],
-        tonningBall: map[AccessoriesAttrs.tonningBall],
+  factory Accessories.fromMap(Map<String, dynamic>? map) => Accessories(
+        ball: map?[AccessoriesAttrs.ball],
+        bosu: map?[AccessoriesAttrs.bosu],
+        comboBox: map?[AccessoriesAttrs.comboBox],
+        proprioceptionDisk: map?[AccessoriesAttrs.proprioceptionDisk],
+        pushUpSupport: map?[AccessoriesAttrs.pushUpSupport],
+        foamRoller: map?[AccessoriesAttrs.foamRoller],
+        myofascialRoller: map?[AccessoriesAttrs.myofascialRoller],
+        beanBag: map?[AccessoriesAttrs.beanBag],
+        pilatesRing: map?[AccessoriesAttrs.pilatesRing],
+        pilatesWheel: map?[AccessoriesAttrs.pilatesWheel],
+        abdominalWheel: map?[AccessoriesAttrs.abdominalWheel],
+        stressBall: map?[AccessoriesAttrs.stressBall],
+        massager: map?[AccessoriesAttrs.massager],
+        baton: map?[AccessoriesAttrs.baton],
+        elasticBand: map?[AccessoriesAttrs.elasticBand],
+        dumbbell: map?[AccessoriesAttrs.dumbbell],
+        tonningBall: map?[AccessoriesAttrs.tonningBall],
       );
 
-  Map<String, dynamic> toMap() {
+  factory Accessories.fromModel(model.Accessories accessories) => Accessories(
+        ball: accessories.ball,
+        bosu: accessories.bosu,
+        comboBox: accessories.comboBox,
+        proprioceptionDisk: accessories.proprioceptionDisk,
+        pushUpSupport: accessories.pushUpSupport,
+        foamRoller: accessories.foamRoller,
+        myofascialRoller: accessories.myofascialRoller,
+        beanBag: accessories.beanBag,
+        pilatesRing: accessories.pilatesRing,
+        pilatesWheel: accessories.pilatesWheel,
+        abdominalWheel: accessories.abdominalWheel,
+        stressBall: accessories.stressBall,
+        massager: accessories.massager,
+        baton: accessories.baton,
+        elasticBand: accessories.elasticBand,
+        dumbbell: accessories.dumbbell,
+        tonningBall: accessories.tonningBall,
+      );
+
+  Map<String, dynamic>? toMap() {
     final map = {
       AccessoriesAttrs.ball: ball,
       AccessoriesAttrs.bosu: bosu,
@@ -501,6 +593,8 @@ class Accessories {
     };
 
     map.removeWhere((key, value) => value == null);
+
+    if (map.isEmpty) return null;
     return map;
   }
 
@@ -600,35 +694,64 @@ class Physiotherapy {
     this.ultrasound,
   });
 
-  factory Physiotherapy.fromMap(Map<String, dynamic> map) => Physiotherapy(
-        stretching: map[PhysiotherapyAttrs.stretching],
-        cryotherapy: map[PhysiotherapyAttrs.cryotherapy],
-        thermotherapy: map[PhysiotherapyAttrs.thermotherapy],
-        gaitTraining: map[PhysiotherapyAttrs.gaitTraining],
-        jointMobilization: map[PhysiotherapyAttrs.jointMobilization],
-        massotherapy: map[PhysiotherapyAttrs.massotherapy],
-        williams: map[PhysiotherapyAttrs.williams],
-        codman: map[PhysiotherapyAttrs.codman],
-        mckenzie: map[PhysiotherapyAttrs.mckenzie],
-        klapp: map[PhysiotherapyAttrs.klapp],
-        rpg: map[PhysiotherapyAttrs.rpg],
-        muscleStrengthening: map[PhysiotherapyAttrs.muscleStrengthening],
-        activeExercises: map[PhysiotherapyAttrs.activeExercises],
-        passiveExercises: map[PhysiotherapyAttrs.passiveExercises],
-        assistedExercises: map[PhysiotherapyAttrs.assistedExercises],
-        bandage: map[PhysiotherapyAttrs.bandage],
-        homework: map[PhysiotherapyAttrs.homework],
-        footwearChange: map[PhysiotherapyAttrs.footwearChange],
-        isometricMmss: map[PhysiotherapyAttrs.isometricMmss],
-        isometricMmii: map[PhysiotherapyAttrs.isometricMmii],
-        isometricAbd: map[PhysiotherapyAttrs.isometricAbd],
-        isometricOther: map[PhysiotherapyAttrs.isometricOther],
-        tens: map[PhysiotherapyAttrs.tens],
-        fes: map[PhysiotherapyAttrs.fes],
-        ultrasound: map[PhysiotherapyAttrs.ultrasound],
+  factory Physiotherapy.fromMap(Map<String, dynamic>? map) => Physiotherapy(
+        stretching: map?[PhysiotherapyAttrs.stretching],
+        cryotherapy: map?[PhysiotherapyAttrs.cryotherapy],
+        thermotherapy: map?[PhysiotherapyAttrs.thermotherapy],
+        gaitTraining: map?[PhysiotherapyAttrs.gaitTraining],
+        jointMobilization: map?[PhysiotherapyAttrs.jointMobilization],
+        massotherapy: map?[PhysiotherapyAttrs.massotherapy],
+        williams: map?[PhysiotherapyAttrs.williams],
+        codman: map?[PhysiotherapyAttrs.codman],
+        mckenzie: map?[PhysiotherapyAttrs.mckenzie],
+        klapp: map?[PhysiotherapyAttrs.klapp],
+        rpg: map?[PhysiotherapyAttrs.rpg],
+        muscleStrengthening: map?[PhysiotherapyAttrs.muscleStrengthening],
+        activeExercises: map?[PhysiotherapyAttrs.activeExercises],
+        passiveExercises: map?[PhysiotherapyAttrs.passiveExercises],
+        assistedExercises: map?[PhysiotherapyAttrs.assistedExercises],
+        bandage: map?[PhysiotherapyAttrs.bandage],
+        homework: map?[PhysiotherapyAttrs.homework],
+        footwearChange: map?[PhysiotherapyAttrs.footwearChange],
+        isometricMmss: map?[PhysiotherapyAttrs.isometricMmss],
+        isometricMmii: map?[PhysiotherapyAttrs.isometricMmii],
+        isometricAbd: map?[PhysiotherapyAttrs.isometricAbd],
+        isometricOther: map?[PhysiotherapyAttrs.isometricOther],
+        tens: map?[PhysiotherapyAttrs.tens],
+        fes: map?[PhysiotherapyAttrs.fes],
+        ultrasound: map?[PhysiotherapyAttrs.ultrasound],
       );
 
-  Map<String, dynamic> toMap() {
+  factory Physiotherapy.fromModel(model.Physiotherapy physiotherapy) =>
+      Physiotherapy(
+        stretching: physiotherapy.stretching,
+        cryotherapy: physiotherapy.cryotherapy,
+        thermotherapy: physiotherapy.thermotherapy,
+        gaitTraining: physiotherapy.gaitTraining,
+        jointMobilization: physiotherapy.jointMobilization,
+        massotherapy: physiotherapy.massotherapy,
+        williams: physiotherapy.williams,
+        codman: physiotherapy.codman,
+        mckenzie: physiotherapy.mckenzie,
+        klapp: physiotherapy.klapp,
+        rpg: physiotherapy.rpg,
+        muscleStrengthening: physiotherapy.muscleStrengthening,
+        activeExercises: physiotherapy.activeExercises,
+        passiveExercises: physiotherapy.passiveExercises,
+        assistedExercises: physiotherapy.assistedExercises,
+        bandage: physiotherapy.bandage,
+        homework: physiotherapy.homework,
+        footwearChange: physiotherapy.footwearChange,
+        isometricMmss: physiotherapy.isometricMmss,
+        isometricMmii: physiotherapy.isometricMmii,
+        isometricAbd: physiotherapy.isometricAbd,
+        isometricOther: physiotherapy.isometricOther,
+        tens: physiotherapy.tens,
+        fes: physiotherapy.fes,
+        ultrasound: physiotherapy.ultrasound,
+      );
+
+  Map<String, dynamic>? toMap() {
     final map = {
       PhysiotherapyAttrs.stretching: stretching,
       PhysiotherapyAttrs.cryotherapy: cryotherapy,
@@ -658,6 +781,8 @@ class Physiotherapy {
     };
 
     map.removeWhere((key, value) => value == null);
+
+    if (map.isEmpty) return null;
     return map;
   }
 

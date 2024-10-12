@@ -9,6 +9,7 @@ import '/src/features/auth/login/presentation/bloc/login_bloc.dart';
 import '/src/features/auth/logout/presentation/bloc/logout_bloc.dart';
 import '/src/features/home/presentation/bloc/home_bloc.dart';
 import '/src/features/patients/presentation/bloc/patients_bloc.dart';
+import '/src/features/records/presentation/bloc/records_bloc.dart';
 import '/src/features/splash/presentation/bloc/splash_bloc.dart';
 
 class MainBlocProvider extends StatelessWidget {
@@ -30,6 +31,7 @@ class MainBlocProvider extends StatelessWidget {
         BlocProvider(create: (_) => PasswordBloc(locator.get())),
         BlocProvider(create: (_) => HomeBloc(locator.get())),
         BlocProvider(create: (_) => PatientsBloc(locator.get())),
+        BlocProvider(create: (_) => RecordsBloc(locator.get())),
       ],
       child: child,
     );

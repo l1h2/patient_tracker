@@ -11,14 +11,28 @@ class RecordsDao {
   RecordsDao(String userId, String companyId, String patientId)
       : _collectionPath = CollectionPaths.records(userId, companyId, patientId);
 
-  Future<void> createRecord(Map<String, dynamic> data) async {
-    await _baseDao.createDocument(_collectionPath, data);
+  Future<String> createRecord(Map<String, dynamic> data) async {
+    return await _baseDao.createDocument(_collectionPath, data).then((doc) {
+      return doc.id;
+    });
   }
 
   Future<Map<String, dynamic>?> readRecord(String recordId) async {
     return await _baseDao.readDocument(
       _collectionPath,
       recordId,
+      RecordAttrs.id,
+    );
+  }
+
+  Future<Map<String, dynamic>?> readRecordByField(
+    String fieldName,
+    dynamic value,
+  ) async {
+    return await _baseDao.readDocumentByField(
+      _collectionPath,
+      fieldName,
+      value,
       RecordAttrs.id,
     );
   }

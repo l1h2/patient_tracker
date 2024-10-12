@@ -2,66 +2,154 @@ import 'package:flutter/material.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-import 'package:patient_tracker/config/locator/setup.dart';
-import 'package:patient_tracker/src/core/models/records_model.dart';
-import 'package:patient_tracker/src/core/repositories/user_repository.dart';
-import 'package:patient_tracker/src/core/widgets/main_app_bar.dart';
-import 'package:patient_tracker/src/core/widgets/scrollable_scaffold.dart';
-import 'package:patient_tracker/src/features/patients/presentation/bloc/patients_bloc.dart';
-
+import '../bloc/records_bloc.dart';
 import '../widgets/calendar.dart';
 import '../widgets/edit_name_modal.dart';
+import '../widgets/form/records_form.dart';
 
+import '/config/locator/setup.dart';
 import '/src/core/models/company_model.dart';
 import '/src/core/models/patient_model.dart';
+import '/src/core/models/records_model.dart';
+import '/src/core/models/user_model.dart';
+import '/src/core/repositories/user_repository.dart';
+import '/src/core/widgets/error_widgets.dart';
+import '/src/core/widgets/main_app_bar.dart';
+import '/src/core/widgets/scrollable_scaffold.dart';
+import '/src/features/patients/presentation/bloc/patients_bloc.dart' as pb;
 
 @RoutePage()
-class RecordsScreen extends StatelessWidget {
-  RecordsScreen({
+class RecordsScreen extends StatefulWidget {
+  const RecordsScreen({
     super.key,
-    required Company company,
-    required Patient patient,
-  })  : _records = locator<UserRepository>().getRecordsList(company, patient),
-        _patient = locator<UserRepository>().getPatient(company, patient.id)!,
-        _company = locator<UserRepository>().getCompany(company.id)!;
+    required this.company,
+    required this.patient,
+    required this.currentRecords,
+  });
 
-  final Company _company;
-  final Patient _patient;
-  final List<Records> _records;
+  final Company company;
+  final Patient patient;
+  final Records currentRecords;
 
-  final String _userId = locator<UserRepository>().getUser()!.id;
+  @override
+  State<RecordsScreen> createState() => _RecordsScreenState();
+}
+
+class _RecordsScreenState extends State<RecordsScreen> {
+  late User _user;
+  late Company _company;
+  late Patient _patient;
+  late Records _currentRecords;
+  late TextEditingController _dateController;
+
   final _editNameController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    _user = locator<UserRepository>().getUser()!;
+    _company = _user.companies[widget.company.id]!;
+    _patient = _company.patients[widget.patient.id]!;
+    _currentRecords = widget.currentRecords;
+    _dateController = TextEditingController(
+      text: _currentRecords.date.toString().split(' ')[0],
+    );
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    _editNameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PatientsBloc, PatientsState>(
-      builder: (context, patientsState) {
-        return ModalProgressHUD(
-          inAsyncCall: patientsState is SearchingPatients,
-          child: ScrollableScaffold(
-            appBar: MainAppBar(
-              title: _patient.name,
-              actionButton: IconButton(
-                icon: const Icon(Icons.edit),
-                onPressed: () => editNameDialog(
-                  context: context,
-                  userId: _userId,
-                  company: _company,
-                  patient: _patient,
-                  controller: _editNameController,
-                ),
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+    final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
+
+    return BlocListener<RecordsBloc, RecordsState>(
+      listener: (context, state) {
+        if (state is RecordsSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(locale.recordSaved, textAlign: TextAlign.center),
+            ),
+          );
+        } else if (state is GetRecordsSuccess) {
+          setState(() {
+            _currentRecords.update(state.records);
+          });
+        } else if (state is NoChangesToSave) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                locale.noChanges,
+                textAlign: TextAlign.center,
               ),
             ),
-            content: Column(
-              children: [
-                DatePicker(records: _patient.records),
-              ],
+          );
+        } else if (state is EmptyRecords) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                locale.emptyForm,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
-        );
+          );
+        } else if (state is RecordsFailure) {
+          ErrorScaffoldMessenger.of(context).showSnackBar(
+            state.error,
+            theme,
+          );
+        }
       },
+      child: BlocBuilder<pb.PatientsBloc, pb.PatientsState>(
+        builder: (context, patientsState) {
+          return ModalProgressHUD(
+            inAsyncCall: patientsState is pb.SearchingPatients,
+            child: ScrollableScaffold(
+              appBar: MainAppBar(
+                title: _patient.name,
+                actionButton: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => editNameDialog(
+                    context: context,
+                    userId: _user.id,
+                    company: _company,
+                    patient: _patient,
+                    controller: _editNameController,
+                  ),
+                ),
+              ),
+              content: Column(
+                children: [
+                  DatePicker(
+                    controller: _dateController,
+                    recordsBloc: recordsBloc,
+                    user: _user,
+                    company: _company,
+                    patient: _patient,
+                  ),
+                  RecordsForm(
+                    locale: locale,
+                    recordsBloc: recordsBloc,
+                    user: _user,
+                    company: _company,
+                    patient: _patient,
+                    records: _currentRecords,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

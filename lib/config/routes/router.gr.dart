@@ -13,6 +13,7 @@ import 'package:flutter/cupertino.dart' as _i15;
 import 'package:flutter/material.dart' as _i13;
 import 'package:patient_tracker/src/core/models/company_model.dart' as _i14;
 import 'package:patient_tracker/src/core/models/patient_model.dart' as _i16;
+import 'package:patient_tracker/src/core/models/records_model.dart' as _i17;
 import 'package:patient_tracker/src/features/auth/change_password/presentation/screens/change_password_screen.dart'
     as _i3;
 import 'package:patient_tracker/src/features/auth/forgot_password/presentation/screens/forgot_password_screen.dart'
@@ -329,6 +330,7 @@ class RecordsRoute extends _i12.PageRouteInfo<RecordsRouteArgs> {
     _i13.Key? key,
     required _i14.Company company,
     required _i16.Patient patient,
+    required _i17.Records currentRecords,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           RecordsRoute.name,
@@ -336,6 +338,7 @@ class RecordsRoute extends _i12.PageRouteInfo<RecordsRouteArgs> {
             key: key,
             company: company,
             patient: patient,
+            currentRecords: currentRecords,
           ),
           initialChildren: children,
         );
@@ -350,6 +353,7 @@ class RecordsRoute extends _i12.PageRouteInfo<RecordsRouteArgs> {
         key: args.key,
         company: args.company,
         patient: args.patient,
+        currentRecords: args.currentRecords,
       );
     },
   );
@@ -360,6 +364,7 @@ class RecordsRouteArgs {
     this.key,
     required this.company,
     required this.patient,
+    required this.currentRecords,
   });
 
   final _i13.Key? key;
@@ -368,9 +373,11 @@ class RecordsRouteArgs {
 
   final _i16.Patient patient;
 
+  final _i17.Records currentRecords;
+
   @override
   String toString() {
-    return 'RecordsRouteArgs{key: $key, company: $company, patient: $patient}';
+    return 'RecordsRouteArgs{key: $key, company: $company, patient: $patient, currentRecords: $currentRecords}';
   }
 }
 

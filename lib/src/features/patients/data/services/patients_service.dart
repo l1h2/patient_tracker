@@ -11,4 +11,5 @@ abstract class PatientsService {
     Patient patient,
     String name,
   );
+  Future<GetRecordsReturn> getRecords(GetRecordsParams params);
 }

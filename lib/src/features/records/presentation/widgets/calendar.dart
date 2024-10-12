@@ -1,38 +1,33 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '/src/core/models/records_model.dart';
+import 'package:patient_tracker/src/core/widgets/error_widgets.dart';
 
-class DatePicker extends StatefulWidget {
+import '../bloc/records_bloc.dart';
+
+import '/src/core/models/company_model.dart';
+import '/src/core/models/patient_model.dart';
+import '/src/core/models/user_model.dart';
+
+class DatePicker extends StatelessWidget {
   const DatePicker({
     super.key,
-    required this.records,
+    required this.controller,
+    required this.recordsBloc,
+    required this.user,
+    required this.company,
+    required this.patient,
   });
 
-  final Map<String, Records> records;
-
-  @override
-  State<DatePicker> createState() => _DatePickerState();
-}
-
-class _DatePickerState extends State<DatePicker> {
-  late TextEditingController _dateController;
-
-  @override
-  void initState() {
-    super.initState();
-    _dateController = TextEditingController(
-      text: DateTime.now().toString().split(' ')[0],
-    );
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    super.dispose();
-  }
+  final TextEditingController controller;
+  final RecordsBloc recordsBloc;
+  final User user;
+  final Company company;
+  final Patient patient;
 
   @override
   Widget build(BuildContext context) {
@@ -41,31 +36,48 @@ class _DatePickerState extends State<DatePicker> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
-        controller: _dateController,
+        controller: controller,
         readOnly: true,
         decoration: const InputDecoration(
           suffixIcon: Icon(Icons.calendar_today),
         ),
         textAlign: TextAlign.center,
         style: theme.textTheme.headlineSmall,
-        onTap: () async => _dateController.text = await showDialog<String>(
+        onTap: () async => controller.text = await showDialog<String>(
               context: context,
               builder: (context) {
                 return Dialog(
-                  child: CustomCalendar(records: widget.records),
+                  child: CustomCalendar(
+                    initialDate: DateTime.parse(controller.text),
+                    recordsBloc: recordsBloc,
+                    user: user,
+                    company: company,
+                    patient: patient,
+                  ),
                 );
               },
             ) ??
-            _dateController.text,
+            controller.text,
       ),
     );
   }
 }
 
 class CustomCalendar extends StatefulWidget {
-  const CustomCalendar({super.key, required this.records});
+  const CustomCalendar({
+    super.key,
+    required this.initialDate,
+    required this.recordsBloc,
+    required this.user,
+    required this.company,
+    required this.patient,
+  });
 
-  final Map<String, Records> records;
+  final DateTime initialDate;
+  final RecordsBloc recordsBloc;
+  final User user;
+  final Company company;
+  final Patient patient;
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -81,8 +93,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
   @override
   void initState() {
     super.initState();
-    _focusedDay = ValueNotifier(DateTime.now());
-    _selectedDay = DateTime.now();
+    _focusedDay = ValueNotifier(widget.initialDate);
+    _selectedDay = widget.initialDate;
   }
 
   @override
@@ -119,48 +131,86 @@ class _CustomCalendarState extends State<CustomCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          TableCalendar(
-            firstDay: firstDate,
-            lastDay: lastDate,
-            focusedDay: _focusedDay.value,
-            selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-            calendarFormat: CalendarFormat.month,
-            headerStyle: const HeaderStyle(titleCentered: true),
-            calendarStyle: const CalendarStyle(
-              holidayDecoration: BoxDecoration(shape: BoxShape.circle),
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+
+    return BlocConsumer<RecordsBloc, RecordsState>(
+      listener: (context, state) {
+        if (state is GetRecordsSuccess) {
+          Navigator.pop(context);
+          Navigator.pop(context, _selectedDay.toString().split(' ')[0]);
+        } else if (state is GetRecordsFailure) {
+          Navigator.pop(context);
+          ErrorScaffoldMessenger.of(context).showSnackBar(
+            locale.getRecordsError,
+            Theme.of(context),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TableCalendar(
+                  firstDay: firstDate,
+                  lastDay: lastDate,
+                  focusedDay: _focusedDay.value,
+                  availableGestures: AvailableGestures.horizontalSwipe,
+                  selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                  availableCalendarFormats: const {
+                    CalendarFormat.month: 'Month'
+                  },
+                  calendarFormat: CalendarFormat.month,
+                  headerStyle: const HeaderStyle(titleCentered: true),
+                  calendarStyle: const CalendarStyle(
+                    holidayDecoration: BoxDecoration(shape: BoxShape.circle),
+                  ),
+                  pageJumpingEnabled: true,
+                  onHeaderTapped: (focusedDay) => _selectYear(context),
+                  onHeaderLongPressed: (focusedDay) => _selectYear(context),
+                  holidayPredicate: (day) => widget.patient.recordDates.any(
+                    (recordDate) => isSameDay(day, recordDate),
+                  ),
+                  onDaySelected: _selectDay,
+                  onDayLongPressed: _selectDay,
+                  onPageChanged: (focusedDay) => _focusedDay.value = focusedDay,
+                ),
+              ],
             ),
-            pageJumpingEnabled: true,
-            onHeaderTapped: (focusedDay) => _selectYear(context),
-            onHeaderLongPressed: (focusedDay) => _selectYear(context),
-            holidayPredicate: (day) => widget.records.values.any(
-              (record) => isSameDay(day, record.date),
-            ),
-            onDaySelected: (selectedDay, focusedDay) => setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay.value = focusedDay;
-            }),
-            onDayLongPressed: (selectedDay, focusedDay) => setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay.value = focusedDay;
-            }),
-            onPageChanged: (focusedDay) => _focusedDay.value = focusedDay,
           ),
-          TextButton(
-            child: Text(AppLocalizations.of(context)!.select),
-            onPressed: () => Navigator.pop(
-              context,
-              _selectedDay.toString().split(' ')[0],
-            ),
-          ),
-        ],
+        );
+      },
+    );
+  }
+
+  void _selectDay(DateTime selectedDay, DateTime focusedDay) async {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay.value = focusedDay;
+    });
+    widget.recordsBloc.add(
+      GetRecords(
+        user: widget.user,
+        company: widget.company,
+        patient: widget.patient,
+        date: _selectedDay,
       ),
+    );
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return const Scaffold(
+          backgroundColor: Colors.transparent,
+          body: ModalProgressHUD(
+            inAsyncCall: true,
+            child: SizedBox(width: 0),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,15 +1,25 @@
 import '../../domain/entities/patients_entity.dart';
 
 import '/config/firebase/firestore/collections/patients.dart';
+import '/config/firebase/firestore/collections/record_dates.dart';
 import '/config/firebase/firestore/repositories/patients_repository.dart';
+import '/config/firebase/firestore/repositories/record_dates_repository.dart';
+import '/config/firebase/firestore/repositories/records_repository.dart';
 import '/src/core/models/patient_model.dart';
+import '/src/core/models/records_model.dart';
 import 'patients_service.dart';
 
 class PatientsFirebaseService implements PatientsService {
   @override
   Future<void> addPatient(PatientParams params) async {
     final patientsRepo = PatientsRepository(params.userId, params.companyId);
-    await patientsRepo.createPatient(PatientDocument(name: params.name));
+    final String patientId = await patientsRepo.createPatient(
+      PatientDocument(name: params.name),
+    );
+
+    await RecordDatesRepository(patientId).createRecordDates(
+      RecordDatesDocument(patientId: patientId, recordDates: {}),
+    );
   }
 
   @override
@@ -32,5 +42,32 @@ class PatientsFirebaseService implements PatientsService {
     );
     patient.name = name;
     return patient;
+  }
+
+  @override
+  Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
+    final recordDatesRepo = RecordDatesRepository(params.patient.id);
+    final recordsRepo = RecordsRepository(
+      params.user.id,
+      params.company.id,
+      params.patient.id,
+    );
+
+    final Set<DateTime> recordDates =
+        await recordDatesRepo.readRecordDates().then((recordDates) {
+      return recordDates?.recordDates ?? {};
+    });
+
+    if (!recordDates.contains(params.date)) {
+      return GetRecordsReturn(records: null, recordDates: recordDates);
+    }
+
+    final Records? records =
+        await recordsRepo.readRecordByDate(params.date).then((record) {
+      if (record == null) return null;
+      return record.toRecords();
+    });
+
+    return GetRecordsReturn(records: records, recordDates: recordDates);
   }
 }

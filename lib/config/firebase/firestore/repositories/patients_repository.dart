@@ -7,8 +7,8 @@ class PatientsRepository {
 
   final PatientsDao _patientsDao;
 
-  Future<void> createPatient(PatientDocument patient) async {
-    await _patientsDao.createPatient(patient.toMap());
+  Future<String> createPatient(PatientDocument patient) async {
+    return await _patientsDao.createPatient(patient.toMap());
   }
 
   Future<PatientDocument?> readPatient(String patientId) async {

@@ -4,14 +4,14 @@ class User {
   final String id;
   final String email;
   final String certificate;
-  final String? name;
+  final String name;
   final Map<String, Company> companies;
 
   User({
     required this.id,
     required this.email,
     required this.certificate,
-    this.name,
+    required this.name,
     Map<String, Company>? companies,
   }) : companies = companies ?? {};
 

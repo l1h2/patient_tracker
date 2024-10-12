@@ -7,6 +7,7 @@ import 'setup_login.dart';
 import 'setup_logout.dart';
 import 'setup_password.dart';
 import 'setup_patients.dart';
+import 'setup_records.dart';
 import 'setup_splash.dart';
 import 'setup_user.dart';
 
@@ -22,6 +23,7 @@ Future<void> setupLocator() async {
   setupLogoutLocator(locator);
   setupHomeLocator(locator);
   setupPatientsLocator(locator);
+  setupRecordsLocator(locator);
 
   // Wait for all async singletons to be ready
   await locator.allReady();

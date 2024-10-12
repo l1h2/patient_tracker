@@ -24,6 +24,16 @@ final class SearchingPatients extends PatientsState {}
 
 final class AddPatientSuccess extends PatientsState {}
 
+final class GetRecordsSuccess extends PatientsState {
+  final Patient patient;
+  final Records records;
+
+  const GetRecordsSuccess(this.patient, this.records);
+
+  @override
+  List<Object> get props => [patient, records];
+}
+
 final class AddPatientFailure extends PatientsState {
   final String error;
 

@@ -116,6 +116,32 @@ class UserRepository {
     currentCompany.patients[patient.id] = existingPatient.copyWith(patient);
   }
 
+  void updatePatientRecords(
+    Company company,
+    Patient patient,
+    Records records,
+    Set<DateTime> recordDates,
+  ) {
+    if (_user == null) return;
+
+    final Company? currentCompany = _user!.companies[company.id];
+
+    if (currentCompany == null) return;
+
+    final Patient? existingPatient = currentCompany.patients[patient.id];
+
+    if (existingPatient == null) return;
+
+    final newPatient = Patient(
+      id: existingPatient.id,
+      name: existingPatient.name,
+      records: records.id == null ? {} : {records.id!: records},
+      recordDates: recordDates,
+    );
+
+    currentCompany.patients[patient.id] = existingPatient.copyWith(newPatient);
+  }
+
   void updatePatients(Company company, List<Patient> patients) {
     if (_user == null) return;
 
@@ -133,22 +159,6 @@ class UserRepository {
     if (currentCompany == null) return;
 
     currentCompany.patients.remove(patient.id);
-  }
-
-  void addRecords(Company company, Patient patient, Records records) {
-    if (_user == null) return;
-
-    final Company? currentCompany = _user!.companies[company.id];
-
-    if (currentCompany == null) return;
-
-    final Patient? currentPatient = currentCompany.patients[patient.id];
-
-    if (currentPatient == null) return;
-
-    if (currentPatient.records.containsKey(records.id)) return;
-
-    currentPatient.records[records.id] = records;
   }
 
   List<Records> getRecordsList(Company company, Patient patient) {
@@ -181,6 +191,28 @@ class UserRepository {
     return currentPatient.records[recordId];
   }
 
+  Records? getRecordsFromDate(
+    User user,
+    Company company,
+    Patient patient,
+    DateTime date,
+  ) {
+    if (_user == null) return null;
+
+    final Company? currentCompany = _user!.companies[company.id];
+
+    if (currentCompany == null) return null;
+
+    final Patient? currentPatient = currentCompany.patients[patient.id];
+
+    if (currentPatient == null) return null;
+
+    return currentPatient.records.values.firstWhere(
+      (records) => records.date == date,
+      orElse: () => Records.empty(user, patient, date),
+    );
+  }
+
   void updateRecords(Company company, Patient patient, Records records) {
     if (_user == null) return;
 
@@ -192,11 +224,8 @@ class UserRepository {
 
     if (currentPatient == null) return;
 
-    final Records? existingRecords = currentPatient.records[records.id];
-
-    if (existingRecords == null) return;
-
-    currentPatient.records[records.id] = existingRecords.copyWith(records);
+    currentPatient.records[records.id!] = records;
+    currentPatient.recordDates.add(records.date);
   }
 
   void updateRecordsFromList(
@@ -208,7 +237,6 @@ class UserRepository {
 
     for (final records in recordsList) {
       updateRecords(company, patient, records);
-      addRecords(company, patient, records);
     }
   }
 

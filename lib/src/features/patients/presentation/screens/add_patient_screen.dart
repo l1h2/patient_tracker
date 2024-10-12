@@ -72,25 +72,33 @@ class AddPatientScreen extends StatelessWidget {
                         locale.patientName,
                       ),
                     ),
-                    const SizedBox(height: 42),
-                    FilledButton(
-                      child: Text(locale.add),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          patientsBloc.add(
-                            AddPatient(
-                              _patientNameController.text,
-                              _userId,
-                              company.id,
-                            ),
-                          );
-                        }
-                      },
+                    const SizedBox(height: 64),
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: FilledButton(
+                        child: Text(locale.add),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            patientsBloc.add(
+                              AddPatient(
+                                _patientNameController.text,
+                                _userId,
+                                company.id,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    OutlinedButton(
-                      child: Text(locale.cancel),
-                      onPressed: () => router.maybePop(),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: OutlinedButton(
+                        child: Text(locale.cancel),
+                        onPressed: () => router.maybePop(),
+                      ),
                     ),
                   ],
                 ),

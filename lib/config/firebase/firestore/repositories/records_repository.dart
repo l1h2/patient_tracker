@@ -7,12 +7,21 @@ class RecordsRepository {
 
   final RecordsDao _recordsDao;
 
-  Future<void> createRecord(RecordsDocument record) async {
-    await _recordsDao.createRecord(record.toMap());
+  Future<String> createRecord(RecordsDocument record) async {
+    return await _recordsDao.createRecord(record.toMap()!);
   }
 
   Future<RecordsDocument?> readRecord(String recordId) async {
     final Map<String, dynamic>? data = await _recordsDao.readRecord(recordId);
+    if (data == null) return null;
+    return RecordsDocument.fromMap(data);
+  }
+
+  Future<RecordsDocument?> readRecordByDate(DateTime date) async {
+    final Map<String, dynamic>? data = await _recordsDao.readRecordByField(
+      RecordAttrs.date,
+      date,
+    );
     if (data == null) return null;
     return RecordsDocument.fromMap(data);
   }
@@ -23,7 +32,7 @@ class RecordsRepository {
   }
 
   Future<void> updateRecord(RecordsDocument record) async {
-    await _recordsDao.updateRecord(record.id!, record.toMap());
+    await _recordsDao.updateRecord(record.id!, record.toMap()!);
   }
 
   Future<void> deleteRecord(String recordId) async {

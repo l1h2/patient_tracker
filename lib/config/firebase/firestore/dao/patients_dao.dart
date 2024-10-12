@@ -11,8 +11,10 @@ class PatientsDao {
   PatientsDao(String userId, String companyId)
       : _collectionPath = CollectionPaths.patients(userId, companyId);
 
-  Future<void> createPatient(Map<String, dynamic> data) async {
-    await _baseDao.createDocument(_collectionPath, data);
+  Future<String> createPatient(Map<String, dynamic> data) async {
+    return await _baseDao.createDocument(_collectionPath, data).then((doc) {
+      return doc.id;
+    });
   }
 
   Future<Map<String, dynamic>?> readPatient(String patientId) async {

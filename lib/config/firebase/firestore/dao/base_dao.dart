@@ -3,11 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreDao {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> createDocument(
+  Future<DocumentReference> createDocument(
     String collectionPath,
     Map<String, dynamic> data,
   ) async {
-    await _db.collection(collectionPath).add(data);
+    return await _db.collection(collectionPath).add(data);
+  }
+
+  Future<void> createDocumentWithId(
+    String collectionPath,
+    String documentId,
+    Map<String, dynamic> data,
+  ) async {
+    await _db.collection(collectionPath).doc(documentId).set(data);
   }
 
   Future<Map<String, dynamic>?> readDocument(
@@ -19,6 +27,24 @@ class FirestoreDao {
         await _db.collection(collectionPath).doc(documentId).get();
 
     if (!document.exists) return null;
+    return _getDocumentData(document, idFieldName);
+  }
+
+  Future<Map<String, dynamic>?> readDocumentByField(
+    String collectionPath,
+    String fieldName,
+    dynamic value,
+    String idFieldName,
+  ) async {
+    final QuerySnapshot querySnapshot = await _db
+        .collection(collectionPath)
+        .where(fieldName, isEqualTo: value)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) return null;
+
+    final DocumentSnapshot document = querySnapshot.docs.first;
     return _getDocumentData(document, idFieldName);
   }
 
@@ -39,6 +65,28 @@ class FirestoreDao {
     Map<String, dynamic> data,
   ) async {
     await _db.collection(collectionPath).doc(documentId).update(data);
+  }
+
+  Future<void> appendToArray(
+    String collectionPath,
+    String documentId,
+    String arrayName,
+    List<dynamic> value,
+  ) async {
+    await _db.collection(collectionPath).doc(documentId).update({
+      arrayName: FieldValue.arrayUnion(value),
+    });
+  }
+
+  Future<void> removeFromArray(
+    String collectionPath,
+    String documentId,
+    String arrayName,
+    List<dynamic> value,
+  ) async {
+    await _db.collection(collectionPath).doc(documentId).update({
+      arrayName: FieldValue.arrayRemove(value),
+    });
   }
 
   Future<void> deleteDocument(

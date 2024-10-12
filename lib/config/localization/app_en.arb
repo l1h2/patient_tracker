@@ -111,6 +111,390 @@
   "@selectYear": {
     "description": "Select Year"
   },
+  "maleAbr": "M",
+  "@maleAbr": {
+    "description": "Male Abbreviation"
+  },
+  "femaleAbr": "F",
+  "@femaleAbr": {
+    "description": "Female Abbreviation"
+  },
+  "pilates": "Pilates",
+  "@pilates": {
+    "description": "Pilates"
+  },
+  "physiotherapy": "Physiotherapy",
+  "@physiotherapy": {
+    "description": "Physiotherapy"
+  },
+  "vitalSigns": "Vital Signs",
+  "@vitalSigns": {
+    "description": "Vital Signs"
+  },
+  "warmUp": "Warm Up",
+  "@warmUp": {
+    "description": "Warm Up"
+  },
+  "barrel": "Barrel",
+  "@barrel": {
+    "description": "Barrel"
+  },
+  "cadillac": "Cadillac",
+  "@cadillac": {
+    "description": "Cadillac"
+  },
+  "stepChair": "Step Chair",
+  "@stepChair": {
+    "description": "Step Chair"
+  },
+  "reformer": "Reformer",
+  "@reformer": {
+    "description": "Reformer"
+  },
+  "columpio": "Columpio",
+  "@columpio": {
+    "description": "Columpio"
+  },
+  "solo": "Solo",
+  "@solo": {
+    "description": "Solo"
+  },
+  "accessoriesUsed": "Accessories Used",
+  "@accessoriesUsed": {
+    "description": "Accessories Used"
+  },
+  "arterialPressure": "Arterial Pressure",
+  "@arterialPressure": {
+    "description": "Arterial Pressure"
+  },
+  "heartRate": "Heart Rate",
+  "@heartRate": {
+    "description": "Heart Rate"
+  },
+  "saturation": "Saturation",
+  "@saturation": {
+    "description": "Saturation"
+  },
+  "oxygenSaturation": "Oxygen Saturation",
+  "@oxygenSaturation": {
+    "description": "Oxygen Saturation"
+  },
+  "pressureAbr": "A.P.",
+  "@pressureAbr": {
+    "description": "Pressure Abbreviation"
+  },
+  "heartRateAbr": "H.R.",
+  "@heartRateAbr": {
+    "description": "Heart Rate Abbreviation"
+  },
+  "saturationAbr": "Sat",
+  "@saturationAbr": {
+    "description": "Saturation Abbreviation"
+  },
+  "pressureUnit": "mmHg",
+  "@pressureUnit": {
+    "description": "Pressure Unit"
+  },
+  "heartRateUnit": "bpm",
+  "@heartRateUnit": {
+    "description": "Heart Rate Unit"
+  },
+  "saturationUnit": "%",
+  "@saturationUnit": {
+    "description": "Saturation Unit"
+  },
+  "functionalAerobic": "Functional aerobic circuit",
+  "@functionalAerobic": {
+    "description": "Functional Aerobic Circuit"
+  },
+  "plyometricReformer": "Plyometric reformer",
+  "@plyometricReformer": {
+    "description": "Plyometric Reformer"
+  },
+  "plyometricWall": "Plyometric columpio wall",
+  "@plyometricWall": {
+    "description": "Plyometric Columpio Wall"
+  },
+  "swimming": "Swimming",
+  "@swimming": {
+    "description": "Swimming"
+  },
+  "hundredSolo": "The hundred solo",
+  "@hundredSolo": {
+    "description": "The Hundred Solo"
+  },
+  "hundredReformer": "The hundred reformer",
+  "@hundredReformer": {
+    "description": "The Hundred Reformer"
+  },
+  "other": "Other",
+  "@other": {
+    "description": "Other"
+  },
+  "stretching": "Stretching",
+  "@stretching": {
+    "description": "Stretching"
+  },
+  "cadAntAbr": "Cad. Ant.",
+  "@cadAntAbr": {
+    "description": "Cadillac Anterior Abbreviation"
+  },
+  "cadPostAbr": "Cad. Post.",
+  "@cadPostAbr": {
+    "description": "Cadillac Posterior Abbreviation"
+  },
+  "cadLatAbr": "Cad. Lat.",
+  "@cadLatAbr": {
+    "description": "Cadillac Lateral Abbreviation"
+  },
+  "cadCrossAbr": "Cad. Cross",
+  "@cadCrossAbr": {
+    "description": "Cadillac Cross Abbreviation"
+  },
+  "mmii": "MMII",
+  "@mmii": {
+    "description": "MMII"
+  },
+  "mmss": "MMSS",
+  "@mmss": {
+    "description": "MMSS"
+  },
+  "strengthening": "Strengthening",
+  "@strengthening": {
+    "description": "Strengthening"
+  },
+  "abdominal": "Abdominal",
+  "@abdominal": {
+    "description": "Abdominal"
+  },
+  "paravertebral": "Paravertebral",
+  "@paravertebral": {
+    "description": "Paravertebral"
+  },
+  "mobilityTraining": "Mobility Training",
+  "@mobilityTraining": {
+    "description": "Mobility Training"
+  },
+  "spine": "Spine",
+  "@spine": {
+    "description": "Spine"
+  },
+  "shoulder": "Shoulder",
+  "@shoulder": {
+    "description": "Shoulder"
+  },
+  "hip": "Hip",
+  "@hip": {
+    "description": "Hip"
+  },
+  "ankle": "Ankle",
+  "@ankle": {
+    "description": "Ankle"
+  },
+  "wrist": "Wrist",
+  "@wrist": {
+    "description": "Wrist"
+  },
+  "relaxation": "Relaxation",
+  "@relaxation": {
+    "description": "Relaxation"
+  },
+  "motorCoordinationAbr": "Motor Coord. Training",
+  "@motorCoordinationAbr": {
+    "description": "Motor Coordination Training Abbreviation"
+  },
+  "balanceTraining": "Balance Training",
+  "@balanceTraining": {
+    "description": "Balance Training"
+  },
+  "proprioceptionTraining": "Proprioception Training",
+  "@proprioceptionTraining": {
+    "description": "Proprioception Training"
+  },
+  "ball": "Ball",
+  "@ball": {
+    "description": "Ball"
+  },
+  "bosu": "Bosu",
+  "@bosu": {
+    "description": "Bosu"
+  },
+  "comboBox": "Combo Box",
+  "@comboBox": {
+    "description": "Combo Box"
+  },
+  "proprioceptionDisk": "Proprioception Disk",
+  "@proprioceptionDisk": {
+    "description": "Proprioception Disk"
+  },
+  "pushUpSupport": "Push Up Support",
+  "@pushUpSupport": {
+    "description": "Push Up Support"
+  },
+  "foamRoller": "Foam Roller",
+  "@foamRoller": {
+    "description": "Foam Roller"
+  },
+  "myofascialRoller": "Myofascial Roller",
+  "@myofascialRoller": {
+    "description": "Myofascial Roller"
+  },
+  "beanBag": "Bean Bag",
+  "@beanBag": {
+    "description": "Bean Bag"
+  },
+  "pilatesRing": "Pilates Ring",
+  "@pilatesRing": {
+    "description": "Pilates Ring"
+  },
+  "pilatesWheel": "Pilates Wheel",
+  "@pilatesWheel": {
+    "description": "Pilates Wheel"
+  },
+  "abdominalWheel": "Abdominal Wheel",
+  "@abdominalWheel": {
+    "description": "Abdominal Wheel"
+  },
+  "stressBall": "Stress Ball",
+  "@stressBall": {
+    "description": "Stress Ball"
+  },
+  "massager": "Massager",
+  "@massager": {
+    "description": "Massager"
+  },
+  "baton": "Baton",
+  "@baton": {
+    "description": "Baton"
+  },
+  "elasticBand": "Elastic Band",
+  "@elasticBand": {
+    "description": "Elastic Band"
+  },
+  "dumbbell": "Dumbbell",
+  "@dumbbell": {
+    "description": "Dumbbell"
+  },
+  "tonningBall": "Tonning Ball",
+  "@tonningBall": {
+    "description": "Tonning Ball"
+  },
+  "weightUnit": "kg",
+  "@weightUnit": {
+    "description": "Weight Unit"
+  },
+  "stretches": "Stretches",
+  "@stretches": {
+    "description": "Stretches"
+  },
+  "cryotherapy": "Cryotherapy",
+  "@cryotherapy": {
+    "description": "Cryotherapy"
+  },
+  "thermotherapy": "Thermotherapy",
+  "@thermotherapy": {
+    "description": "Thermotherapy"
+  },
+  "gaitTraining": "Gait Training",
+  "@gaitTraining": {
+    "description": "Gait Training"
+  },
+  "jointMobilization": "Joint Mobilization",
+  "@jointMobilization": {
+    "description": "Joint Mobilization"
+  },
+  "massotherapy": "Massotherapy",
+  "@massotherapy": {
+    "description": "Massotherapy"
+  },
+  "williamsExercises": "Williams Exercises",
+  "@williamsExercises": {
+    "description": "Williams Exercises"
+  },
+  "codmanExercises": "Codman Exercises",
+  "@codmanExercises": {
+    "description": "Codman Exercises"
+  },
+  "mckenzieExercises": "McKenzie Exercises",
+  "@mckenzieExercises": {
+    "description": "McKenzie Exercises"
+  },
+  "klappExercises": "Klapp Exercises",
+  "@klappExercises": {
+    "description": "Klapp Exercises"
+  },
+  "rpg": "RPG",
+  "@rpg": {
+    "description": "RPG"
+  },
+  "muscleStrengtheningAbr": "Muscle Strength.",
+  "@muscleStrengtheningAbr": {
+    "description": "Muscle Strengthening Abbreviation"
+  },
+  "activeExercises": "Active Exercises",
+  "@activeExercises": {
+    "description": "Active Exercises"
+  },
+  "passiveExercises": "Passive Exercises",
+  "@passiveExercises": {
+    "description": "Passive Exercises"
+  },
+  "assistedExercises": "Assisted Active Exercises",
+  "@assistedExercises": {
+    "description": "Assisted Exercises"
+  },
+  "bandage": "Bandage",
+  "@bandage": {
+    "description": "Bandage"
+  },
+  "homework": "Homework",
+  "@homework": {
+    "description": "Homework"
+  },
+  "footwearChange": "Footwear Change",
+  "@footwearChange": {
+    "description": "Footwear Change"
+  },
+  "isometry": "Isometry",
+  "@isometry": {
+    "description": "Isometry"
+  },
+  "tens": "TENS",
+  "@tens": {
+    "description": "TENS"
+  },
+  "fes": "FES",
+  "@fes": {
+    "description": "FES"
+  },
+  "ultrasound": "Ultrasound",
+  "@ultrasound": {
+    "description": "Ultrasound"
+  },
+  "ultrasoundAbr": "US",
+  "@ultrasoundAbr": {
+    "description": "Ultrasound Abbreviation"
+  },
+  "intercurrences": "Intercurrences",
+  "@intercurrences": {
+    "description": "Intercurrences"
+  },
+  "yesAbr": "Y",
+  "@yesAbr": {
+    "description": "Yes Abbreviation"
+  },
+  "noAbr": "N",
+  "@noAbr": {
+    "description": "No Abbreviation"
+  },
+  "comments": "Comments",
+  "@comments": {
+    "description": "Comments"
+  },
+  "recordSaved": "Record saved successfully",
+  "@recordSaved": {
+    "description": "Record Saved"
+  },
   "settings": "Settings",
   "@settings": {
     "description": "Settings"
@@ -178,6 +562,18 @@
   "invalidCredentials": "Incorrect email or password",
   "@invalidCredentials": {
     "description": "Invalid Credentials"
+  },
+  "getRecordsError": "Error getting records. Please check your internet connection and try again.",
+  "@getRecordsError": {
+    "description": "Get Records Error"
+  },
+  "noChanges": "No changes to save",
+  "@noChanges": {
+    "description": "No Changes"
+  },
+  "emptyForm": "Can''t save an empty form",
+  "@emptyForm": {
+    "description": "Empty Form"
   },
   "fieldInvalidFormatError": "Invalid {field} format",
   "@fieldInvalidFormatError": {

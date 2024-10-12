@@ -13,6 +13,7 @@ import '/config/locator/setup.dart';
 import '/config/routes/router.gr.dart';
 import '/src/core/models/company_model.dart';
 import '/src/core/models/patient_model.dart';
+import '/src/core/models/user_model.dart';
 import '/src/core/repositories/user_repository.dart';
 import '/src/core/widgets/entity_list.dart';
 import '/src/core/widgets/error_widgets.dart';
@@ -31,7 +32,7 @@ class PatientsScreen extends StatelessWidget {
 
   final _searchController = TextEditingController();
   final _editNameController = TextEditingController();
-  final String _userId = locator<UserRepository>().getUser()!.id;
+  final User _user = locator<UserRepository>().getUser()!;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +48,14 @@ class PatientsScreen extends StatelessWidget {
         if (state is FoundPatients) {
           _patients.clear();
           _patients.addAll(state.patients);
+        } else if (state is GetRecordsSuccess) {
+          router.push(
+            RecordsRoute(
+              company: _company,
+              patient: state.patient,
+              currentRecords: state.records,
+            ),
+          );
         } else if (state is PatientsFailure) {
           ErrorScaffoldMessenger.of(context).showSnackBar(
             state.error,
@@ -67,7 +76,7 @@ class PatientsScreen extends StatelessWidget {
                     child: IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () => editNameDialog(
-                        userId: _userId,
+                        userId: _user.id,
                         context: context,
                         company: _company,
                         controller: _editNameController,
@@ -112,7 +121,7 @@ class PatientsScreen extends StatelessWidget {
                             OutlinedButton(
                               child: Text(locale.refresh),
                               onPressed: () => patientsBloc.add(
-                                GetPatients(_userId, _company),
+                                GetPatients(_user.id, _company),
                               ),
                             ),
                           ],
@@ -122,9 +131,22 @@ class PatientsScreen extends StatelessWidget {
                           items: _patients,
                           searchController: _searchController,
                           getName: (patient) => patient.name,
-                          onItemTap: (patient) => router.push(
-                            RecordsRoute(company: _company, patient: patient),
-                          ),
+                          onItemTap: (patient) {
+                            DateTime now = DateTime.now();
+                            DateTime todayMidnight = DateTime(
+                              now.year,
+                              now.month,
+                              now.day,
+                            ).toUtc();
+                            patientsBloc.add(
+                              GetRecords(
+                                user: _user,
+                                company: _company,
+                                patient: patient,
+                                date: todayMidnight,
+                              ),
+                            );
+                          },
                         )
                     ],
                   ),

@@ -28,6 +28,23 @@ class GetPatients extends PatientsEvent {
   List<Object> get props => [userId, company];
 }
 
+class GetRecords extends PatientsEvent {
+  final User user;
+  final Company company;
+  final Patient patient;
+  final DateTime date;
+
+  const GetRecords({
+    required this.user,
+    required this.company,
+    required this.patient,
+    required this.date,
+  });
+
+  @override
+  List<Object> get props => [user, company, patient, date];
+}
+
 class UpdatePatient extends PatientsEvent {
   final String userId;
   final Company company;
@@ -42,5 +59,5 @@ class UpdatePatient extends PatientsEvent {
   });
 
   @override
-  List<Object> get props => [userId, patient, name];
+  List<Object> get props => [userId, company, patient, name];
 }

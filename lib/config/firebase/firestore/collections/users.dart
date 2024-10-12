@@ -5,14 +5,14 @@ class UserDocument {
   final String uid;
   final String email;
   final String certificate;
-  final String? name;
+  final String name;
   final List<CompanyDocument>? companies;
 
   const UserDocument({
     required this.uid,
     required this.email,
     required this.certificate,
-    this.name,
+    required this.name,
     this.companies,
   });
 
@@ -47,7 +47,7 @@ class UserDocument {
   Map<String, dynamic> toMap() => {
         UserAttrs.email: email,
         UserAttrs.certificate: certificate,
-        if (name != null) UserAttrs.name: name,
+        UserAttrs.name: name,
       };
 
   User toUser() => User(

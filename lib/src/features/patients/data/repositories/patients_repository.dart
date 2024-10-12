@@ -7,7 +7,7 @@ import '/src/core/models/patient_model.dart';
 class FirebasePatientsRepository implements PatientsRepository {
   final PatientsService _service;
 
-  FirebasePatientsRepository(this._service);
+  const FirebasePatientsRepository(this._service);
 
   @override
   Future<void> addPatient(PatientParams params) async {
@@ -27,5 +27,10 @@ class FirebasePatientsRepository implements PatientsRepository {
     String name,
   ) async {
     return await _service.updatePatient(userId, companyId, patient, name);
+  }
+
+  @override
+  Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
+    return await _service.getRecords(params);
   }
 }
