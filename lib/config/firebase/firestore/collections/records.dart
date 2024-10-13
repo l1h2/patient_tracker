@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../utils/helpers.dart';
+
 import '/src/core/models/records_model.dart' as model;
 
 class RecordsDocument {
@@ -8,7 +10,7 @@ class RecordsDocument {
   final String therapist;
   final String certificate;
   final String patient;
-  final bool? isMale;
+  final bool isMale;
   final bool? isPhysiotherapy;
   final VitalSigns vitalSigns;
   final WarmUp warmUp;
@@ -29,7 +31,7 @@ class RecordsDocument {
     required this.therapist,
     required this.certificate,
     required this.patient,
-    this.isMale,
+    required this.isMale,
     this.isPhysiotherapy,
     required this.vitalSigns,
     required this.warmUp,
@@ -64,7 +66,7 @@ class RecordsDocument {
         accessories: Accessories.fromMap(map[RecordAttrs.accessories]),
         physiotherapy: Physiotherapy.fromMap(map[RecordAttrs.physiotherapy]),
         intercurrences: map[RecordAttrs.intercurrences],
-        comments: map[RecordAttrs.observations],
+        comments: map[RecordAttrs.comments],
       );
 
   factory RecordsDocument.fromRecords(model.Records records) => RecordsDocument(
@@ -113,37 +115,33 @@ class RecordsDocument {
       accessories: newAttrs[RecordAttrs.accessories] ?? accessories,
       physiotherapy: newAttrs[RecordAttrs.physiotherapy] ?? physiotherapy,
       intercurrences: newAttrs[RecordAttrs.intercurrences] ?? intercurrences,
-      comments: newAttrs[RecordAttrs.observations] ?? comments,
+      comments: newAttrs[RecordAttrs.comments] ?? comments,
     );
   }
 
-  Map<String, dynamic>? toMap() {
-    final map = {
-      RecordAttrs.date: date,
-      RecordAttrs.therapist: therapist,
-      RecordAttrs.certificate: certificate,
-      RecordAttrs.patient: patient,
-      RecordAttrs.isMale: isMale,
-      RecordAttrs.isPhysiotherapy: isPhysiotherapy,
-      RecordAttrs.vitalSigns: vitalSigns.toMap(),
-      RecordAttrs.warmUp: warmUp.toMap(),
-      RecordAttrs.barrel: barrel.toMap(),
-      RecordAttrs.cadillac: cadillac.toMap(),
-      RecordAttrs.stepChair: stepChair.toMap(),
-      RecordAttrs.reformer: reformer.toMap(),
-      RecordAttrs.columpio: columpio.toMap(),
-      RecordAttrs.solo: solo.toMap(),
-      RecordAttrs.accessories: accessories.toMap(),
-      RecordAttrs.physiotherapy: physiotherapy.toMap(),
-      RecordAttrs.intercurrences: intercurrences,
-      RecordAttrs.observations: comments,
-    };
-
-    map.removeWhere((key, value) => value == null);
-
-    if (map.isEmpty) return null;
-    return map;
-  }
+  Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
+        {
+          RecordAttrs.date: date,
+          RecordAttrs.therapist: therapist,
+          RecordAttrs.certificate: certificate,
+          RecordAttrs.patient: patient,
+          RecordAttrs.isMale: isMale,
+          RecordAttrs.isPhysiotherapy: isPhysiotherapy,
+          RecordAttrs.vitalSigns: vitalSigns.toMap(isCreate: isCreate),
+          RecordAttrs.warmUp: warmUp.toMap(isCreate: isCreate),
+          RecordAttrs.barrel: barrel.toMap(isCreate: isCreate),
+          RecordAttrs.cadillac: cadillac.toMap(isCreate: isCreate),
+          RecordAttrs.stepChair: stepChair.toMap(isCreate: isCreate),
+          RecordAttrs.reformer: reformer.toMap(isCreate: isCreate),
+          RecordAttrs.columpio: columpio.toMap(isCreate: isCreate),
+          RecordAttrs.solo: solo.toMap(isCreate: isCreate),
+          RecordAttrs.accessories: accessories.toMap(isCreate: isCreate),
+          RecordAttrs.physiotherapy: physiotherapy.toMap(isCreate: isCreate),
+          RecordAttrs.intercurrences: intercurrences,
+          RecordAttrs.comments: deleteIfInvalid(comments),
+        },
+        isCreate: isCreate,
+      );
 
   model.Records toRecords() => model.Records(
         id: id!,
@@ -187,7 +185,7 @@ class RecordAttrs {
   static const String accessories = 'accessories';
   static const String physiotherapy = 'physiotherapy';
   static const String intercurrences = 'intercurrences';
-  static const String observations = 'observations';
+  static const String comments = 'comments';
 }
 
 class VitalSigns {
@@ -201,10 +199,10 @@ class VitalSigns {
     this.oxygenSaturation,
   });
 
-  factory VitalSigns.fromMap(Map<String, dynamic> map) => VitalSigns(
-        pressure: map[VitalSignsAttrs.pressure],
-        heartRate: map[VitalSignsAttrs.heartRate],
-        oxygenSaturation: map[VitalSignsAttrs.oxygenSaturation],
+  factory VitalSigns.fromMap(Map<String, dynamic>? map) => VitalSigns(
+        pressure: map?[VitalSignsAttrs.pressure],
+        heartRate: map?[VitalSignsAttrs.heartRate],
+        oxygenSaturation: map?[VitalSignsAttrs.oxygenSaturation],
       );
 
   factory VitalSigns.fromModel(model.VitalSigns vitalSigns) => VitalSigns(
@@ -213,18 +211,14 @@ class VitalSigns {
         oxygenSaturation: vitalSigns.oxygenSaturation,
       );
 
-  Map<String, dynamic>? toMap() {
-    final map = {
-      VitalSignsAttrs.pressure: pressure,
-      VitalSignsAttrs.heartRate: heartRate,
-      VitalSignsAttrs.oxygenSaturation: oxygenSaturation,
-    };
-
-    map.removeWhere((key, value) => value == null);
-
-    if (map.isEmpty) return null;
-    return map;
-  }
+  Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
+        {
+          VitalSignsAttrs.pressure: pressure,
+          VitalSignsAttrs.heartRate: heartRate,
+          VitalSignsAttrs.oxygenSaturation: oxygenSaturation,
+        },
+        isCreate: isCreate,
+      );
 
   model.VitalSigns toModel() => model.VitalSigns(
         pressure: pressure,
@@ -283,23 +277,19 @@ class WarmUp {
         other: warmUp.other,
       );
 
-  Map<String, dynamic>? toMap() {
-    final map = {
-      WarmUpAttrs.functionalAerobic: functionalAerobic,
-      WarmUpAttrs.plyometricReformer: plyometricReformer,
-      WarmUpAttrs.plyometricWall: plyometricWall,
-      WarmUpAttrs.swimmingSolo: swimmingSolo,
-      WarmUpAttrs.swimmingBarrel: swimmingBarrel,
-      WarmUpAttrs.hundredSolo: hundredSolo,
-      WarmUpAttrs.hundredReformer: hundredReformer,
-      WarmUpAttrs.other: other,
-    };
-
-    map.removeWhere((key, value) => value == null);
-
-    if (map.isEmpty) return null;
-    return map;
-  }
+  Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
+        {
+          WarmUpAttrs.functionalAerobic: functionalAerobic,
+          WarmUpAttrs.plyometricReformer: plyometricReformer,
+          WarmUpAttrs.plyometricWall: plyometricWall,
+          WarmUpAttrs.swimmingSolo: swimmingSolo,
+          WarmUpAttrs.swimmingBarrel: swimmingBarrel,
+          WarmUpAttrs.hundredSolo: hundredSolo,
+          WarmUpAttrs.hundredReformer: hundredReformer,
+          WarmUpAttrs.other: other,
+        },
+        isCreate: isCreate,
+      );
 
   model.WarmUp toModel() => model.WarmUp(
         functionalAerobic: functionalAerobic,
@@ -415,35 +405,31 @@ class Exercises {
         other: exercises.other,
       );
 
-  Map<String, dynamic>? toMap() {
-    final map = {
-      ExercisesAttrs.stretchCadAnt: stretchCadAnt,
-      ExercisesAttrs.stretchCadPost: stretchCadPost,
-      ExercisesAttrs.stretchCadLat: stretchCadLat,
-      ExercisesAttrs.stretchCadCross: stretchCadCross,
-      ExercisesAttrs.stretchMmii: stretchMmii,
-      ExercisesAttrs.stretchMmss: stretchMmss,
-      ExercisesAttrs.strengthMmii: strengthMmii,
-      ExercisesAttrs.strengthMmss: strengthMmss,
-      ExercisesAttrs.strengthAbd: strengthAbd,
-      ExercisesAttrs.strengthPara: strengthPara,
-      ExercisesAttrs.mobilitySpine: mobilitySpine,
-      ExercisesAttrs.mobilityShoulder: mobilityShoulder,
-      ExercisesAttrs.mobilityHip: mobilityHip,
-      ExercisesAttrs.mobilityAnkle: mobilityAnkle,
-      ExercisesAttrs.mobilityWrist: mobilityWrist,
-      ExercisesAttrs.relaxation: relaxation,
-      ExercisesAttrs.motorCoordination: motorCoordination,
-      ExercisesAttrs.balance: balance,
-      ExercisesAttrs.proprioception: proprioception,
-      ExercisesAttrs.other: other,
-    };
-
-    map.removeWhere((key, value) => value == null);
-
-    if (map.isEmpty) return null;
-    return map;
-  }
+  Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
+        {
+          ExercisesAttrs.stretchCadAnt: stretchCadAnt,
+          ExercisesAttrs.stretchCadPost: stretchCadPost,
+          ExercisesAttrs.stretchCadLat: stretchCadLat,
+          ExercisesAttrs.stretchCadCross: stretchCadCross,
+          ExercisesAttrs.stretchMmii: stretchMmii,
+          ExercisesAttrs.stretchMmss: stretchMmss,
+          ExercisesAttrs.strengthMmii: strengthMmii,
+          ExercisesAttrs.strengthMmss: strengthMmss,
+          ExercisesAttrs.strengthAbd: strengthAbd,
+          ExercisesAttrs.strengthPara: strengthPara,
+          ExercisesAttrs.mobilitySpine: mobilitySpine,
+          ExercisesAttrs.mobilityShoulder: mobilityShoulder,
+          ExercisesAttrs.mobilityHip: mobilityHip,
+          ExercisesAttrs.mobilityAnkle: mobilityAnkle,
+          ExercisesAttrs.mobilityWrist: mobilityWrist,
+          ExercisesAttrs.relaxation: relaxation,
+          ExercisesAttrs.motorCoordination: motorCoordination,
+          ExercisesAttrs.balance: balance,
+          ExercisesAttrs.proprioception: proprioception,
+          ExercisesAttrs.other: other,
+        },
+        isCreate: isCreate,
+      );
 
   model.Exercises toModel() => model.Exercises(
         stretchCadAnt: stretchCadAnt,
@@ -571,32 +557,28 @@ class Accessories {
         tonningBall: accessories.tonningBall,
       );
 
-  Map<String, dynamic>? toMap() {
-    final map = {
-      AccessoriesAttrs.ball: ball,
-      AccessoriesAttrs.bosu: bosu,
-      AccessoriesAttrs.comboBox: comboBox,
-      AccessoriesAttrs.proprioceptionDisk: proprioceptionDisk,
-      AccessoriesAttrs.pushUpSupport: pushUpSupport,
-      AccessoriesAttrs.foamRoller: foamRoller,
-      AccessoriesAttrs.myofascialRoller: myofascialRoller,
-      AccessoriesAttrs.beanBag: beanBag,
-      AccessoriesAttrs.pilatesRing: pilatesRing,
-      AccessoriesAttrs.pilatesWheel: pilatesWheel,
-      AccessoriesAttrs.abdominalWheel: abdominalWheel,
-      AccessoriesAttrs.stressBall: stressBall,
-      AccessoriesAttrs.massager: massager,
-      AccessoriesAttrs.baton: baton,
-      AccessoriesAttrs.elasticBand: elasticBand,
-      AccessoriesAttrs.dumbbell: dumbbell,
-      AccessoriesAttrs.tonningBall: tonningBall,
-    };
-
-    map.removeWhere((key, value) => value == null);
-
-    if (map.isEmpty) return null;
-    return map;
-  }
+  Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
+        {
+          AccessoriesAttrs.ball: ball,
+          AccessoriesAttrs.bosu: bosu,
+          AccessoriesAttrs.comboBox: comboBox,
+          AccessoriesAttrs.proprioceptionDisk: proprioceptionDisk,
+          AccessoriesAttrs.pushUpSupport: pushUpSupport,
+          AccessoriesAttrs.foamRoller: foamRoller,
+          AccessoriesAttrs.myofascialRoller: myofascialRoller,
+          AccessoriesAttrs.beanBag: beanBag,
+          AccessoriesAttrs.pilatesRing: pilatesRing,
+          AccessoriesAttrs.pilatesWheel: pilatesWheel,
+          AccessoriesAttrs.abdominalWheel: abdominalWheel,
+          AccessoriesAttrs.stressBall: stressBall,
+          AccessoriesAttrs.massager: massager,
+          AccessoriesAttrs.baton: baton,
+          AccessoriesAttrs.elasticBand: elasticBand,
+          AccessoriesAttrs.dumbbell: dumbbell,
+          AccessoriesAttrs.tonningBall: tonningBall,
+        },
+        isCreate: isCreate,
+      );
 
   model.Accessories toModel() => model.Accessories(
         ball: ball,
@@ -751,40 +733,36 @@ class Physiotherapy {
         ultrasound: physiotherapy.ultrasound,
       );
 
-  Map<String, dynamic>? toMap() {
-    final map = {
-      PhysiotherapyAttrs.stretching: stretching,
-      PhysiotherapyAttrs.cryotherapy: cryotherapy,
-      PhysiotherapyAttrs.thermotherapy: thermotherapy,
-      PhysiotherapyAttrs.gaitTraining: gaitTraining,
-      PhysiotherapyAttrs.jointMobilization: jointMobilization,
-      PhysiotherapyAttrs.massotherapy: massotherapy,
-      PhysiotherapyAttrs.williams: williams,
-      PhysiotherapyAttrs.codman: codman,
-      PhysiotherapyAttrs.mckenzie: mckenzie,
-      PhysiotherapyAttrs.klapp: klapp,
-      PhysiotherapyAttrs.rpg: rpg,
-      PhysiotherapyAttrs.muscleStrengthening: muscleStrengthening,
-      PhysiotherapyAttrs.activeExercises: activeExercises,
-      PhysiotherapyAttrs.passiveExercises: passiveExercises,
-      PhysiotherapyAttrs.assistedExercises: assistedExercises,
-      PhysiotherapyAttrs.bandage: bandage,
-      PhysiotherapyAttrs.homework: homework,
-      PhysiotherapyAttrs.footwearChange: footwearChange,
-      PhysiotherapyAttrs.isometricMmss: isometricMmss,
-      PhysiotherapyAttrs.isometricMmii: isometricMmii,
-      PhysiotherapyAttrs.isometricAbd: isometricAbd,
-      PhysiotherapyAttrs.isometricOther: isometricOther,
-      PhysiotherapyAttrs.tens: tens,
-      PhysiotherapyAttrs.fes: fes,
-      PhysiotherapyAttrs.ultrasound: ultrasound,
-    };
-
-    map.removeWhere((key, value) => value == null);
-
-    if (map.isEmpty) return null;
-    return map;
-  }
+  Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
+        {
+          PhysiotherapyAttrs.stretching: stretching,
+          PhysiotherapyAttrs.cryotherapy: cryotherapy,
+          PhysiotherapyAttrs.thermotherapy: thermotherapy,
+          PhysiotherapyAttrs.gaitTraining: gaitTraining,
+          PhysiotherapyAttrs.jointMobilization: jointMobilization,
+          PhysiotherapyAttrs.massotherapy: massotherapy,
+          PhysiotherapyAttrs.williams: williams,
+          PhysiotherapyAttrs.codman: codman,
+          PhysiotherapyAttrs.mckenzie: mckenzie,
+          PhysiotherapyAttrs.klapp: klapp,
+          PhysiotherapyAttrs.rpg: rpg,
+          PhysiotherapyAttrs.muscleStrengthening: muscleStrengthening,
+          PhysiotherapyAttrs.activeExercises: activeExercises,
+          PhysiotherapyAttrs.passiveExercises: passiveExercises,
+          PhysiotherapyAttrs.assistedExercises: assistedExercises,
+          PhysiotherapyAttrs.bandage: bandage,
+          PhysiotherapyAttrs.homework: homework,
+          PhysiotherapyAttrs.footwearChange: footwearChange,
+          PhysiotherapyAttrs.isometricMmss: isometricMmss,
+          PhysiotherapyAttrs.isometricMmii: isometricMmii,
+          PhysiotherapyAttrs.isometricAbd: isometricAbd,
+          PhysiotherapyAttrs.isometricOther: isometricOther,
+          PhysiotherapyAttrs.tens: tens,
+          PhysiotherapyAttrs.fes: fes,
+          PhysiotherapyAttrs.ultrasound: ultrasound,
+        },
+        isCreate: isCreate,
+      );
 
   model.Physiotherapy toModel() => model.Physiotherapy(
         stretching: stretching,

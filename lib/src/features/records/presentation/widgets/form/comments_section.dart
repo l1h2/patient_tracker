@@ -27,6 +27,7 @@ class _CommentsSectionState extends State<CommentsSection> {
   void initState() {
     super.initState();
     _intercurrences = widget.records.intercurrences ?? false;
+    widget.records.intercurrences = _intercurrences;
   }
 
   @override

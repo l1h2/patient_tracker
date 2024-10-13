@@ -4,13 +4,13 @@ import '../repositories/records_repository.dart';
 import '/src/core/models/records_model.dart';
 import '/src/core/utils/usecase.dart';
 
-class RecordsUseCase implements UseCase<Records, RecordsParams> {
+class RecordsUseCase implements UseCase<String, RecordsParams> {
   RecordsUseCase(this._repository);
 
   final RecordsRepository _repository;
 
   @override
-  Future<Records> call(RecordsParams params) async {
+  Future<String> call(RecordsParams params) async {
     return await _repository.saveRecords(params);
   }
 

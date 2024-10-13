@@ -27,37 +27,33 @@ class _GeneralInformationState extends State<GeneralInformation> {
   void initState() {
     super.initState();
     _isPhysiotherapy = widget.records.isPhysiotherapy ?? false;
+    widget.records.isPhysiotherapy = _isPhysiotherapy;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CheckboxMenuButton(
-              value: !(widget.records.isPhysiotherapy ?? false),
-              child: Text(widget.locale.pilates),
-              onChanged: (value) {
-                setState(() {
-                  _isPhysiotherapy = !(value ?? false);
-                  widget.records.isPhysiotherapy = _isPhysiotherapy;
-                });
-              },
-            ),
-            CheckboxMenuButton(
-              value: widget.records.isPhysiotherapy ?? false,
-              child: Text(widget.locale.physiotherapy),
-              onChanged: (value) {
-                setState(() {
-                  _isPhysiotherapy = value ?? false;
-                  widget.records.isPhysiotherapy = _isPhysiotherapy;
-                });
-              },
-            ),
-          ],
+        CheckboxMenuButton(
+          value: !(widget.records.isPhysiotherapy ?? false),
+          child: Text(widget.locale.pilates),
+          onChanged: (value) {
+            setState(() {
+              _isPhysiotherapy = !(value ?? false);
+              widget.records.isPhysiotherapy = _isPhysiotherapy;
+            });
+          },
+        ),
+        CheckboxMenuButton(
+          value: widget.records.isPhysiotherapy ?? false,
+          child: Text(widget.locale.physiotherapy),
+          onChanged: (value) {
+            setState(() {
+              _isPhysiotherapy = value ?? false;
+              widget.records.isPhysiotherapy = _isPhysiotherapy;
+            });
+          },
         ),
       ],
     );

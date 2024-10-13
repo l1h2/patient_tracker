@@ -67,6 +67,10 @@
   "@editName": {
     "description": "Edit Name"
   },
+  "ok": "Ok",
+  "@ok": {
+    "description": "Ok"
+  },
   "save": "Save",
   "@save": {
     "description": "Save"
@@ -74,6 +78,10 @@
   "patients": "Patients",
   "@patients": {
     "description": "Patients"
+  },
+  "editPatient": "Edit Patient",
+  "@editPatient": {
+    "description": "Edit Patient"
   },
   "addPatient": "Add Patient",
   "@addPatient": {

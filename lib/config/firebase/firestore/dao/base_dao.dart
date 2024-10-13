@@ -67,6 +67,44 @@ class FirestoreDao {
     await _db.collection(collectionPath).doc(documentId).update(data);
   }
 
+  Future<void> updateDocumentField(
+    String collectionPath,
+    String documentId,
+    String fieldName,
+    dynamic value,
+  ) async {
+    await _db.collection(collectionPath).doc(documentId).update({
+      fieldName: value,
+    });
+  }
+
+  Future<void> updateDocumentWithMapFields(
+    String collectionPath,
+    String documentId,
+    Map<String, dynamic> data, [
+    List<String>? fieldsToDelete,
+  ]) async {
+    final Map<String, dynamic> updates = {};
+
+    data.forEach((key, value) {
+      if (value is Map) {
+        value.forEach((subKey, subValue) {
+          updates['$key.$subKey'] = subValue;
+        });
+      } else {
+        updates[key] = value;
+      }
+    });
+
+    if (fieldsToDelete != null) {
+      for (final fieldName in fieldsToDelete) {
+        updates[fieldName] = FieldValue.delete();
+      }
+    }
+
+    await _db.collection(collectionPath).doc(documentId).update(updates);
+  }
+
   Future<void> appendToArray(
     String collectionPath,
     String documentId,
@@ -76,6 +114,30 @@ class FirestoreDao {
     await _db.collection(collectionPath).doc(documentId).update({
       arrayName: FieldValue.arrayUnion(value),
     });
+  }
+
+  Future<void> deleteField(
+    String collectionPath,
+    String documentId,
+    String fieldName,
+  ) async {
+    await _db.collection(collectionPath).doc(documentId).update({
+      fieldName: FieldValue.delete(),
+    });
+  }
+
+  Future<void> deleteFields(
+    String collectionPath,
+    String documentId,
+    List<String> fieldNames,
+  ) async {
+    final Map<String, dynamic> updates = {};
+
+    for (final fieldName in fieldNames) {
+      updates[fieldName] = FieldValue.delete();
+    }
+
+    await _db.collection(collectionPath).doc(documentId).update(updates);
   }
 
   Future<void> removeFromArray(

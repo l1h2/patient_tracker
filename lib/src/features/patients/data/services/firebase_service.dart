@@ -14,7 +14,7 @@ class PatientsFirebaseService implements PatientsService {
   Future<void> addPatient(PatientParams params) async {
     final patientsRepo = PatientsRepository(params.userId, params.companyId);
     final String patientId = await patientsRepo.createPatient(
-      PatientDocument(name: params.name),
+      PatientDocument(name: params.name, isMale: params.isMale),
     );
 
     await RecordDatesRepository(patientId).createRecordDates(
@@ -30,18 +30,19 @@ class PatientsFirebaseService implements PatientsService {
   }
 
   @override
-  Future<Patient> updatePatient(
-    String userId,
-    String companyId,
-    Patient patient,
-    String name,
-  ) async {
-    final patientsRepo = PatientsRepository(userId, companyId);
+  Future<Patient> updatePatient(UpdatePatientParams params) async {
+    final patientsRepo = PatientsRepository(params.userId, params.companyId);
     await patientsRepo.updatePatient(
-      PatientDocument(id: patient.id, name: name),
+      PatientDocument(
+        id: params.patient.id,
+        name: params.name,
+        isMale: params.isMale,
+      ),
     );
-    patient.name = name;
-    return patient;
+
+    params.patient.name = params.name;
+    params.patient.isMale = params.isMale;
+    return params.patient;
   }
 
   @override

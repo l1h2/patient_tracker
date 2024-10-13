@@ -7,7 +7,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../bloc/records_bloc.dart';
 import '../widgets/calendar.dart';
-import '../widgets/edit_name_modal.dart';
+import '../widgets/edit_patient_modal.dart';
 import '../widgets/form/records_form.dart';
 
 import '/config/locator/setup.dart';
@@ -43,9 +43,6 @@ class _RecordsScreenState extends State<RecordsScreen> {
   late Company _company;
   late Patient _patient;
   late Records _currentRecords;
-  late TextEditingController _dateController;
-
-  final _editNameController = TextEditingController();
 
   @override
   void initState() {
@@ -54,16 +51,6 @@ class _RecordsScreenState extends State<RecordsScreen> {
     _company = _user.companies[widget.company.id]!;
     _patient = _company.patients[widget.patient.id]!;
     _currentRecords = widget.currentRecords;
-    _dateController = TextEditingController(
-      text: _currentRecords.date.toString().split(' ')[0],
-    );
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    _editNameController.dispose();
-    super.dispose();
   }
 
   @override
@@ -81,26 +68,16 @@ class _RecordsScreenState extends State<RecordsScreen> {
             ),
           );
         } else if (state is GetRecordsSuccess) {
-          setState(() {
-            _currentRecords.update(state.records);
-          });
+          setState(() => _currentRecords.update(state.records));
         } else if (state is NoChangesToSave) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                locale.noChanges,
-                textAlign: TextAlign.center,
-              ),
-            ),
+          ErrorScaffoldMessenger.of(context).showSnackBar(
+            locale.noChanges,
+            theme,
           );
         } else if (state is EmptyRecords) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                locale.emptyForm,
-                textAlign: TextAlign.center,
-              ),
-            ),
+          ErrorScaffoldMessenger.of(context).showSnackBar(
+            locale.emptyForm,
+            theme,
           );
         } else if (state is RecordsFailure) {
           ErrorScaffoldMessenger.of(context).showSnackBar(
@@ -118,19 +95,18 @@ class _RecordsScreenState extends State<RecordsScreen> {
                 title: _patient.name,
                 actionButton: IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () => editNameDialog(
+                  onPressed: () => editPatientDialog(
                     context: context,
                     userId: _user.id,
                     company: _company,
                     patient: _patient,
-                    controller: _editNameController,
                   ),
                 ),
               ),
               content: Column(
                 children: [
                   DatePicker(
-                    controller: _dateController,
+                    currentDate: _currentRecords.date,
                     recordsBloc: recordsBloc,
                     user: _user,
                     company: _company,

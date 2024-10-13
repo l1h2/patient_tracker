@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '/src/core/utils/helpers.dart';
+
 class CustomExpansionTile extends StatelessWidget {
   const CustomExpansionTile({
     super.key,
@@ -122,7 +124,7 @@ class NumberInput extends StatelessWidget {
     return SizedBox(
       width: 150,
       child: TextFormField(
-        initialValue: initialValue?.toString() ?? '',
+        initialValue: getNumberString(initialValue),
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelText: label,
@@ -138,7 +140,7 @@ class TextInput extends StatelessWidget {
   const TextInput({
     super.key,
     required this.label,
-    this.initialValue,
+    this.initialValue = '',
     required this.onChanged,
   });
 
@@ -151,7 +153,7 @@ class TextInput extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
-        initialValue: initialValue ?? '',
+        initialValue: initialValue,
         decoration: InputDecoration(labelText: label),
         onChanged: onChanged,
       ),

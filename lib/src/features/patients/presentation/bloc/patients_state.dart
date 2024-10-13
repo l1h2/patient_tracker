@@ -34,6 +34,8 @@ final class GetRecordsSuccess extends PatientsState {
   List<Object> get props => [patient, records];
 }
 
+final class NoChangesToSave extends PatientsState {}
+
 final class AddPatientFailure extends PatientsState {
   final String error;
 

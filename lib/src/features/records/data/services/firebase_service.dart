@@ -8,7 +8,7 @@ import 'records_service.dart';
 
 class RecordsFirebaseService implements RecordsService {
   @override
-  Future<Records> saveRecords(RecordsParams params) async {
+  Future<String> saveRecords(RecordsParams params) async {
     final recordDatesRepo = RecordDatesRepository(params.patientId);
     final recordsRepo = RecordsRepository(
       params.userId,
@@ -16,18 +16,21 @@ class RecordsFirebaseService implements RecordsService {
       params.patientId,
     );
 
-    if (params.records.id == null) {
+    final Records newRecords = params.records.copy();
+
+    if (newRecords.id == null) {
       final String recordId = await recordsRepo.createRecord(
-        RecordsDocument.fromRecords(params.records),
+        RecordsDocument.fromRecords(newRecords),
       );
-      params.records.id = recordId;
-      await recordDatesRepo.addRecordDates({params.records.date});
+      newRecords.id = recordId;
+      await recordDatesRepo.addRecordDates({newRecords.date});
     } else {
       await recordsRepo.updateRecord(
-        RecordsDocument.fromRecords(params.records),
+        RecordsDocument.fromRecords(newRecords),
       );
     }
-    return params.records;
+
+    return newRecords.id!;
   }
 
   @override

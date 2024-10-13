@@ -7,17 +7,19 @@ import '/src/core/models/user_model.dart';
 
 class PatientParams extends Equatable {
   final String name;
+  final bool isMale;
   final String userId;
   final String companyId;
 
   const PatientParams({
     required this.name,
+    required this.isMale,
     required this.userId,
     required this.companyId,
   });
 
   @override
-  List<Object> get props => [name, userId, companyId];
+  List<Object> get props => [name, isMale, userId, companyId];
 }
 
 class GetRecordsParams extends Equatable {
@@ -35,6 +37,25 @@ class GetRecordsParams extends Equatable {
 
   @override
   List<Object> get props => [user, company, patient, date];
+}
+
+class UpdatePatientParams extends Equatable {
+  final String userId;
+  final String companyId;
+  final Patient patient;
+  final String name;
+  final bool isMale;
+
+  const UpdatePatientParams({
+    required this.userId,
+    required this.companyId,
+    required this.patient,
+    required this.name,
+    required this.isMale,
+  });
+
+  @override
+  List<Object> get props => [userId, companyId, patient, name, isMale];
 }
 
 class GetRecordsReturn {

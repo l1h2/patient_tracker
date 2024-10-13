@@ -8,7 +8,7 @@ class RecordsRepository {
   final RecordsDao _recordsDao;
 
   Future<String> createRecord(RecordsDocument record) async {
-    return await _recordsDao.createRecord(record.toMap()!);
+    return await _recordsDao.createRecord(record.toMap(isCreate: true)!);
   }
 
   Future<RecordsDocument?> readRecord(String recordId) async {

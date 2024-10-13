@@ -5,18 +5,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '/src/core/models/company_model.dart';
 import '/src/core/models/patient_model.dart';
-import '/src/core/validators/name_validator.dart';
+import '/src/core/validators/not_empty_validator.dart';
+import '/src/core/widgets/selection_checkbox.dart';
 import '/src/features/patients/presentation/bloc/patients_bloc.dart';
 
-void editNameDialog({
+void editPatientDialog({
   required BuildContext context,
   required String userId,
   required Company company,
   required Patient patient,
-  required TextEditingController controller,
 }) {
   final key = GlobalKey<FormState>();
-  controller.text = patient.name;
+  final nameController = TextEditingController(text: patient.name);
+  final genderController = BoolController(boolean: patient.isMale);
 
   showModalBottomSheet(
     context: context,
@@ -39,20 +40,24 @@ void editNameDialog({
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                locale.editName,
+                locale.editPatient,
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 12),
               TextFormField(
-                controller: controller,
+                controller: nameController,
                 decoration: InputDecoration(hintText: locale.patientName),
                 textAlign: TextAlign.center,
-                validator: (value) => newNameValidator(
+                validator: (value) => notEmptyValidator(
                   value,
-                  patient.name,
-                  locale,
                   locale.patientName,
+                  locale,
                 ),
+              ),
+              SelectionCheckbox(
+                trueText: locale.maleAbr,
+                falseText: locale.femaleAbr,
+                controller: genderController,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -64,13 +69,19 @@ void editNameDialog({
                   TextButton(
                     child: Text(locale.save),
                     onPressed: () {
-                      if (key.currentState!.validate()) {
+                      if (patient.name == nameController.text &&
+                          patient.isMale == genderController.boolean) {
+                        showErrorDialog(context: context);
+                        return;
+                      }
+                      if (key.currentState?.validate() ?? false) {
                         patientsBloc.add(
                           UpdatePatient(
                             userId: userId,
                             company: company,
                             patient: patient,
-                            name: controller.text,
+                            name: nameController.text,
+                            isMale: genderController.boolean,
                           ),
                         );
                         Navigator.pop(context);
@@ -82,6 +93,32 @@ void editNameDialog({
             ],
           ),
         ),
+      );
+    },
+  );
+}
+
+void showErrorDialog({
+  required BuildContext context,
+}) {
+  final AppLocalizations locale = AppLocalizations.of(context)!;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text(locale.noChanges, textAlign: TextAlign.center),
+        actions: [
+          Center(
+            child: SizedBox(
+              width: 80,
+              child: FilledButton(
+                child: Text(locale.ok),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ),
+        ],
       );
     },
   );

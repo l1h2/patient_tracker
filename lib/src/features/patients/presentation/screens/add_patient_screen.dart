@@ -13,6 +13,7 @@ import '/src/core/repositories/user_repository.dart';
 import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
+import '/src/core/widgets/selection_checkbox.dart';
 
 @RoutePage()
 class AddPatientScreen extends StatelessWidget {
@@ -21,6 +22,7 @@ class AddPatientScreen extends StatelessWidget {
   final Company company;
 
   final _patientNameController = TextEditingController();
+  final _genderController = BoolController();
   final _formKey = GlobalKey<FormState>();
   final String _userId = locator<UserRepository>().getUser()!.id;
 
@@ -72,7 +74,14 @@ class AddPatientScreen extends StatelessWidget {
                         locale.patientName,
                       ),
                     ),
-                    const SizedBox(height: 64),
+                    const SizedBox(height: 20),
+                    SelectionCheckbox(
+                      trueText: locale.maleAbr,
+                      falseText: locale.femaleAbr,
+                      alignment: MainAxisAlignment.center,
+                      controller: _genderController,
+                    ),
+                    const SizedBox(height: 46),
                     SizedBox(
                       height: 56,
                       width: screenSize.width * 0.8,
@@ -83,6 +92,7 @@ class AddPatientScreen extends StatelessWidget {
                             patientsBloc.add(
                               AddPatient(
                                 _patientNameController.text,
+                                _genderController.boolean,
                                 _userId,
                                 company.id,
                               ),

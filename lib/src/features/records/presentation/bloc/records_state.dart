@@ -28,14 +28,7 @@ final class NoChangesToSave extends RecordsState {}
 
 final class EmptyRecords extends RecordsState {}
 
-final class RecordsSuccess extends RecordsState {
-  final Records records;
-
-  const RecordsSuccess(this.records);
-
-  @override
-  List<Object> get props => [records];
-}
+final class RecordsSuccess extends RecordsState {}
 
 final class GetRecordsFailure extends RecordsState {
   final String error;

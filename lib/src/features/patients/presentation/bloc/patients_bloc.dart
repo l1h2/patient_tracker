@@ -31,6 +31,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
       await _patientsUseCase(
         PatientParams(
           name: event.name,
+          isMale: event.isMale,
           userId: event.userId,
           companyId: event.companyId,
         ),
@@ -62,10 +63,13 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
     emit(SearchingPatients());
     try {
       final Patient patient = await _patientsUseCase.updatePatient(
-        event.userId,
-        event.company.id,
-        event.patient,
-        event.name,
+        UpdatePatientParams(
+          userId: event.userId,
+          companyId: event.company.id,
+          patient: event.patient,
+          name: event.name,
+          isMale: event.isMale,
+        ),
       );
       _userRepository.updatePatient(event.company, patient);
       emit(FoundPatients(_userRepository.getPatients(event.company)));

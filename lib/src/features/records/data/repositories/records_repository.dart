@@ -10,7 +10,7 @@ class FirebaseRecordsRepository implements RecordsRepository {
   const FirebaseRecordsRepository(this._service);
 
   @override
-  Future<Records> saveRecords(RecordsParams params) async {
+  Future<String> saveRecords(RecordsParams params) async {
     return await _service.saveRecords(params);
   }
 

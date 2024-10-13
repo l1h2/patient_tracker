@@ -9,13 +9,14 @@ sealed class PatientsEvent extends Equatable {
 
 class AddPatient extends PatientsEvent {
   final String name;
+  final bool isMale;
   final String userId;
   final String companyId;
 
-  const AddPatient(this.name, this.userId, this.companyId);
+  const AddPatient(this.name, this.isMale, this.userId, this.companyId);
 
   @override
-  List<Object> get props => [name, userId, companyId];
+  List<Object> get props => [name, isMale, userId, companyId];
 }
 
 class GetPatients extends PatientsEvent {
@@ -50,14 +51,16 @@ class UpdatePatient extends PatientsEvent {
   final Company company;
   final Patient patient;
   final String name;
+  final bool isMale;
 
   const UpdatePatient({
     required this.userId,
     required this.company,
     required this.patient,
     required this.name,
+    required this.isMale,
   });
 
   @override
-  List<Object> get props => [userId, company, patient, name];
+  List<Object> get props => [userId, company, patient, name, isMale];
 }

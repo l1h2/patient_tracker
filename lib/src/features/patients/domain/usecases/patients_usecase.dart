@@ -18,13 +18,8 @@ class PatientsUseCase implements UseCase<void, PatientParams> {
     return await _repository.getPatients(userId, companyId);
   }
 
-  Future<Patient> updatePatient(
-    String userId,
-    String companyId,
-    Patient patient,
-    String name,
-  ) async {
-    return await _repository.updatePatient(userId, companyId, patient, name);
+  Future<Patient> updatePatient(UpdatePatientParams params) async {
+    return await _repository.updatePatient(params);
   }
 
   Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {

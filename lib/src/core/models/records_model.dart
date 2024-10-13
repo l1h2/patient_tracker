@@ -1,5 +1,6 @@
 import '/src/core/models/patient_model.dart';
 import '/src/core/models/user_model.dart';
+import '/src/core/utils/helpers.dart';
 
 class Records {
   String? id;
@@ -7,7 +8,7 @@ class Records {
   String therapist;
   String certificate;
   String patient;
-  bool? isMale;
+  bool isMale;
   bool? isPhysiotherapy;
   final VitalSigns vitalSigns;
   final WarmUp warmUp;
@@ -28,7 +29,7 @@ class Records {
     required this.therapist,
     required this.certificate,
     required this.patient,
-    this.isMale,
+    required this.isMale,
     this.isPhysiotherapy,
     VitalSigns? vitalSigns,
     WarmUp? warmUp,
@@ -58,6 +59,7 @@ class Records {
         therapist: user.name,
         certificate: user.certificate,
         patient: patient.name,
+        isMale: patient.isMale,
         vitalSigns: VitalSigns(),
         warmUp: WarmUp(),
         barrel: Exercises(),
@@ -70,35 +72,35 @@ class Records {
         physiotherapy: Physiotherapy(),
       );
 
-  Records copyWith(Records records) => Records(
+  Records copy() => Records(
         id: id,
-        date: records.date,
-        therapist: records.therapist,
-        certificate: records.certificate,
-        patient: records.patient,
-        isMale: records.isMale,
-        isPhysiotherapy: records.isPhysiotherapy,
-        vitalSigns: records.vitalSigns,
-        warmUp: records.warmUp,
-        barrel: records.barrel,
-        cadillac: records.cadillac,
-        stepChair: records.stepChair,
-        reformer: records.reformer,
-        columpio: records.columpio,
-        solo: records.solo,
-        accessories: records.accessories,
-        physiotherapy: records.physiotherapy,
-        intercurrences: records.intercurrences,
-        comments: records.comments,
+        date: date,
+        therapist: therapist,
+        certificate: certificate,
+        patient: patient,
+        isMale: isMale,
+        isPhysiotherapy: isPhysiotherapy,
+        vitalSigns: vitalSigns.copy(),
+        warmUp: warmUp.copy(),
+        barrel: barrel.copy(),
+        cadillac: cadillac.copy(),
+        stepChair: stepChair.copy(),
+        reformer: reformer.copy(),
+        columpio: columpio.copy(),
+        solo: solo.copy(),
+        accessories: accessories.copy(),
+        physiotherapy: physiotherapy.copy(),
+        intercurrences: intercurrences,
+        comments: comments,
       );
 
-  bool isEqual(Records records) => [
+  bool isEqual(Records records, {bool considerDefaults = true}) => [
         date == records.date,
         therapist == records.therapist,
         certificate == records.certificate,
         patient == records.patient,
         isMale == records.isMale,
-        isPhysiotherapy == records.isPhysiotherapy,
+        considerDefaults ? isPhysiotherapy == records.isPhysiotherapy : true,
         vitalSigns.isEqual(records.vitalSigns),
         warmUp.isEqual(records.warmUp),
         barrel.isEqual(records.barrel),
@@ -109,7 +111,7 @@ class Records {
         solo.isEqual(records.solo),
         accessories.isEqual(records.accessories),
         physiotherapy.isEqual(records.physiotherapy),
-        intercurrences == records.intercurrences,
+        considerDefaults ? intercurrences == records.intercurrences : true,
         comments == records.comments,
       ].every((element) => element);
 
@@ -119,7 +121,7 @@ class Records {
         therapist: therapist,
         certificate: certificate,
         patient: patient,
-        isMale: isMale == records.isMale ? null : records.isMale,
+        isMale: isMale,
         isPhysiotherapy: isPhysiotherapy == records.isPhysiotherapy
             ? null
             : records.isPhysiotherapy,
@@ -136,7 +138,7 @@ class Records {
         intercurrences: intercurrences == records.intercurrences
             ? null
             : records.intercurrences,
-        comments: comments == records.comments ? null : records.comments,
+        comments: getDefaultValue(comments, records.comments),
       );
 
   void update(Records records) => this
@@ -172,6 +174,12 @@ class VitalSigns {
     this.oxygenSaturation,
   });
 
+  VitalSigns copy() => VitalSigns(
+        pressure: pressure,
+        heartRate: heartRate,
+        oxygenSaturation: oxygenSaturation,
+      );
+
   bool isEqual(VitalSigns vitalSigns) => [
         pressure == vitalSigns.pressure,
         heartRate == vitalSigns.heartRate,
@@ -179,12 +187,12 @@ class VitalSigns {
       ].every((element) => element);
 
   VitalSigns getChanges(VitalSigns vitalSigns) => VitalSigns(
-        pressure: pressure == vitalSigns.pressure ? null : vitalSigns.pressure,
-        heartRate:
-            heartRate == vitalSigns.heartRate ? null : vitalSigns.heartRate,
-        oxygenSaturation: oxygenSaturation == vitalSigns.oxygenSaturation
-            ? null
-            : vitalSigns.oxygenSaturation,
+        pressure: getDefaultValue(pressure, vitalSigns.pressure),
+        heartRate: getDefaultValue(heartRate, vitalSigns.heartRate),
+        oxygenSaturation: getDefaultValue(
+          oxygenSaturation,
+          vitalSigns.oxygenSaturation,
+        ),
       );
 
   void update(VitalSigns vitalSigns) => this
@@ -214,6 +222,17 @@ class WarmUp {
     this.other,
   });
 
+  WarmUp copy() => WarmUp(
+        functionalAerobic: functionalAerobic,
+        plyometricReformer: plyometricReformer,
+        plyometricWall: plyometricWall,
+        swimmingSolo: swimmingSolo,
+        swimmingBarrel: swimmingBarrel,
+        hundredSolo: hundredSolo,
+        hundredReformer: hundredReformer,
+        other: other,
+      );
+
   bool isEqual(WarmUp warmUp) => [
         functionalAerobic == warmUp.functionalAerobic,
         plyometricReformer == warmUp.plyometricReformer,
@@ -226,26 +245,23 @@ class WarmUp {
       ].every((element) => element);
 
   WarmUp getChanges(WarmUp warmUp) => WarmUp(
-        functionalAerobic: functionalAerobic == warmUp.functionalAerobic
-            ? null
-            : warmUp.functionalAerobic,
-        plyometricReformer: plyometricReformer == warmUp.plyometricReformer
-            ? null
-            : warmUp.plyometricReformer,
-        plyometricWall: plyometricWall == warmUp.plyometricWall
-            ? null
-            : warmUp.plyometricWall,
-        swimmingSolo:
-            swimmingSolo == warmUp.swimmingSolo ? null : warmUp.swimmingSolo,
-        swimmingBarrel: swimmingBarrel == warmUp.swimmingBarrel
-            ? null
-            : warmUp.swimmingBarrel,
-        hundredSolo:
-            hundredSolo == warmUp.hundredSolo ? null : warmUp.hundredSolo,
-        hundredReformer: hundredReformer == warmUp.hundredReformer
-            ? null
-            : warmUp.hundredReformer,
-        other: other == warmUp.other ? null : warmUp.other,
+        functionalAerobic: getDefaultValue(
+          functionalAerobic,
+          warmUp.functionalAerobic,
+        ),
+        plyometricReformer: getDefaultValue(
+          plyometricReformer,
+          warmUp.plyometricReformer,
+        ),
+        plyometricWall: getDefaultValue(plyometricWall, warmUp.plyometricWall),
+        swimmingSolo: getDefaultValue(swimmingSolo, warmUp.swimmingSolo),
+        swimmingBarrel: getDefaultValue(swimmingBarrel, warmUp.swimmingBarrel),
+        hundredSolo: getDefaultValue(hundredSolo, warmUp.hundredSolo),
+        hundredReformer: getDefaultValue(
+          hundredReformer,
+          warmUp.hundredReformer,
+        ),
+        other: getDefaultValue(other, warmUp.other),
       );
 
   void update(WarmUp warmUp) => this
@@ -304,6 +320,29 @@ class Exercises {
     this.other,
   });
 
+  Exercises copy() => Exercises(
+        stretchCadAnt: stretchCadAnt,
+        stretchCadPost: stretchCadPost,
+        stretchCadLat: stretchCadLat,
+        stretchCadCross: stretchCadCross,
+        stretchMmii: stretchMmii,
+        stretchMmss: stretchMmss,
+        strengthMmii: strengthMmii,
+        strengthMmss: strengthMmss,
+        strengthAbd: strengthAbd,
+        strengthPara: strengthPara,
+        mobilitySpine: mobilitySpine,
+        mobilityShoulder: mobilityShoulder,
+        mobilityHip: mobilityHip,
+        mobilityAnkle: mobilityAnkle,
+        mobilityWrist: mobilityWrist,
+        relaxation: relaxation,
+        motorCoordination: motorCoordination,
+        balance: balance,
+        proprioception: proprioception,
+        other: other,
+      );
+
   bool isEqual(Exercises exercises) => [
         stretchCadAnt == exercises.stretchCadAnt,
         stretchCadPost == exercises.stretchCadPost,
@@ -328,57 +367,41 @@ class Exercises {
       ].every((element) => element);
 
   Exercises getChanges(Exercises exercises) => Exercises(
-        stretchCadAnt: stretchCadAnt == exercises.stretchCadAnt
-            ? null
-            : exercises.stretchCadAnt,
-        stretchCadPost: stretchCadPost == exercises.stretchCadPost
-            ? null
-            : exercises.stretchCadPost,
-        stretchCadLat: stretchCadLat == exercises.stretchCadLat
-            ? null
-            : exercises.stretchCadLat,
-        stretchCadCross: stretchCadCross == exercises.stretchCadCross
-            ? null
-            : exercises.stretchCadCross,
-        stretchMmii:
-            stretchMmii == exercises.stretchMmii ? null : exercises.stretchMmii,
-        stretchMmss:
-            stretchMmss == exercises.stretchMmss ? null : exercises.stretchMmss,
-        strengthMmii: strengthMmii == exercises.strengthMmii
-            ? null
-            : exercises.strengthMmii,
-        strengthMmss: strengthMmss == exercises.strengthMmss
-            ? null
-            : exercises.strengthMmss,
-        strengthAbd:
-            strengthAbd == exercises.strengthAbd ? null : exercises.strengthAbd,
-        strengthPara: strengthPara == exercises.strengthPara
-            ? null
-            : exercises.strengthPara,
-        mobilitySpine: mobilitySpine == exercises.mobilitySpine
-            ? null
-            : exercises.mobilitySpine,
-        mobilityShoulder: mobilityShoulder == exercises.mobilityShoulder
-            ? null
-            : exercises.mobilityShoulder,
-        mobilityHip:
-            mobilityHip == exercises.mobilityHip ? null : exercises.mobilityHip,
-        mobilityAnkle: mobilityAnkle == exercises.mobilityAnkle
-            ? null
-            : exercises.mobilityAnkle,
-        mobilityWrist: mobilityWrist == exercises.mobilityWrist
-            ? null
-            : exercises.mobilityWrist,
-        relaxation:
-            relaxation == exercises.relaxation ? null : exercises.relaxation,
-        motorCoordination: motorCoordination == exercises.motorCoordination
-            ? null
-            : exercises.motorCoordination,
-        balance: balance == exercises.balance ? null : exercises.balance,
-        proprioception: proprioception == exercises.proprioception
-            ? null
-            : exercises.proprioception,
-        other: other == exercises.other ? null : exercises.other,
+        stretchCadAnt: getDefaultValue(stretchCadAnt, exercises.stretchCadAnt),
+        stretchCadPost: getDefaultValue(
+          stretchCadPost,
+          exercises.stretchCadPost,
+        ),
+        stretchCadLat: getDefaultValue(stretchCadLat, exercises.stretchCadLat),
+        stretchCadCross: getDefaultValue(
+          stretchCadCross,
+          exercises.stretchCadCross,
+        ),
+        stretchMmii: getDefaultValue(stretchMmii, exercises.stretchMmii),
+        stretchMmss: getDefaultValue(stretchMmss, exercises.stretchMmss),
+        strengthMmii: getDefaultValue(strengthMmii, exercises.strengthMmii),
+        strengthMmss: getDefaultValue(strengthMmss, exercises.strengthMmss),
+        strengthAbd: getDefaultValue(strengthAbd, exercises.strengthAbd),
+        strengthPara: getDefaultValue(strengthPara, exercises.strengthPara),
+        mobilitySpine: getDefaultValue(mobilitySpine, exercises.mobilitySpine),
+        mobilityShoulder: getDefaultValue(
+          mobilityShoulder,
+          exercises.mobilityShoulder,
+        ),
+        mobilityHip: getDefaultValue(mobilityHip, exercises.mobilityHip),
+        mobilityAnkle: getDefaultValue(mobilityAnkle, exercises.mobilityAnkle),
+        mobilityWrist: getDefaultValue(mobilityWrist, exercises.mobilityWrist),
+        relaxation: getDefaultValue(relaxation, exercises.relaxation),
+        motorCoordination: getDefaultValue(
+          motorCoordination,
+          exercises.motorCoordination,
+        ),
+        balance: getDefaultValue(balance, exercises.balance),
+        proprioception: getDefaultValue(
+          proprioception,
+          exercises.proprioception,
+        ),
+        other: getDefaultValue(other, exercises.other),
       );
 
   void update(Exercises exercises) => this
@@ -443,6 +466,26 @@ class Accessories {
     this.tonningBall,
   });
 
+  Accessories copy() => Accessories(
+        ball: ball,
+        bosu: bosu,
+        comboBox: comboBox,
+        proprioceptionDisk: proprioceptionDisk,
+        pushUpSupport: pushUpSupport,
+        foamRoller: foamRoller,
+        myofascialRoller: myofascialRoller,
+        beanBag: beanBag,
+        pilatesRing: pilatesRing,
+        pilatesWheel: pilatesWheel,
+        abdominalWheel: abdominalWheel,
+        stressBall: stressBall,
+        massager: massager,
+        baton: baton,
+        elasticBand: elasticBand,
+        dumbbell: dumbbell,
+        tonningBall: tonningBall,
+      );
+
   bool isEqual(Accessories accessories) => [
         ball == accessories.ball,
         bosu == accessories.bosu,
@@ -464,46 +507,35 @@ class Accessories {
       ].every((element) => element);
 
   Accessories getChanges(Accessories accessories) => Accessories(
-        ball: ball == accessories.ball ? null : accessories.ball,
-        bosu: bosu == accessories.bosu ? null : accessories.bosu,
-        comboBox:
-            comboBox == accessories.comboBox ? null : accessories.comboBox,
-        proprioceptionDisk: proprioceptionDisk == accessories.proprioceptionDisk
-            ? null
-            : accessories.proprioceptionDisk,
-        pushUpSupport: pushUpSupport == accessories.pushUpSupport
-            ? null
-            : accessories.pushUpSupport,
-        foamRoller: foamRoller == accessories.foamRoller
-            ? null
-            : accessories.foamRoller,
-        myofascialRoller: myofascialRoller == accessories.myofascialRoller
-            ? null
-            : accessories.myofascialRoller,
-        beanBag: beanBag == accessories.beanBag ? null : accessories.beanBag,
-        pilatesRing: pilatesRing == accessories.pilatesRing
-            ? null
-            : accessories.pilatesRing,
-        pilatesWheel: pilatesWheel == accessories.pilatesWheel
-            ? null
-            : accessories.pilatesWheel,
-        abdominalWheel: abdominalWheel == accessories.abdominalWheel
-            ? null
-            : accessories.abdominalWheel,
-        stressBall: stressBall == accessories.stressBall
-            ? null
-            : accessories.stressBall,
-        massager:
-            massager == accessories.massager ? null : accessories.massager,
-        baton: baton == accessories.baton ? null : accessories.baton,
-        elasticBand: elasticBand == accessories.elasticBand
-            ? null
-            : accessories.elasticBand,
-        dumbbell:
-            dumbbell == accessories.dumbbell ? null : accessories.dumbbell,
-        tonningBall: tonningBall == accessories.tonningBall
-            ? null
-            : accessories.tonningBall,
+        ball: getDefaultValue(ball, accessories.ball),
+        bosu: getDefaultValue(bosu, accessories.bosu),
+        comboBox: getDefaultValue(comboBox, accessories.comboBox),
+        proprioceptionDisk: getDefaultValue(
+          proprioceptionDisk,
+          accessories.proprioceptionDisk,
+        ),
+        pushUpSupport: getDefaultValue(
+          pushUpSupport,
+          accessories.pushUpSupport,
+        ),
+        foamRoller: getDefaultValue(foamRoller, accessories.foamRoller),
+        myofascialRoller: getDefaultValue(
+          myofascialRoller,
+          accessories.myofascialRoller,
+        ),
+        beanBag: getDefaultValue(beanBag, accessories.beanBag),
+        pilatesRing: getDefaultValue(pilatesRing, accessories.pilatesRing),
+        pilatesWheel: getDefaultValue(pilatesWheel, accessories.pilatesWheel),
+        abdominalWheel: getDefaultValue(
+          abdominalWheel,
+          accessories.abdominalWheel,
+        ),
+        stressBall: getDefaultValue(stressBall, accessories.stressBall),
+        massager: getDefaultValue(massager, accessories.massager),
+        baton: getDefaultValue(baton, accessories.baton),
+        elasticBand: getDefaultValue(elasticBand, accessories.elasticBand),
+        dumbbell: getDefaultValue(dumbbell, accessories.dumbbell),
+        tonningBall: getDefaultValue(tonningBall, accessories.tonningBall),
       );
 
   void update(Accessories accessories) => this
@@ -581,6 +613,34 @@ class Physiotherapy {
     this.ultrasound,
   });
 
+  Physiotherapy copy() => Physiotherapy(
+        stretching: stretching,
+        cryotherapy: cryotherapy,
+        thermotherapy: thermotherapy,
+        gaitTraining: gaitTraining,
+        jointMobilization: jointMobilization,
+        massotherapy: massotherapy,
+        williams: williams,
+        codman: codman,
+        mckenzie: mckenzie,
+        klapp: klapp,
+        rpg: rpg,
+        muscleStrengthening: muscleStrengthening,
+        activeExercises: activeExercises,
+        passiveExercises: passiveExercises,
+        assistedExercises: assistedExercises,
+        bandage: bandage,
+        homework: homework,
+        footwearChange: footwearChange,
+        isometricMmss: isometricMmss,
+        isometricMmii: isometricMmii,
+        isometricAbd: isometricAbd,
+        isometricOther: isometricOther,
+        tens: tens,
+        fes: fes,
+        ultrasound: ultrasound,
+      );
+
   bool isEqual(Physiotherapy physiotherapy) => [
         stretching == physiotherapy.stretching,
         cryotherapy == physiotherapy.cryotherapy,
@@ -610,68 +670,61 @@ class Physiotherapy {
       ].every((element) => element);
 
   Physiotherapy getChanges(Physiotherapy physiotherapy) => Physiotherapy(
-        stretching: stretching == physiotherapy.stretching
-            ? null
-            : physiotherapy.stretching,
-        cryotherapy: cryotherapy == physiotherapy.cryotherapy
-            ? null
-            : physiotherapy.cryotherapy,
-        thermotherapy: thermotherapy == physiotherapy.thermotherapy
-            ? null
-            : physiotherapy.thermotherapy,
-        gaitTraining: gaitTraining == physiotherapy.gaitTraining
-            ? null
-            : physiotherapy.gaitTraining,
-        jointMobilization: jointMobilization == physiotherapy.jointMobilization
-            ? null
-            : physiotherapy.jointMobilization,
-        massotherapy: massotherapy == physiotherapy.massotherapy
-            ? null
-            : physiotherapy.massotherapy,
-        williams:
-            williams == physiotherapy.williams ? null : physiotherapy.williams,
-        codman: codman == physiotherapy.codman ? null : physiotherapy.codman,
-        mckenzie:
-            mckenzie == physiotherapy.mckenzie ? null : physiotherapy.mckenzie,
-        klapp: klapp == physiotherapy.klapp ? null : physiotherapy.klapp,
-        rpg: rpg == physiotherapy.rpg ? null : physiotherapy.rpg,
-        muscleStrengthening:
-            muscleStrengthening == physiotherapy.muscleStrengthening
-                ? null
-                : physiotherapy.muscleStrengthening,
-        activeExercises: activeExercises == physiotherapy.activeExercises
-            ? null
-            : physiotherapy.activeExercises,
-        passiveExercises: passiveExercises == physiotherapy.passiveExercises
-            ? null
-            : physiotherapy.passiveExercises,
-        assistedExercises: assistedExercises == physiotherapy.assistedExercises
-            ? null
-            : physiotherapy.assistedExercises,
-        bandage:
-            bandage == physiotherapy.bandage ? null : physiotherapy.bandage,
-        homework:
-            homework == physiotherapy.homework ? null : physiotherapy.homework,
-        footwearChange: footwearChange == physiotherapy.footwearChange
-            ? null
-            : physiotherapy.footwearChange,
-        isometricMmss: isometricMmss == physiotherapy.isometricMmss
-            ? null
-            : physiotherapy.isometricMmss,
-        isometricMmii: isometricMmii == physiotherapy.isometricMmii
-            ? null
-            : physiotherapy.isometricMmii,
-        isometricAbd: isometricAbd == physiotherapy.isometricAbd
-            ? null
-            : physiotherapy.isometricAbd,
-        isometricOther: isometricOther == physiotherapy.isometricOther
-            ? null
-            : physiotherapy.isometricOther,
-        tens: tens == physiotherapy.tens ? null : physiotherapy.tens,
-        fes: fes == physiotherapy.fes ? null : physiotherapy.fes,
-        ultrasound: ultrasound == physiotherapy.ultrasound
-            ? null
-            : physiotherapy.ultrasound,
+        stretching: getDefaultValue(stretching, physiotherapy.stretching),
+        cryotherapy: getDefaultValue(cryotherapy, physiotherapy.cryotherapy),
+        thermotherapy: getDefaultValue(
+          thermotherapy,
+          physiotherapy.thermotherapy,
+        ),
+        gaitTraining: getDefaultValue(gaitTraining, physiotherapy.gaitTraining),
+        jointMobilization: getDefaultValue(
+          jointMobilization,
+          physiotherapy.jointMobilization,
+        ),
+        massotherapy: getDefaultValue(massotherapy, physiotherapy.massotherapy),
+        williams: getDefaultValue(williams, physiotherapy.williams),
+        codman: getDefaultValue(codman, physiotherapy.codman),
+        mckenzie: getDefaultValue(mckenzie, physiotherapy.mckenzie),
+        klapp: getDefaultValue(klapp, physiotherapy.klapp),
+        rpg: getDefaultValue(rpg, physiotherapy.rpg),
+        muscleStrengthening: getDefaultValue(
+          muscleStrengthening,
+          physiotherapy.muscleStrengthening,
+        ),
+        activeExercises: getDefaultValue(
+          activeExercises,
+          physiotherapy.activeExercises,
+        ),
+        passiveExercises: getDefaultValue(
+          passiveExercises,
+          physiotherapy.passiveExercises,
+        ),
+        assistedExercises: getDefaultValue(
+          assistedExercises,
+          physiotherapy.assistedExercises,
+        ),
+        bandage: getDefaultValue(bandage, physiotherapy.bandage),
+        homework: getDefaultValue(homework, physiotherapy.homework),
+        footwearChange: getDefaultValue(
+          footwearChange,
+          physiotherapy.footwearChange,
+        ),
+        isometricMmss: getDefaultValue(
+          isometricMmss,
+          physiotherapy.isometricMmss,
+        ),
+        isometricMmii: getDefaultValue(
+          isometricMmii,
+          physiotherapy.isometricMmii,
+        ),
+        isometricAbd: getDefaultValue(isometricAbd, physiotherapy.isometricAbd),
+        isometricOther: getDefaultValue(
+          isometricOther,
+          physiotherapy.isometricOther,
+        ),
+        tens: getDefaultValue(tens, physiotherapy.tens),
+        fes: getDefaultValue(fes, physiotherapy.fes),
+        ultrasound: getDefaultValue(ultrasound, physiotherapy.ultrasound),
       );
 
   void update(Physiotherapy physiotherapy) => this

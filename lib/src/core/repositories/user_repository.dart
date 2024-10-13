@@ -135,6 +135,7 @@ class UserRepository {
     final newPatient = Patient(
       id: existingPatient.id,
       name: existingPatient.name,
+      isMale: existingPatient.isMale,
       records: records.id == null ? {} : {records.id!: records},
       recordDates: recordDates,
     );

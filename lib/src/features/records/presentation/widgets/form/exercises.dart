@@ -25,39 +25,58 @@ class ExerciseSection extends StatelessWidget {
       title: title,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stretching(locale: locale, theme: theme, exercises: exercises),
-            Strengthening(locale: locale, theme: theme, exercises: exercises),
-            Mobility(locale: locale, theme: theme, exercises: exercises),
-            CustomCheckbox(
-              value: exercises.relaxation,
-              title: locale.relaxation,
-              onChanged: (value) => exercises.relaxation = value,
-            ),
-            CustomCheckbox(
-              value: exercises.motorCoordination,
-              title: locale.motorCoordinationAbr,
-              onChanged: (value) => exercises.motorCoordination = value,
-            ),
-            CustomCheckbox(
-              value: exercises.balance,
-              title: locale.balanceTraining,
-              onChanged: (value) => exercises.balance = value,
-            ),
-            CustomCheckbox(
-              value: exercises.proprioception,
-              title: locale.proprioceptionTraining,
-              onChanged: (value) => exercises.proprioception = value,
-            ),
-            TextInput(
-              label: locale.other,
-              onChanged: (value) => exercises.other = value,
-            ),
-          ],
-        ),
+        child:
+            ExerciseContent(locale: locale, theme: theme, exercises: exercises),
       ),
+    );
+  }
+}
+
+class ExerciseContent extends StatelessWidget {
+  const ExerciseContent({
+    super.key,
+    required this.locale,
+    required this.theme,
+    required this.exercises,
+  });
+
+  final AppLocalizations locale;
+  final ThemeData theme;
+  final Exercises exercises;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stretching(locale: locale, theme: theme, exercises: exercises),
+        Strengthening(locale: locale, theme: theme, exercises: exercises),
+        Mobility(locale: locale, theme: theme, exercises: exercises),
+        CustomCheckbox(
+          value: exercises.relaxation,
+          title: locale.relaxation,
+          onChanged: (value) => exercises.relaxation = value,
+        ),
+        CustomCheckbox(
+          value: exercises.motorCoordination,
+          title: locale.motorCoordinationAbr,
+          onChanged: (value) => exercises.motorCoordination = value,
+        ),
+        CustomCheckbox(
+          value: exercises.balance,
+          title: locale.balanceTraining,
+          onChanged: (value) => exercises.balance = value,
+        ),
+        CustomCheckbox(
+          value: exercises.proprioception,
+          title: locale.proprioceptionTraining,
+          onChanged: (value) => exercises.proprioception = value,
+        ),
+        TextInput(
+          label: locale.other,
+          onChanged: (value) => exercises.other = value,
+        ),
+      ],
     );
   }
 }
@@ -121,9 +140,9 @@ class Stretching extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomCheckbox(
-                  value: exercises.strengthMmii,
+                  value: exercises.stretchMmii,
                   title: locale.mmii,
-                  onChanged: (value) => exercises.strengthMmii = value,
+                  onChanged: (value) => exercises.stretchMmii = value,
                 ),
               ),
               Expanded(

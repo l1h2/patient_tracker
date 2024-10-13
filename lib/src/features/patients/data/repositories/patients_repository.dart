@@ -20,13 +20,8 @@ class FirebasePatientsRepository implements PatientsRepository {
   }
 
   @override
-  Future<Patient> updatePatient(
-    String userId,
-    String companyId,
-    Patient patient,
-    String name,
-  ) async {
-    return await _service.updatePatient(userId, companyId, patient, name);
+  Future<Patient> updatePatient(UpdatePatientParams params) async {
+    return await _service.updatePatient(params);
   }
 
   @override

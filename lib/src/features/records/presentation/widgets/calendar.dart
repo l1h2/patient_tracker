@@ -14,20 +14,22 @@ import '/src/core/models/patient_model.dart';
 import '/src/core/models/user_model.dart';
 
 class DatePicker extends StatelessWidget {
-  const DatePicker({
+  DatePicker({
     super.key,
-    required this.controller,
+    required DateTime currentDate,
     required this.recordsBloc,
     required this.user,
     required this.company,
     required this.patient,
-  });
+  }) : dateController = TextEditingController(
+          text: currentDate.toString().split(' ')[0],
+        );
 
-  final TextEditingController controller;
   final RecordsBloc recordsBloc;
   final User user;
   final Company company;
   final Patient patient;
+  final TextEditingController dateController;
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +38,19 @@ class DatePicker extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
-        controller: controller,
+        controller: dateController,
         readOnly: true,
         decoration: const InputDecoration(
           suffixIcon: Icon(Icons.calendar_today),
         ),
         textAlign: TextAlign.center,
         style: theme.textTheme.headlineSmall,
-        onTap: () async => controller.text = await showDialog<String>(
+        onTap: () async => dateController.text = await showDialog<String>(
               context: context,
               builder: (context) {
                 return Dialog(
                   child: CustomCalendar(
-                    initialDate: DateTime.parse(controller.text),
+                    initialDate: DateTime.parse(dateController.text),
                     recordsBloc: recordsBloc,
                     user: user,
                     company: company,
@@ -57,7 +59,7 @@ class DatePicker extends StatelessWidget {
                 );
               },
             ) ??
-            controller.text,
+            dateController.text,
       ),
     );
   }

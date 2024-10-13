@@ -43,9 +43,15 @@ class RecordsDao {
 
   Future<void> updateRecord(
     String recordId,
-    Map<String, dynamic> data,
-  ) async {
-    await _baseDao.updateDocument(_collectionPath, recordId, data);
+    Map<String, dynamic> data, [
+    List<String>? fieldsToDelete,
+  ]) async {
+    await _baseDao.updateDocumentWithMapFields(
+      _collectionPath,
+      recordId,
+      data,
+      fieldsToDelete,
+    );
   }
 
   Future<void> deleteRecord(String recordId) async {
