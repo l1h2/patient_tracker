@@ -11,7 +11,14 @@ final class SplashInitial extends SplashState {}
 
 final class SplashLoading extends SplashState {}
 
-final class SplashAuthenticated extends SplashState {}
+final class SplashAuthenticated extends SplashState {
+  final User user;
+
+  const SplashAuthenticated(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
 
 final class SplashNotAuthenticated extends SplashState {}
 

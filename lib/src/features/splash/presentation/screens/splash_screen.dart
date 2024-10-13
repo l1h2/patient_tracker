@@ -7,6 +7,7 @@ import '../bloc/splash_bloc.dart';
 
 import '/config/assets/assets.dart';
 import '/config/routes/router.gr.dart';
+import '/src/features/settings/presentation/bloc/settings_bloc.dart';
 
 @RoutePage()
 class SplashScreen extends StatelessWidget {
@@ -16,12 +17,14 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final StackRouter router = AutoRouter.of(context);
     final SplashBloc splashBloc = BlocProvider.of<SplashBloc>(context);
+    final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
 
     splashBloc.add(SplashCheckAuthentication());
 
-    return BlocConsumer<SplashBloc, SplashState>(
+    return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state is SplashAuthenticated) {
+          settingsBloc.add(ChangeTheme(state.user.isDarkMode));
           router.replace(HomeRoute());
         } else if (state is SplashNotAuthenticated) {
           router.replace(LoginRoute());
@@ -29,13 +32,12 @@ class SplashScreen extends StatelessWidget {
           router.replace(LoginRoute());
         }
       },
-      builder: (context, state) {
-        return Scaffold(
-          body: Center(
-            child: Image.asset(Assets.logoSplash),
-          ),
-        );
-      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Image.asset(Assets.logoSplash),
+        ),
+      ),
     );
   }
 }

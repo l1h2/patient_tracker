@@ -10,6 +10,7 @@ import '../bloc/password_bloc.dart';
 import '/src/core/validators/not_empty_validator.dart';
 import '/src/core/validators/password_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
+import '/src/core/widgets/main_app_bar.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
 
 @RoutePage()
@@ -24,9 +25,9 @@ class ChangePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppLocalizations locale = AppLocalizations.of(context)!;
-    final Size screenSize = MediaQuery.of(context).size;
     final ThemeData theme = Theme.of(context);
     final StackRouter router = AutoRouter.of(context);
+    final Size screenSize = MediaQuery.of(context).size;
     final PasswordBloc passwordBloc = BlocProvider.of<PasswordBloc>(context);
 
     return BlocConsumer<PasswordBloc, PasswordState>(
@@ -57,9 +58,7 @@ class ChangePasswordScreen extends StatelessWidget {
         return ModalProgressHUD(
           inAsyncCall: state is PasswordChangeLoading,
           child: ScrollableScaffold(
-            appBar: SliverAppBar(
-              title: Text(locale.changePassword),
-            ),
+            appBar: MainAppBar(title: locale.changePassword),
             content: Padding(
               padding: EdgeInsets.all(screenSize.width * 0.05),
               child: Form(
@@ -117,23 +116,32 @@ class ChangePasswordScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 36),
-                    FilledButton(
-                      child: Text(locale.changePasswordAction),
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          passwordBloc.add(
-                            PasswordChange(
-                              currentPassword: _currentPasswordController.text,
-                              newPassword: _newPasswordController.text,
-                            ),
-                          );
-                        }
-                      },
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: FilledButton(
+                        child: Text(locale.changePasswordAction),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            passwordBloc.add(
+                              PasswordChange(
+                                currentPassword:
+                                    _currentPasswordController.text,
+                                newPassword: _newPasswordController.text,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                    OutlinedButton(
-                      child: Text(locale.cancel),
-                      onPressed: () => router.maybePop(),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: OutlinedButton(
+                        child: Text(locale.cancel),
+                        onPressed: () => router.maybePop(),
+                      ),
                     ),
                   ],
                 ),

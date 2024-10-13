@@ -39,6 +39,7 @@ class LogoutScreen extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               title: Text(locale.logout),
+              centerTitle: true,
             ),
             body: Padding(
               padding: EdgeInsets.all(screenSize.width * 0.05),
@@ -49,17 +50,25 @@ class LogoutScreen extends StatelessWidget {
                     style: theme.textTheme.headlineMedium,
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 36),
-                  FilledButton(
-                    child: Text(locale.logoutConfirmAction),
-                    onPressed: () => logoutBloc.add(LogoutRequest()),
+                  const SizedBox(height: 56),
+                  SizedBox(
+                    height: 56,
+                    width: screenSize.width * 0.8,
+                    child: FilledButton(
+                      child: Text(locale.logoutConfirmAction),
+                      onPressed: () => logoutBloc.add(LogoutRequest()),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  OutlinedButton(
-                    child: Text(locale.cancel),
-                    onPressed: () {
-                      router.maybePop();
-                    },
+                  const SizedBox(height: 22),
+                  SizedBox(
+                    height: 56,
+                    width: screenSize.width * 0.8,
+                    child: OutlinedButton(
+                      child: Text(locale.cancel),
+                      onPressed: () {
+                        router.maybePop();
+                      },
+                    ),
                   ),
                 ],
               ),

@@ -5,6 +5,7 @@ import '../../domain/entities/login_entity.dart';
 import '../../domain/usecases/login_usecase.dart';
 
 import '/config/locator/setup.dart';
+import '/src/core/models/user_model.dart';
 import '/src/core/repositories/user_repository.dart';
 
 part 'login_event.dart';
@@ -31,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       );
 
       locator<UserRepository>().setUser(loginReturn.user);
-      emit(LoginSuccess());
+      emit(LoginSuccess(loginReturn.user));
     } on LoginIncorrectException catch (_) {
       emit(LoginUserNotFound());
     } on Exception catch (e) {

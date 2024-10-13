@@ -110,11 +110,15 @@ void showErrorDialog({
         title: Text(locale.noChanges, textAlign: TextAlign.center),
         actions: [
           Center(
-            child: SizedBox(
-              width: 80,
-              child: FilledButton(
-                child: Text(locale.ok),
-                onPressed: () => Navigator.pop(context),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: SizedBox(
+                height: 46,
+                width: 120,
+                child: FilledButton(
+                  child: Text(locale.ok),
+                  onPressed: () => Navigator.pop(context),
+                ),
               ),
             ),
           ),

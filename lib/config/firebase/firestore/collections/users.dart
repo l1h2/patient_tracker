@@ -6,6 +6,7 @@ class UserDocument {
   final String email;
   final String certificate;
   final String name;
+  final bool isDarkMode;
   final List<CompanyDocument>? companies;
 
   const UserDocument({
@@ -13,6 +14,7 @@ class UserDocument {
     required this.email,
     required this.certificate,
     required this.name,
+    required this.isDarkMode,
     this.companies,
   });
 
@@ -21,6 +23,7 @@ class UserDocument {
         email: map[UserAttrs.email],
         certificate: map[UserAttrs.certificate],
         name: map[UserAttrs.name],
+        isDarkMode: map[UserAttrs.isDarkMode],
       );
 
   factory UserDocument.fromUser(User user) => UserDocument(
@@ -28,6 +31,7 @@ class UserDocument {
         email: user.email,
         certificate: user.certificate,
         name: user.name,
+        isDarkMode: user.isDarkMode,
       );
 
   UserDocument copyWith({required Map<String, dynamic> newAttrs}) {
@@ -40,6 +44,7 @@ class UserDocument {
       email: newAttrs[UserAttrs.email] ?? email,
       certificate: newAttrs[UserAttrs.certificate] ?? certificate,
       name: newAttrs[UserAttrs.name] ?? name,
+      isDarkMode: newAttrs[UserAttrs.isDarkMode] ?? isDarkMode,
       companies: newAttrs[UserAttrs.companies] ?? companies,
     );
   }
@@ -48,6 +53,7 @@ class UserDocument {
         UserAttrs.email: email,
         UserAttrs.certificate: certificate,
         UserAttrs.name: name,
+        UserAttrs.isDarkMode: isDarkMode,
       };
 
   User toUser() => User(
@@ -55,6 +61,7 @@ class UserDocument {
         email: email,
         certificate: certificate,
         name: name,
+        isDarkMode: isDarkMode,
       );
 }
 
@@ -63,5 +70,6 @@ class UserAttrs {
   static const email = 'email';
   static const certificate = 'certificate';
   static const name = 'name';
+  static const isDarkMode = 'isDarkMode';
   static const companies = 'companies';
 }

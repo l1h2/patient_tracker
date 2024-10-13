@@ -7,14 +7,13 @@ import '/src/core/models/company_model.dart';
 import '/src/core/validators/name_validator.dart';
 import '/src/features/home/presentation/bloc/home_bloc.dart';
 
-void editNameDialog({
+void editCompanyDialog({
   required BuildContext context,
   required String userId,
   required Company company,
-  required TextEditingController controller,
 }) {
   final key = GlobalKey<FormState>();
-  controller.text = company.name;
+  final nameController = TextEditingController(text: company.name);
 
   showModalBottomSheet(
     context: context,
@@ -37,12 +36,12 @@ void editNameDialog({
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                locale.editName,
+                locale.editCompany,
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 12),
               TextFormField(
-                controller: controller,
+                controller: nameController,
                 decoration: InputDecoration(hintText: locale.companyName),
                 textAlign: TextAlign.center,
                 validator: (value) => newNameValidator(
@@ -67,7 +66,7 @@ void editNameDialog({
                           UpdateCompany(
                             userId: userId,
                             company: company,
-                            name: controller.text,
+                            name: nameController.text,
                           ),
                         );
                         Navigator.pop(context);

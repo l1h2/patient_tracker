@@ -23,6 +23,13 @@ class UsersRepository {
     await _usersDao.updateUser(user.uid, user.toMap());
   }
 
+  Future<void> updateUserPreferences(
+    String userId,
+    Map<String, dynamic> preferences,
+  ) async {
+    await _usersDao.updateUser(userId, preferences);
+  }
+
   Future<void> deleteUser(String userId) async {
     await _usersDao.deleteUser(userId);
   }

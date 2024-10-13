@@ -13,6 +13,7 @@ import '/src/core/validators/not_empty_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/main_app_bar.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
+import '/src/features/settings/presentation/bloc/settings_bloc.dart';
 
 @RoutePage()
 class LoginScreen extends StatelessWidget {
@@ -29,10 +30,12 @@ class LoginScreen extends StatelessWidget {
     final StackRouter router = AutoRouter.of(context);
     final Size screenSize = MediaQuery.of(context).size;
     final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+    final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
 
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
+          settingsBloc.add(ChangeTheme(state.user.isDarkMode));
           router.replaceAll([HomeRoute()]);
         } else if (state is LoginUserNotFound) {
           ErrorScaffoldMessenger.of(context).showSnackBar(
@@ -90,19 +93,23 @@ class LoginScreen extends StatelessWidget {
                       child: Text(locale.forgotPassword),
                       onPressed: () => router.push(ForgotPasswordRoute()),
                     ),
-                    const SizedBox(height: 16),
-                    FilledButton(
-                      child: Text(locale.loginAction),
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          loginBloc.add(
-                            LoginRequest(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            ),
-                          );
-                        }
-                      },
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: FilledButton(
+                        child: Text(locale.loginAction),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            loginBloc.add(
+                              LoginRequest(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

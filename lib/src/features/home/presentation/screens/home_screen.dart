@@ -79,9 +79,13 @@ class HomeScreen extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 42),
-                      OutlinedButton(
-                        child: Text(locale.refresh),
-                        onPressed: () => homeBloc.add(GetCompanies(_userId)),
+                      SizedBox(
+                        height: 56,
+                        width: screenSize.width * 0.8,
+                        child: OutlinedButton(
+                          child: Text(locale.refresh),
+                          onPressed: () => homeBloc.add(GetCompanies(_userId)),
+                        ),
                       ),
                     ],
                   ),

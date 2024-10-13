@@ -5,6 +5,7 @@ import '../../domain/entities/splash_entity.dart';
 import '../../domain/usecases/splash_usecase.dart';
 
 import '/config/locator/setup.dart';
+import '/src/core/models/user_model.dart';
 import '/src/core/repositories/user_repository.dart';
 import '/src/core/utils/usecase.dart';
 
@@ -27,7 +28,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       final SplashReturn splashReturn = await _splashUseCase(NoParams());
       if (splashReturn.isLoggedIn) {
         locator<UserRepository>().setUser(splashReturn.user!);
-        emit(SplashAuthenticated());
+        emit(SplashAuthenticated(splashReturn.user!));
       } else {
         emit(SplashNotAuthenticated());
       }

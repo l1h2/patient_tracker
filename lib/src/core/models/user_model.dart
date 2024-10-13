@@ -5,6 +5,7 @@ class User {
   final String email;
   final String certificate;
   final String name;
+  bool isDarkMode;
   final Map<String, Company> companies;
 
   User({
@@ -12,6 +13,7 @@ class User {
     required this.email,
     required this.certificate,
     required this.name,
+    this.isDarkMode = false,
     Map<String, Company>? companies,
   }) : companies = companies ?? {};
 
@@ -23,6 +25,7 @@ class User {
       email: newAttrs[UserAttributes.email] ?? email,
       certificate: newAttrs[UserAttributes.certificate] ?? certificate,
       name: newAttrs[UserAttributes.name] ?? name,
+      isDarkMode: newAttrs[UserAttributes.isDarkMode] ?? isDarkMode,
       companies: newAttrs[UserAttributes.companies] ?? companies,
     );
   }
@@ -33,5 +36,6 @@ class UserAttributes {
   static const email = 'email';
   static const certificate = 'certificate';
   static const name = 'name';
+  static const isDarkMode = 'isDarkMode';
   static const companies = 'companies';
 }

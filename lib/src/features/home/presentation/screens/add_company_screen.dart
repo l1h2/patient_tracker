@@ -11,6 +11,7 @@ import '/config/locator/setup.dart';
 import '/src/core/repositories/user_repository.dart';
 import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
+import '/src/core/widgets/main_app_bar.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
 
 @RoutePage()
@@ -53,7 +54,7 @@ class AddCompanyScreen extends StatelessWidget {
         return ModalProgressHUD(
           inAsyncCall: state is HomeLoading,
           child: ScrollableScaffold(
-            appBar: SliverAppBar(title: Text(locale.addCompany)),
+            appBar: MainAppBar(title: locale.addCompany),
             content: Padding(
               padding: EdgeInsets.all(screenSize.width * 0.1),
               child: Form(
@@ -70,20 +71,28 @@ class AddCompanyScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 42),
-                    FilledButton(
-                      child: Text(locale.add),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          homeBloc.add(
-                            AddCompany(_companyNameController.text, _userId),
-                          );
-                        }
-                      },
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: FilledButton(
+                        child: Text(locale.add),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            homeBloc.add(
+                              AddCompany(_companyNameController.text, _userId),
+                            );
+                          }
+                        },
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    OutlinedButton(
-                      child: Text(locale.cancel),
-                      onPressed: () => router.maybePop(),
+                    const SizedBox(height: 22),
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: OutlinedButton(
+                        child: Text(locale.cancel),
+                        onPressed: () => router.maybePop(),
+                      ),
                     ),
                   ],
                 ),

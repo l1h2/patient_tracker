@@ -6,6 +6,7 @@ class OnboardingAppBar extends SliverAppBar {
     required String title,
   }) : super(
           title: Text(title.toUpperCase()),
+          centerTitle: true,
           floating: true,
         );
 }
@@ -14,12 +15,12 @@ class MainAppBar extends SliverAppBar {
   MainAppBar({
     super.key,
     required String title,
-    required Widget actionButton,
+    Widget? actionButton,
   }) : super(
           toolbarHeight: 70,
           floating: true,
           title: Text(title),
           centerTitle: true,
-          actions: [actionButton],
+          actions: [if (actionButton != null) actionButton],
         );
 }

@@ -19,6 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   final HomeUseCase _homeUseCase;
+
   final UserRepository _userRepository = locator<UserRepository>();
 
   void _onAddCompany(AddCompany event, Emitter<HomeState> emit) async {

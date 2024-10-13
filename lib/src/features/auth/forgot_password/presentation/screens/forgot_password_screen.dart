@@ -69,15 +69,19 @@ class ForgotPasswordScreen extends StatelessWidget {
                       validator: (value) => emailValidator(value, locale),
                     ),
                     const SizedBox(height: 42),
-                    OutlinedButton(
-                      child: Text(locale.resetPassword),
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          forgotPasswordBloc.add(
-                            SendResetLink(_emailController.text),
-                          );
-                        }
-                      },
+                    SizedBox(
+                      height: 56,
+                      width: screenSize.width * 0.8,
+                      child: OutlinedButton(
+                        child: Text(locale.resetPassword),
+                        onPressed: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            forgotPasswordBloc.add(
+                              SendResetLink(_emailController.text),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

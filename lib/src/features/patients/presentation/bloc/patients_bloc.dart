@@ -107,7 +107,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
       emit(
         GetRecordsSuccess(
           _userRepository.getPatient(event.company, event.patient.id)!,
-          records,
+          records.copy(),
         ),
       );
     } catch (e) {

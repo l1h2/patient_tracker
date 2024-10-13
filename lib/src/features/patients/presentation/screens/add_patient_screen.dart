@@ -12,6 +12,7 @@ import '/src/core/models/company_model.dart';
 import '/src/core/repositories/user_repository.dart';
 import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
+import '/src/core/widgets/main_app_bar.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
 import '/src/core/widgets/selection_checkbox.dart';
 
@@ -58,7 +59,7 @@ class AddPatientScreen extends StatelessWidget {
         return ModalProgressHUD(
           inAsyncCall: state is PatientsLoading,
           child: ScrollableScaffold(
-            appBar: SliverAppBar(title: Text(locale.addPatient)),
+            appBar: MainAppBar(title: locale.addPatient),
             content: Padding(
               padding: EdgeInsets.all(screenSize.width * 0.1),
               child: Form(

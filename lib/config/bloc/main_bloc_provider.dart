@@ -10,6 +10,7 @@ import '/src/features/auth/logout/presentation/bloc/logout_bloc.dart';
 import '/src/features/home/presentation/bloc/home_bloc.dart';
 import '/src/features/patients/presentation/bloc/patients_bloc.dart';
 import '/src/features/records/presentation/bloc/records_bloc.dart';
+import '/src/features/settings/presentation/bloc/settings_bloc.dart';
 import '/src/features/splash/presentation/bloc/splash_bloc.dart';
 
 class MainBlocProvider extends StatelessWidget {
@@ -25,6 +26,7 @@ class MainBlocProvider extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SplashBloc(locator.get())),
+        BlocProvider(create: (_) => SettingsBloc(locator.get())),
         BlocProvider(create: (_) => LoginBloc(locator.get())),
         BlocProvider(create: (_) => ForgotPasswordBloc(locator.get())),
         BlocProvider(create: (_) => LogoutBloc(locator.get())),

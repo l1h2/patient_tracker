@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import 'settings_locator.dart';
 import 'setup_firebase.dart';
 import 'setup_forgot_password.dart';
 import 'setup_home.dart';
@@ -19,6 +20,7 @@ Future<void> setupLocator() async {
   setupSplashLocator(locator);
   setupLoginLocator(locator);
   setupForgotPasswordLocator(locator);
+  setupSettingsLocator(locator);
   setupPasswordLocator(locator);
   setupLogoutLocator(locator);
   setupHomeLocator(locator);

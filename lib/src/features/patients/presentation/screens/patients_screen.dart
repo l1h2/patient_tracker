@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../bloc/patients_bloc.dart';
-import '../widgets/edit_name_modal.dart';
+import '../widgets/action_menu.dart';
 
 import '/config/locator/setup.dart';
 import '/config/routes/router.gr.dart';
@@ -31,7 +31,6 @@ class PatientsScreen extends StatelessWidget {
   final List<Patient> _patients;
 
   final _searchController = TextEditingController();
-  final _editNameController = TextEditingController();
   final User _user = locator<UserRepository>().getUser()!;
 
   @override
@@ -71,17 +70,10 @@ class PatientsScreen extends StatelessWidget {
               child: ScrollableScaffold(
                 appBar: MainAppBar(
                   title: _company.name,
-                  actionButton: Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () => editNameDialog(
-                        userId: _user.id,
-                        context: context,
-                        company: _company,
-                        controller: _editNameController,
-                      ),
-                    ),
+                  actionButton: RecordsActionMenu(
+                    locale: locale,
+                    user: _user,
+                    company: _company,
                   ),
                 ),
                 floatingActionButton: FloatingActionButton(
@@ -118,10 +110,14 @@ class PatientsScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 42),
-                            OutlinedButton(
-                              child: Text(locale.refresh),
-                              onPressed: () => patientsBloc.add(
-                                GetPatients(_user.id, _company),
+                            SizedBox(
+                              height: 56,
+                              width: screenSize.width * 0.8,
+                              child: OutlinedButton(
+                                child: Text(locale.refresh),
+                                onPressed: () => patientsBloc.add(
+                                  GetPatients(_user.id, _company),
+                                ),
                               ),
                             ),
                           ],
