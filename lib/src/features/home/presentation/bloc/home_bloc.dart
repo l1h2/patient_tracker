@@ -16,6 +16,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<AddCompany>(_onAddCompany);
     on<GetCompanies>(_onGetCompanies);
     on<UpdateCompany>(_onUpdateCompany);
+    on<DeleteCompany>(_onDeleteCompany);
   }
 
   final HomeUseCase _homeUseCase;
@@ -58,6 +59,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       );
       _userRepository.updateCompany(company);
       emit(FoundCompanies(_userRepository.getCompanies()));
+    } catch (e) {
+      emit(HomeFailure(e.toString()));
+    }
+  }
+
+  void _onDeleteCompany(DeleteCompany event, Emitter<HomeState> emit) async {
+    emit(SearchingCompanies());
+    try {
+      await _homeUseCase.deleteCompany(event.userId, event.company.id);
+      _userRepository.removeCompany(event.company);
+      emit(FoundCompanies(_userRepository.getCompanies()));
+      emit(DeleteCompanySuccess());
     } catch (e) {
       emit(HomeFailure(e.toString()));
     }

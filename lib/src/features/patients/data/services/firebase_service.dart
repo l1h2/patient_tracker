@@ -71,4 +71,10 @@ class PatientsFirebaseService implements PatientsService {
 
     return GetRecordsReturn(records: records, recordDates: recordDates);
   }
+
+  @override
+  Future<void> deletePatient(DeletePatientParams params) async {
+    final patientsRepo = PatientsRepository(params.userId, params.companyId);
+    await patientsRepo.deletePatient(params.patientId);
+  }
 }

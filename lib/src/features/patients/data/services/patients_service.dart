@@ -7,4 +7,5 @@ abstract class PatientsService {
   Future<List<Patient>> getPatients(String userId, String companyId);
   Future<Patient> updatePatient(UpdatePatientParams params);
   Future<GetRecordsReturn> getRecords(GetRecordsParams params);
+  Future<void> deletePatient(DeletePatientParams params);
 }

@@ -27,4 +27,9 @@ class FirebaseHomeRepository implements HomeRepository {
   ) async {
     return await _service.updateCompany(userId, company, name);
   }
+
+  @override
+  Future<void> deleteCompany(String userId, String companyId) async {
+    return await _service.deleteCompany(userId, companyId);
+  }
 }

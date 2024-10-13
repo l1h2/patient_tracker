@@ -35,3 +35,22 @@ class GetRecordsParams extends Equatable {
   @override
   List<Object> get props => [userId, companyId, patientId, date];
 }
+
+class DeleteRecordsParams extends Equatable {
+  final String userId;
+  final String companyId;
+  final String patientId;
+  final String recordsId;
+  final DateTime date;
+
+  const DeleteRecordsParams({
+    required this.userId,
+    required this.companyId,
+    required this.patientId,
+    required this.recordsId,
+    required this.date,
+  });
+
+  @override
+  List<Object> get props => [userId, companyId, patientId, recordsId, date];
+}

@@ -580,6 +580,10 @@
       }
     }
   },
+  "recordsDeleted": "Records deleted successfully",
+  "@recordsDeleted": {
+    "description": "Records Deleted"
+  },
   "deleteSuccess": "{doc} deleted successfully",
   "@deleteSuccess": {
     "description": "Delete Success",

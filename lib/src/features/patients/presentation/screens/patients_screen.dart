@@ -63,7 +63,12 @@ class PatientsScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return BlocBuilder<HomeBloc, HomeState>(
+        return BlocConsumer<HomeBloc, HomeState>(
+          listener: (context, homeState) {
+            if (homeState is DeleteCompanySuccess) {
+              router.maybePop();
+            }
+          },
           builder: (context, homeState) {
             return ModalProgressHUD(
               inAsyncCall: homeState is SearchingCompanies,

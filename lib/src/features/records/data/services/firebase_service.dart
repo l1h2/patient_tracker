@@ -16,21 +16,20 @@ class RecordsFirebaseService implements RecordsService {
       params.patientId,
     );
 
-    final Records newRecords = params.records.copy();
+    String? recordId = params.records.id;
 
-    if (newRecords.id == null) {
-      final String recordId = await recordsRepo.createRecord(
-        RecordsDocument.fromRecords(newRecords),
+    if (recordId == null) {
+      recordId = await recordsRepo.createRecord(
+        RecordsDocument.fromRecords(params.records),
       );
-      newRecords.id = recordId;
-      await recordDatesRepo.addRecordDates({newRecords.date});
+      await recordDatesRepo.addRecordDates({params.records.date});
     } else {
       await recordsRepo.updateRecord(
-        RecordsDocument.fromRecords(newRecords),
+        RecordsDocument.fromRecords(params.records),
       );
     }
 
-    return newRecords.id!;
+    return recordId;
   }
 
   @override
@@ -45,5 +44,18 @@ class RecordsFirebaseService implements RecordsService {
       if (record == null) return null;
       return record.toRecords();
     });
+  }
+
+  @override
+  Future<void> deleteRecords(DeleteRecordsParams params) async {
+    final recordDatesRepo = RecordDatesRepository(params.patientId);
+    final recordsRepo = RecordsRepository(
+      params.userId,
+      params.companyId,
+      params.patientId,
+    );
+
+    await recordsRepo.deleteRecord(params.recordsId);
+    await recordDatesRepo.removeRecordDates({params.date});
   }
 }

@@ -20,6 +20,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
     on<GetPatients>(_onGetPatients);
     on<UpdatePatient>(_onUpdatePatient);
     on<GetRecords>(_onGetRecords);
+    on<DeletePatient>(_onDeletePatient);
   }
 
   final PatientsUseCase _patientsUseCase;
@@ -110,6 +111,27 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
           records.copy(),
         ),
       );
+    } catch (e) {
+      emit(PatientsFailure(e.toString()));
+    }
+  }
+
+  void _onDeletePatient(
+    DeletePatient event,
+    Emitter<PatientsState> emit,
+  ) async {
+    emit(SearchingPatients());
+    try {
+      await _patientsUseCase.deletePatient(
+        DeletePatientParams(
+          userId: event.userId,
+          companyId: event.company.id,
+          patientId: event.patient.id,
+        ),
+      );
+      _userRepository.removePatient(event.company, event.patient);
+      emit(FoundPatients(_userRepository.getPatients(event.company)));
+      emit(DeletePatientSuccess());
     } catch (e) {
       emit(PatientsFailure(e.toString()));
     }

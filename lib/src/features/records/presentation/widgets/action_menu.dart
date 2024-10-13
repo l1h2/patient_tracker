@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:patient_tracker/src/core/models/records_model.dart';
+
+import '../bloc/records_bloc.dart';
+
+import '/config/locator/setup.dart';
 import '/src/core/models/company_model.dart';
 import '/src/core/models/patient_model.dart';
 import '/src/core/models/user_model.dart';
+import '/src/core/repositories/user_repository.dart';
+import '/src/features/patients/presentation/bloc/patients_bloc.dart';
 import 'edit_patient_modal.dart';
 
 class RecordsActionMenu extends StatefulWidget {
@@ -14,21 +22,39 @@ class RecordsActionMenu extends StatefulWidget {
     required this.user,
     required this.company,
     required this.patient,
-    this.recordsId,
+    required this.records,
   });
 
   final AppLocalizations locale;
   final User user;
   final Company company;
   final Patient patient;
-  final String? recordsId;
+  final Records records;
 
   @override
   State<RecordsActionMenu> createState() => _RecordsActionMenuState();
 }
 
 class _RecordsActionMenuState extends State<RecordsActionMenu> {
+  late Records _currentRecords;
+
   bool _isMenuOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentRecords = widget.records;
+  }
+
+  @override
+  void didUpdateWidget(covariant RecordsActionMenu oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.records != widget.records) {
+      setState(() {
+        _currentRecords = widget.records;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +87,9 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
           case MenuOptions.deleteRecord:
             deleteRecordsDialog(
               context: context,
-              userId: widget.user.id,
               company: widget.company,
               patient: widget.patient,
-              recordsId: widget.recordsId!,
+              records: widget.records,
             );
             setState(() => _isMenuOpen = false);
             break;
@@ -77,7 +102,7 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
             children: [
               const Icon(Icons.edit),
               const SizedBox(width: 10),
-              Text(widget.locale.editPatient),
+              Text(_currentRecords.id ?? 'Null'),
             ],
           ),
         ),
@@ -92,8 +117,8 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
             ],
           ),
         ),
-        const PopupMenuDivider(),
-        if (widget.recordsId != null)
+        if (widget.records.id != null) ...[
+          const PopupMenuDivider(),
           PopupMenuItem(
             value: MenuOptions.deleteRecord,
             child: Row(
@@ -104,6 +129,7 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
               ],
             ),
           ),
+        ],
       ],
     );
   }
@@ -122,6 +148,7 @@ void deletePatientDialog({
   required Patient patient,
 }) {
   final AppLocalizations locale = AppLocalizations.of(context)!;
+  final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
 
   showDialog(
     context: context,
@@ -148,7 +175,7 @@ void deletePatientDialog({
                 width: 120,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Add your delete patient logic here
+                    patientsBloc.add(DeletePatient(userId, company, patient));
                     Navigator.of(context).pop();
                   },
                   child: Text(locale.delete),
@@ -164,12 +191,14 @@ void deletePatientDialog({
 
 void deleteRecordsDialog({
   required BuildContext context,
-  required String userId,
   required Company company,
   required Patient patient,
-  required String recordsId,
+  required Records records,
 }) {
   final AppLocalizations locale = AppLocalizations.of(context)!;
+
+  final User user = locator<UserRepository>().getUser()!;
+  final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
 
   showDialog(
     context: context,
@@ -196,7 +225,12 @@ void deleteRecordsDialog({
                 width: 120,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Add your delete record logic here
+                    recordsBloc.add(DeleteRecords(
+                      user: user,
+                      company: company,
+                      patient: patient,
+                      records: records,
+                    ));
                     Navigator.of(context).pop();
                   },
                   child: Text(locale.delete),

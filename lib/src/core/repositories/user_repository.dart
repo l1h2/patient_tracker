@@ -253,5 +253,6 @@ class UserRepository {
     if (currentPatient == null) return;
 
     currentPatient.records.remove(records.id);
+    currentPatient.recordDates.remove(records.date);
   }
 }

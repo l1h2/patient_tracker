@@ -24,6 +24,8 @@ final class SearchingCompanies extends HomeState {}
 
 final class AddCompanySuccess extends HomeState {}
 
+final class DeleteCompanySuccess extends HomeState {}
+
 final class AddCompanyFailure extends HomeState {
   final String error;
 

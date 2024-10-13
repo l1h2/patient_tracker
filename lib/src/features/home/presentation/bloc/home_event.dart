@@ -40,3 +40,13 @@ class UpdateCompany extends HomeEvent {
   @override
   List<Object> get props => [userId, company, name];
 }
+
+class DeleteCompany extends HomeEvent {
+  final String userId;
+  final Company company;
+
+  const DeleteCompany(this.userId, this.company);
+
+  @override
+  List<Object> get props => [userId, company];
+}

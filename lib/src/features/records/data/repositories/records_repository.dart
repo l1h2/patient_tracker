@@ -18,4 +18,9 @@ class FirebaseRecordsRepository implements RecordsRepository {
   Future<Records?> getRecords(GetRecordsParams params) async {
     return await _service.getRecords(params);
   }
+
+  @override
+  Future<void> deleteRecords(DeleteRecordsParams params) async {
+    return await _service.deleteRecords(params);
+  }
 }

@@ -18,6 +18,7 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
   RecordsBloc(this._recordsUseCase) : super(RecordsInitial()) {
     on<SaveRecords>(_onSaveRecords);
     on<GetRecords>(_onGetRecords);
+    on<DeleteRecords>(_onDeleteRecords);
   }
 
   final RecordsUseCase _recordsUseCase;
@@ -39,7 +40,7 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
         return;
       }
 
-      newRecords = event.records;
+      newRecords = event.records.copy();
     } else {
       newRecords = _userRepository
           .getRecords(
@@ -103,7 +104,7 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
     );
 
     if (!localRecords.isEqual(emptyRecords)) {
-      emit(GetRecordsSuccess(localRecords.copy()));
+      emit(GetRecordsSuccess(localRecords));
       return;
     }
 
@@ -123,9 +124,47 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
       }
 
       _userRepository.updateRecords(event.company, event.patient, records);
-      emit(GetRecordsSuccess(records.copy()));
+      emit(GetRecordsSuccess(records));
     } catch (e) {
       emit(GetRecordsFailure(e.toString()));
+    }
+  }
+
+  void _onDeleteRecords(
+    DeleteRecords event,
+    Emitter<RecordsState> emit,
+  ) async {
+    emit(RecordsLoading());
+
+    try {
+      await _recordsUseCase.deleteRecords(
+        DeleteRecordsParams(
+          userId: event.user.id,
+          companyId: event.company.id,
+          patientId: event.patient.id,
+          recordsId: event.records.id!,
+          date: event.records.date,
+        ),
+      );
+
+      _userRepository.removeRecords(
+        event.company,
+        event.patient,
+        event.records,
+      );
+
+      emit(DeleteRecordsSuccess());
+      emit(
+        GetRecordsSuccess(
+          Records.empty(
+            event.user,
+            event.patient,
+            event.records.date,
+          ),
+        ),
+      );
+    } catch (e) {
+      emit(RecordsFailure(e.toString()));
     }
   }
 }

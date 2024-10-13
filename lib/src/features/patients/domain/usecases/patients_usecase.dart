@@ -25,4 +25,8 @@ class PatientsUseCase implements UseCase<void, PatientParams> {
   Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
     return await _repository.getRecords(params);
   }
+
+  Future<void> deletePatient(DeletePatientParams params) async {
+    return await _repository.deletePatient(params);
+  }
 }

@@ -30,6 +30,8 @@ final class EmptyRecords extends RecordsState {}
 
 final class RecordsSuccess extends RecordsState {}
 
+final class DeleteRecordsSuccess extends RecordsState {}
+
 final class GetRecordsFailure extends RecordsState {
   final String error;
 

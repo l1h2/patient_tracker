@@ -25,4 +25,8 @@ class HomeUseCase implements UseCase<void, HomeParams> {
   ) async {
     return await _repository.updateCompany(userId, company, name);
   }
+
+  Future<void> deleteCompany(String userId, String companyId) async {
+    return await _repository.deleteCompany(userId, companyId);
+  }
 }

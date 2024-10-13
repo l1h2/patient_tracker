@@ -32,4 +32,10 @@ class HomeFirebaseService implements HomeService {
     company.name = name;
     return company;
   }
+
+  @override
+  Future<void> deleteCompany(String userId, String companyId) async {
+    final companiesRepo = CompaniesRepository(userId);
+    await companiesRepo.deleteCompany(companyId);
+  }
 }

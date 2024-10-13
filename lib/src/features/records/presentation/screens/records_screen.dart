@@ -40,6 +40,7 @@ class RecordsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppLocalizations locale = AppLocalizations.of(context)!;
     final ThemeData theme = Theme.of(context);
+    final StackRouter router = AutoRouter.of(context);
     final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
 
     return BlocConsumer<RecordsBloc, RecordsState>(
@@ -48,6 +49,12 @@ class RecordsScreen extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(locale.recordSaved, textAlign: TextAlign.center),
+            ),
+          );
+        } else if (state is DeleteRecordsSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(locale.recordsDeleted, textAlign: TextAlign.center),
             ),
           );
         } else if (state is NoChangesToSave) {
@@ -70,10 +77,14 @@ class RecordsScreen extends StatelessWidget {
       builder: (context, state) {
         if (state is GetRecordsSuccess) currentRecords.update(state.records);
 
-        return BlocBuilder<pb.PatientsBloc, pb.PatientsState>(
+        return BlocConsumer<pb.PatientsBloc, pb.PatientsState>(
+          listener: (context, patientsState) {
+            if (patientsState is pb.DeletePatientSuccess) router.maybePop();
+          },
           builder: (context, patientsState) {
             return ModalProgressHUD(
-              inAsyncCall: patientsState is pb.SearchingPatients,
+              inAsyncCall: patientsState is pb.SearchingPatients ||
+                  state is RecordsLoading,
               child: ScrollableScaffold(
                 appBar: MainAppBar(
                   title: patient.name,
@@ -82,7 +93,7 @@ class RecordsScreen extends StatelessWidget {
                     user: _user,
                     company: company,
                     patient: patient,
-                    recordsId: currentRecords.id,
+                    records: currentRecords,
                   ),
                 ),
                 content: Column(

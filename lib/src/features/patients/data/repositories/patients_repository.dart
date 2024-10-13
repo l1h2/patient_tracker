@@ -28,4 +28,9 @@ class FirebasePatientsRepository implements PatientsRepository {
   Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
     return await _service.getRecords(params);
   }
+
+  @override
+  Future<void> deletePatient(DeletePatientParams params) async {
+    return await _service.deletePatient(params);
+  }
 }

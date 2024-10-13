@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '/src/core/models/company_model.dart';
 import '/src/core/models/user_model.dart';
+import '/src/features/home/presentation/bloc/home_bloc.dart';
 import 'edit_company_modal.dart';
 
 class RecordsActionMenu extends StatefulWidget {
@@ -91,6 +93,7 @@ void deleteCompanyDialog({
   required Company company,
 }) {
   final AppLocalizations locale = AppLocalizations.of(context)!;
+  final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
 
   showDialog(
     context: context,
@@ -117,7 +120,7 @@ void deleteCompanyDialog({
                 width: 120,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Add your delete patient logic here
+                    homeBloc.add(DeleteCompany(userId, company));
                     Navigator.of(context).pop();
                   },
                   child: Text(locale.delete),

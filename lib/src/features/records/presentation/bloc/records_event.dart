@@ -40,3 +40,20 @@ class GetRecords extends RecordsEvent {
   @override
   List<Object> get props => [user, company, patient, date];
 }
+
+class DeleteRecords extends RecordsEvent {
+  final User user;
+  final Company company;
+  final Patient patient;
+  final Records records;
+
+  const DeleteRecords({
+    required this.user,
+    required this.company,
+    required this.patient,
+    required this.records,
+  });
+
+  @override
+  List<Object> get props => [user, company, patient, records];
+}

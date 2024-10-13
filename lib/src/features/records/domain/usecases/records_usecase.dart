@@ -17,4 +17,8 @@ class RecordsUseCase implements UseCase<String, RecordsParams> {
   Future<Records?> getRecords(GetRecordsParams params) async {
     return await _repository.getRecords(params);
   }
+
+  Future<void> deleteRecords(DeleteRecordsParams params) async {
+    return await _repository.deleteRecords(params);
+  }
 }

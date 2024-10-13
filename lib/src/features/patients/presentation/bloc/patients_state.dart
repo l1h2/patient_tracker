@@ -24,6 +24,8 @@ final class SearchingPatients extends PatientsState {}
 
 final class AddPatientSuccess extends PatientsState {}
 
+final class DeletePatientSuccess extends PatientsState {}
+
 final class GetRecordsSuccess extends PatientsState {
   final Patient patient;
   final Records records;

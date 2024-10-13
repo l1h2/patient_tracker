@@ -64,3 +64,14 @@ class UpdatePatient extends PatientsEvent {
   @override
   List<Object> get props => [userId, company, patient, name, isMale];
 }
+
+class DeletePatient extends PatientsEvent {
+  final String userId;
+  final Company company;
+  final Patient patient;
+
+  const DeletePatient(this.userId, this.company, this.patient);
+
+  @override
+  List<Object> get props => [userId, company, patient];
+}
