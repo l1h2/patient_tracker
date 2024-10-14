@@ -22,14 +22,16 @@ class GetPatients extends PatientsEvent {}
 class GetRecords extends PatientsEvent {
   final String patientId;
   final DateTime date;
+  final bool pushRecordsRoute;
 
   const GetRecords({
     required this.patientId,
     required this.date,
+    this.pushRecordsRoute = true,
   });
 
   @override
-  List<Object> get props => [patientId, date];
+  List<Object> get props => [patientId, date, pushRecordsRoute];
 }
 
 class UpdatePatient extends PatientsEvent {

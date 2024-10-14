@@ -31,7 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       );
 
       final Company company = Company(id: companyId, name: event.name);
-      _userRepo.addCompany(company);
+      await _userRepo.addCompany(company);
 
       emit(AddCompanySuccess());
     } catch (e) {
@@ -44,11 +44,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     Emitter<HomeState> emit,
   ) async {
     emit(SearchingCompanies());
+
     try {
       final List<Company> companies = await _homeUseCase.getCompanies(
         _userRepo.userId!,
       );
-      _userRepo.updateCompanies(companies);
+
+      await _userRepo.updateCompanies(companies);
+
       emit(FoundCompanies());
     } catch (e) {
       emit(HomeFailure(e.toString()));
@@ -63,7 +66,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         event.companyId,
         event.name,
       );
-      _userRepo.updateCompany(event.companyId, event.name);
+      await _userRepo.updateCompany(event.companyId, event.name);
       emit(UpdateCompanySuccess());
     } catch (e) {
       emit(HomeFailure(e.toString()));
@@ -74,7 +77,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(SearchingCompanies());
     try {
       await _homeUseCase.deleteCompany(_userRepo.userId!, event.companyId);
-      _userRepo.removeCompany(event.companyId);
+      await _userRepo.removeCompany(event.companyId);
       emit(DeleteCompanySuccess());
     } catch (e) {
       emit(HomeFailure(e.toString()));

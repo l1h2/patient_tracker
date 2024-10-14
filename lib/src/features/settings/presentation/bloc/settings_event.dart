@@ -16,4 +16,6 @@ class ChangeTheme extends SettingsEvent {
   List<Object> get props => [isDarkMode];
 }
 
+class ResetTheme extends SettingsEvent {}
+
 class ToggleTheme extends SettingsEvent {}

@@ -24,7 +24,7 @@ class LogoutBloc extends Bloc<LogoutEvent, LogoutState> {
     emit(LogoutLoading());
     try {
       await _logoutUsecases(NoParams());
-      locator<UserRepository>().clearUser();
+      await locator<UserRepository>().clearUser();
       emit(LogoutSuccess());
     } on Exception catch (e) {
       emit(LogoutFailure(e.toString()));

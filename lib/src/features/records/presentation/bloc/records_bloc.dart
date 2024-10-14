@@ -86,7 +86,7 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
       );
 
       currentRecords.id = recordsId;
-      _userRepo.updateRecordsFromRecords(
+      await _userRepo.updateRecordsFromRecords(
         companyId,
         patientId,
         currentRecords,
@@ -140,7 +140,7 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
         return;
       }
 
-      _userRepo.addRecords(companyId, patientId, records);
+      await _userRepo.addRecords(companyId, patientId, records);
       currentRecords.updateWith(records);
       emit(GetRecordsSuccess());
     } catch (e) {
@@ -165,7 +165,7 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
         ),
       );
 
-      _userRepo.removeRecords(
+      await _userRepo.removeRecords(
         companyId,
         patientId,
         currentRecords,

@@ -50,7 +50,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
         name: event.name,
         isMale: event.isMale,
       );
-      _userRepo.addPatient(companyId, patient);
+      await _userRepo.addPatient(companyId, patient);
 
       emit(AddPatientSuccess());
     } catch (e) {
@@ -65,7 +65,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
         _userRepo.userId!,
         companyId,
       );
-      _userRepo.updatePatients(companyId, patients);
+      await _userRepo.updatePatients(companyId, patients);
       emit(FoundPatients());
     } catch (e) {
       emit(PatientsFailure(e.toString()));
@@ -88,7 +88,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
         ),
       );
 
-      _userRepo.updatePatient(
+      await _userRepo.updatePatient(
         companyId,
         event.patientId,
         event.name,
@@ -114,7 +114,7 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
           patientId: event.patientId,
         ),
       );
-      _userRepo.removePatient(companyId, event.patientId);
+      await _userRepo.removePatient(companyId, event.patientId);
       emit(DeletePatientSuccess());
     } catch (e) {
       emit(PatientsFailure(e.toString()));
@@ -134,14 +134,15 @@ class PatientsBloc extends Bloc<PatientsEvent, PatientsState> {
         ),
       );
 
-      _userRepo.updatePatientRecords(
+      await _userRepo.updatePatientRecords(
         companyId,
         event.patientId,
         response.records,
         response.recordDates,
       );
 
-      emit(GetRecordsSuccess(companyId, event.patientId, event.date));
+      emit(GetRecordsSuccess(
+          companyId, event.patientId, event.date, event.pushRecordsRoute));
     } catch (e) {
       emit(PatientsFailure(e.toString()));
     }

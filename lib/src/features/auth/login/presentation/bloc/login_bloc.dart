@@ -31,7 +31,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ),
       );
 
-      locator<UserRepository>().setUser(loginReturn.user);
+      await locator<UserRepository>().setUser(loginReturn.user);
       emit(LoginSuccess(loginReturn.user));
     } on LoginIncorrectException catch (_) {
       emit(LoginUserNotFound());

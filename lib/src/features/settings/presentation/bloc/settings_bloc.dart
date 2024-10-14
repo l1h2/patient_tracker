@@ -17,6 +17,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       : super(SettingsInitial()) {
     on<ChangeTheme>(_onChangeTheme);
     on<ToggleTheme>(_onToggleTheme);
+    on<ResetTheme>(_onResetTheme);
   }
 
   final SettingsUseCase _settingsUseCase;
@@ -48,10 +49,19 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       await _settingsUseCase(
         SettingsParams(userId: _userRepo.user!.id, isDarkMode: isDarkMode),
       );
-      _userRepo.updateUser(newAttrs: {UserAttributes.isDarkMode: isDarkMode});
+      await _userRepo
+          .updateUser(newAttrs: {UserAttributes.isDarkMode: isDarkMode});
     } catch (e) {
       emit(ThemeChangeFailure(e.toString()));
     }
+
+    emit(ThemeChangeSuccess(_currentTheme));
+  }
+
+  void _onResetTheme(ResetTheme event, Emitter<SettingsState> emit) async {
+    emit(SettingsLoading());
+
+    _currentTheme = ThemeMode.system;
 
     emit(ThemeChangeSuccess(_currentTheme));
   }

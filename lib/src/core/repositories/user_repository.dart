@@ -1,224 +1,139 @@
+import 'package:hive/hive.dart';
+
 import '../models/company_model.dart';
 import '../models/patient_model.dart';
 import '../models/records_model.dart';
 import '../models/user_model.dart';
 
-class UserRepository {
-  User? _user;
+import '/config/datastore/hive.dart';
+import 'company_repository.dart';
+import 'patient_repository.dart';
+import 'records_repository.dart';
 
-  void setUser(User user) {
-    _user = user;
+class UserRepository {
+  late User _user;
+  late Box<User> _userBox;
+  late CompaniesRepository companiesRepo;
+  late PatientsRepository patientsRepo;
+  late RecordsRepository recordsRepo;
+
+  Future<void> init() async {
+    await _initializeBox();
+    _initializeUser();
+    companiesRepo = CompaniesRepository(user: _user, userBox: _userBox);
+    patientsRepo = PatientsRepository(user: _user, userBox: _userBox);
+    recordsRepo = RecordsRepository(user: _user, userBox: _userBox);
+  }
+
+  Future<void> _initializeBox() async =>
+      _userBox = await Hive.openBox<User>(HiveBoxes.user);
+
+  void _initializeUser() {
+    _user = _userBox.get(HiveKeys.user) ?? User.empty();
   }
 
   User? get user => _user;
-  String? get userId => _user?.id;
+  String? get userId => _user.id;
 
-  void updateUser({required Map<String, dynamic> newAttrs}) {
-    if (_user == null || newAttrs.isEmpty) return;
-    _user = _user!.copyWith(newAttrs: newAttrs);
+  Future<void> setUser(User user) async {
+    _user = user;
+    await _userBox.put(HiveKeys.user, _user);
   }
 
-  void clearUser() {
-    _user = null;
+  Future<void> clearUser() async {
+    _user.clear();
+    await _userBox.put(HiveKeys.user, _user);
   }
 
-  void addCompany(Company company) {
-    if (_user == null) return;
-
-    if (_user!.companies.containsKey(company.id)) return;
-
-    _user!.companies[company.id] = company;
+  Future<void> updateUser({required Map<String, dynamic> newAttrs}) async {
+    if (newAttrs.isEmpty) return;
+    _user = _user.copyWith(newAttrs: newAttrs);
+    await _userBox.put(HiveKeys.user, _user);
   }
 
-  List<Company> getCompanies() {
-    if (_user == null) return [];
+  Future<void> addCompany(Company company) async =>
+      await companiesRepo.addCompany(company);
 
-    final List<Company> companies = _user!.companies.values.toList();
-    companies.sort((a, b) => a.name.compareTo(b.name));
-    return companies;
-  }
+  List<Company> getCompanies() => companiesRepo.getCompanies();
 
-  Company? getCompany(String companyId) {
-    return _user?.companies[companyId];
-  }
+  Company? getCompany(String companyId) => companiesRepo.getCompany(companyId);
 
-  void updateCompany(String companyId, String name) {
-    final Company? company = _user?.companies[companyId];
+  Future<void> updateCompany(String companyId, String name) async =>
+      await companiesRepo.updateCompany(companyId, name);
 
-    if (company == null) return;
+  Future<void> updateCompanies(List<Company> companies) async =>
+      await companiesRepo.updateCompanies(companies);
 
-    company.name = name;
-  }
+  Future<void> removeCompany(String companyId) async =>
+      await companiesRepo.removeCompany(companyId);
 
-  void updateCompanies(List<Company> companies) {
-    if (_user == null) return;
+  Future<void> addPatient(String companyId, Patient patient) async =>
+      await patientsRepo.addPatient(companyId, patient);
 
-    _user!.companies.clear();
+  List<Patient> getPatients(String companyId) =>
+      patientsRepo.getPatients(companyId);
 
-    for (final company in companies) {
-      addCompany(company);
-    }
-  }
+  Patient? getPatient(String companyId, String patientId) =>
+      patientsRepo.getPatient(companyId, patientId);
 
-  void removeCompany(String companyId) {
-    if (_user == null) return;
-    _user!.companies.remove(companyId);
-  }
-
-  void addPatient(String companyId, Patient patient) {
-    final Company? company = _user?.companies[companyId];
-
-    if (company == null) return;
-
-    if (company.patients.containsKey(patient.id)) return;
-
-    company.patients[patient.id] = patient;
-  }
-
-  List<Patient> getPatients(String companyId) {
-    final Company? company = _user?.companies[companyId];
-
-    if (company == null) return [];
-
-    final List<Patient> patients = company.patients.values.toList();
-    patients.sort((a, b) => a.name.compareTo(b.name));
-    return patients;
-  }
-
-  Patient? getPatient(String companyId, String patientId) {
-    final Company? company = _user?.companies[companyId];
-
-    if (company == null) return null;
-
-    return company.patients[patientId];
-  }
-
-  void updatePatient(
+  Future<void> updatePatient(
     String companyId,
     String patientId,
     String name,
     bool isMale,
-  ) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
+  ) async =>
+      await patientsRepo.updatePatient(companyId, patientId, name, isMale);
 
-    if (patient == null) return;
-
-    patient.name = name;
-    patient.isMale = isMale;
-  }
-
-  void updatePatientRecords(
+  Future<void> updatePatientRecords(
     String companyId,
     String patientId,
     Records? records,
     Set<DateTime> recordDates,
-  ) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
+  ) async =>
+      await patientsRepo.updatePatientRecords(
+        companyId,
+        patientId,
+        records,
+        recordDates,
+      );
 
-    if (patient == null) return;
+  Future<void> updatePatients(String companyId, List<Patient> patients) async =>
+      await patientsRepo.updatePatients(companyId, patients);
 
-    patient.records.clear();
-    patient.recordDates.clear();
+  Future<void> removePatient(String companyId, String patientId) async =>
+      await patientsRepo.removePatient(companyId, patientId);
 
-    if (records != null) patient.records[records.id!] = records;
-    patient.recordDates.addAll(recordDates);
-  }
+  List<Records> getRecordsList(String companyId, String patientId) =>
+      recordsRepo.getRecordsList(companyId, patientId);
 
-  void updatePatients(String companyId, List<Patient> patients) {
-    final Company? company = _user?.companies[companyId];
+  Future<void> addRecords(
+    String companyId,
+    String patientId,
+    Records records,
+  ) async =>
+      await recordsRepo.addRecords(companyId, patientId, records);
 
-    if (company == null) return;
-
-    company.patients.clear();
-
-    for (final patient in patients) {
-      addPatient(companyId, patient);
-    }
-  }
-
-  void removePatient(String companyId, String patientId) {
-    final Company? company = _user?.companies[companyId];
-
-    if (company == null) return;
-
-    company.patients.remove(patientId);
-  }
-
-  List<Records> getRecordsList(String companyId, String patientId) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
-
-    if (patient == null) return [];
-
-    final List<Records> records = patient.records.values.toList();
-    records.sort((a, b) => a.date.compareTo(b.date));
-    return records;
-  }
-
-  void addRecords(String companyId, String patientId, Records records) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
-
-    if (patient == null) return;
-
-    patient.records[records.id!] = records;
-    patient.recordDates.add(records.date);
-  }
-
-  Records? getRecords(String companyId, String patientId, String recordId) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
-
-    if (patient == null) return null;
-
-    return patient.records[recordId];
-  }
+  Records? getRecords(String companyId, String patientId, String recordId) =>
+      recordsRepo.getRecords(companyId, patientId, recordId);
 
   Records? getRecordsFromDate(
     String companyId,
     String patientId,
     DateTime date,
-  ) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
+  ) =>
+      recordsRepo.getRecordsFromDate(companyId, patientId, date);
 
-    if (patient == null) return null;
-
-    try {
-      return patient.records.values.firstWhere(
-        (records) => records.date == date,
-      );
-    } on StateError {
-      return null;
-    }
-  }
-
-  void updateRecordsFromRecords(
+  Future<void> updateRecordsFromRecords(
     String companyId,
     String patientId,
     Records records,
-  ) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
+  ) async =>
+      await recordsRepo.updateRecordsFromRecords(companyId, patientId, records);
 
-    if (patient == null) return;
-
-    final Records? existingRecords = patient.records[records.id!];
-
-    if (existingRecords == null) {
-      patient.records[records.id!] = records.copy();
-    } else {
-      existingRecords.updateWith(records);
-    }
-
-    patient.recordDates.add(records.date);
-  }
-
-  void removeRecords(
+  Future<void> removeRecords(
     String companyId,
     String patientId,
     Records records,
-  ) {
-    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
-
-    if (patient == null) return;
-
-    patient.records.remove(records.id);
-    patient.recordDates.remove(records.date);
-  }
+  ) async =>
+      await recordsRepo.removeRecords(companyId, patientId, records);
 }

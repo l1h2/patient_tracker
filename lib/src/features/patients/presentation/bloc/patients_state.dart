@@ -27,11 +27,17 @@ final class GetRecordsSuccess extends PatientsState {
   final String companyId;
   final String patientId;
   final DateTime date;
+  final bool pushRecordsRoute;
 
-  const GetRecordsSuccess(this.companyId, this.patientId, this.date);
+  const GetRecordsSuccess(
+    this.companyId,
+    this.patientId,
+    this.date,
+    this.pushRecordsRoute,
+  );
 
   @override
-  List<Object> get props => [companyId, patientId, date];
+  List<Object> get props => [companyId, patientId, date, pushRecordsRoute];
 }
 
 final class NoChangesToSave extends PatientsState {}

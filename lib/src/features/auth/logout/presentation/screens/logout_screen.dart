@@ -9,6 +9,7 @@ import '../bloc/logout_bloc.dart';
 
 import '/config/routes/router.gr.dart';
 import '/src/core/widgets/error_widgets.dart';
+import '/src/features/settings/presentation/bloc/settings_bloc.dart';
 
 @RoutePage()
 class LogoutScreen extends StatelessWidget {
@@ -21,10 +22,12 @@ class LogoutScreen extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final StackRouter router = AutoRouter.of(context);
     final LogoutBloc logoutBloc = BlocProvider.of<LogoutBloc>(context);
+    final SettingsBloc settingsBloc = BlocProvider.of<SettingsBloc>(context);
 
     return BlocConsumer<LogoutBloc, LogoutState>(
       listener: (context, state) {
         if (state is LogoutSuccess) {
+          settingsBloc.add(ResetTheme());
           router.replaceAll([LoginRoute()]);
         } else if (state is LogoutFailure) {
           ErrorScaffoldMessenger.of(context).showSnackBar(

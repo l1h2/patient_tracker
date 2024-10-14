@@ -37,6 +37,8 @@ class RecordsScreen extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final StackRouter router = AutoRouter.of(context);
     final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
+    final pb.PatientsBloc patientsBloc =
+        BlocProvider.of<pb.PatientsBloc>(context);
 
     if (!_initController.boolean) {
       recordsBloc.init(companyId: companyId, patientId: patientId, date: date);
@@ -82,17 +84,27 @@ class RecordsScreen extends StatelessWidget {
           builder: (context, patientsState) {
             return ModalProgressHUD(
               inAsyncCall: patientsState is pb.SearchingPatients ||
+                  patientsState is pb.GettingRecords ||
                   state is RecordsLoading,
-              child: ScrollableScaffold(
-                appBar: MainAppBar(
-                  title: recordsBloc.patient?.name ?? '',
-                  actionButton: const RecordsActionMenu(),
+              child: RefreshIndicator(
+                onRefresh: () async => patientsBloc.add(
+                  pb.GetRecords(
+                    patientId: recordsBloc.patientId,
+                    date: recordsBloc.currentRecords.date,
+                    pushRecordsRoute: false,
+                  ),
                 ),
-                content: Column(
-                  children: [
-                    DatePicker(recordsBloc: recordsBloc),
-                    RecordsForm(),
-                  ],
+                child: ScrollableScaffold(
+                  appBar: MainAppBar(
+                    title: recordsBloc.patient?.name ?? '',
+                    actionButton: const RecordsActionMenu(),
+                  ),
+                  content: Column(
+                    children: [
+                      DatePicker(recordsBloc: recordsBloc),
+                      RecordsForm(),
+                    ],
+                  ),
                 ),
               ),
             );

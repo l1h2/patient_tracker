@@ -42,7 +42,7 @@ class PatientsScreen extends StatelessWidget {
 
     return BlocConsumer<PatientsBloc, PatientsState>(
       listener: (context, state) {
-        if (state is GetRecordsSuccess) {
+        if (state is GetRecordsSuccess && state.pushRecordsRoute) {
           router.push(
             RecordsRoute(
               companyId: state.companyId,
@@ -66,76 +66,79 @@ class PatientsScreen extends StatelessWidget {
             return ModalProgressHUD(
               inAsyncCall:
                   homeState is SearchingCompanies || state is GettingRecords,
-              child: ScrollableScaffold(
-                appBar: MainAppBar(
-                  title: patientsBloc.company?.name ?? '',
-                  actionButton: const RecordsActionMenu(),
-                ),
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () => router.push(AddPatientRoute()),
-                  child: const Icon(Icons.add),
-                ),
-                content: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    padding,
-                    10,
-                    padding,
-                    padding * 2,
+              child: RefreshIndicator(
+                onRefresh: () async => patientsBloc.add(GetPatients()),
+                child: ScrollableScaffold(
+                  appBar: MainAppBar(
+                    title: patientsBloc.company?.name ?? '',
+                    actionButton: const RecordsActionMenu(),
                   ),
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: locale.search,
-                          prefixIcon: const Icon(Icons.search),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () => router.push(AddPatientRoute()),
+                    child: const Icon(Icons.add),
+                  ),
+                  content: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      padding,
+                      10,
+                      padding,
+                      padding * 2,
+                    ),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: locale.search,
+                            prefixIcon: const Icon(Icons.search),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      if (state is SearchingPatients)
-                        const CupertinoActivityIndicator(radius: 16)
-                      else if (patientsBloc.patients.isEmpty)
-                        Column(
-                          children: [
-                            Text(
-                              locale.noPatients,
-                              style: theme.textTheme.headlineSmall,
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 42),
-                            SizedBox(
-                              height: 56,
-                              width: screenSize.width * 0.8,
-                              child: OutlinedButton(
-                                child: Text(locale.refresh),
-                                onPressed: () => patientsBloc.add(
-                                  GetPatients(),
+                        const SizedBox(height: 20),
+                        if (state is SearchingPatients)
+                          const CupertinoActivityIndicator(radius: 16)
+                        else if (patientsBloc.patients.isEmpty)
+                          Column(
+                            children: [
+                              Text(
+                                locale.noPatients,
+                                style: theme.textTheme.headlineSmall,
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 42),
+                              SizedBox(
+                                height: 56,
+                                width: screenSize.width * 0.8,
+                                child: OutlinedButton(
+                                  child: Text(locale.refresh),
+                                  onPressed: () => patientsBloc.add(
+                                    GetPatients(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      if (patientsBloc.patients.isNotEmpty)
-                        EntityList(
-                          items: patientsBloc.patients,
-                          searchController: _searchController,
-                          getName: (patient) => patient.name,
-                          onItemTap: (patient) {
-                            DateTime now = DateTime.now();
-                            DateTime todayMidnight = DateTime(
-                              now.year,
-                              now.month,
-                              now.day,
-                            ).toUtc();
-                            patientsBloc.add(
-                              GetRecords(
-                                patientId: patient.id,
-                                date: todayMidnight,
-                              ),
-                            );
-                          },
-                        )
-                    ],
+                            ],
+                          ),
+                        if (patientsBloc.patients.isNotEmpty)
+                          EntityList(
+                            items: patientsBloc.patients,
+                            searchController: _searchController,
+                            getName: (patient) => patient.name,
+                            onItemTap: (patient) {
+                              DateTime now = DateTime.now();
+                              DateTime todayMidnight = DateTime(
+                                now.year,
+                                now.month,
+                                now.day,
+                              ).toUtc();
+                              patientsBloc.add(
+                                GetRecords(
+                                  patientId: patient.id,
+                                  date: todayMidnight,
+                                ),
+                              );
+                            },
+                          )
+                      ],
+                    ),
                   ),
                 ),
               ),
