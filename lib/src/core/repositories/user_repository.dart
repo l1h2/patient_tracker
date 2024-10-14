@@ -28,15 +28,13 @@ class UserRepository {
   Future<void> _initializeBox() async =>
       _userBox = await Hive.openBox<User>(HiveBoxes.user);
 
-  void _initializeUser() {
-    _user = _userBox.get(HiveKeys.user) ?? User.empty();
-  }
+  void _initializeUser() => _user = _userBox.get(HiveKeys.user) ?? User.empty();
 
   User? get user => _user;
   String? get userId => _user.id;
 
   Future<void> setUser(User user) async {
-    _user = user;
+    _user.updateFromUser(user);
     await _userBox.put(HiveKeys.user, _user);
   }
 

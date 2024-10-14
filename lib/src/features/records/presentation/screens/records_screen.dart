@@ -101,7 +101,7 @@ class RecordsScreen extends StatelessWidget {
                   ),
                   content: Column(
                     children: [
-                      DatePicker(recordsBloc: recordsBloc),
+                      DatePicker(locale: locale, recordsBloc: recordsBloc),
                       RecordsForm(),
                     ],
                   ),

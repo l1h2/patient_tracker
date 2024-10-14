@@ -1,24 +1,27 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 dynamic getDefaultValue(dynamic value, dynamic newValue) {
-  if (value is bool || newValue is bool) {
-    return value == newValue ? null : newValue ?? false;
-  } else if (value is String || newValue is String) {
-    return value == newValue ? null : newValue ?? '';
-  } else if (value is double || newValue is double) {
-    return value == newValue ? null : newValue ?? 0.0;
-  } else if (value is int || newValue is int) {
-    return value == newValue ? null : newValue ?? 0;
+  final defaultValues = {
+    bool: false,
+    String: '',
+    double: 0.0,
+    int: 0,
+    List: [],
+    Map: {},
+  };
+
+  for (var type in defaultValues.keys) {
+    if (value.runtimeType == type || newValue.runtimeType == type) {
+      return value == newValue ? null : newValue ?? defaultValues[type];
+    }
   }
 
   return value;
 }
 
-String getNumberString(double? number) {
-  if (number == null) {
-    return '';
-  }
+String getNumberString(double? number) =>
+    number == null ? '' : NumberFormat('###.##').format(number);
 
-  final formatter = NumberFormat('###.##');
-  return formatter.format(number);
-}
+String getDateString(AppLocalizations locale, DateTime? date) =>
+    date == null ? '' : DateFormat.yMd(locale.localeName).format(date);

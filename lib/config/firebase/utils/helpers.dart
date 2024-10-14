@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 dynamic deleteIfInvalid(dynamic value) {
-  if (value is bool) {
-    return value == false ? FieldValue.delete() : value;
-  } else if (value is String) {
-    return value.isEmpty ? FieldValue.delete() : value;
-  } else if (value is double) {
-    return value == 0 ? FieldValue.delete() : value;
-  } else if (value is int) {
-    return value == 0 ? FieldValue.delete() : value;
-  } else if (value is List) {
-    return value.isEmpty ? FieldValue.delete() : value;
-  } else if (value is Map) {
-    return value.isEmpty ? FieldValue.delete() : value;
-  }
-  return value;
+  final conditions = {
+    bool: (v) => (v as bool) == false,
+    String: (v) => (v as String).isEmpty,
+    double: (v) => (v as double) == 0,
+    int: (v) => (v as int) == 0,
+    List: (v) => (v as List).isEmpty,
+    Map: (v) => (v as Map).isEmpty,
+  };
+
+  final bool Function(dynamic)? checkFunction = conditions[value.runtimeType];
+
+  if (checkFunction == null || !checkFunction(value)) return value;
+  return FieldValue.delete();
 }
 
 Map<String, dynamic>? getValidMap(

@@ -9,13 +9,8 @@ String? nameValidator(
 ) {
   final String? isEmpty = notEmptyValidator(value, fieldName, locale);
 
-  if (isEmpty != null) {
-    return isEmpty;
-  }
-
-  if (value!.length > 50) {
-    return locale.maxLengthError(fieldName, 50);
-  }
+  if (isEmpty != null) return isEmpty;
+  if (value!.length > 50) return locale.maxLengthError(fieldName, 50);
 
   return null;
 }
@@ -25,10 +20,7 @@ String? newNameValidator(
   String currentValue,
   AppLocalizations locale,
   String fieldName,
-) {
-  if (newValue == currentValue) {
-    return locale.unchangedError;
-  }
-
-  return nameValidator(newValue, locale, fieldName);
-}
+) =>
+    newValue == currentValue
+        ? locale.unchangedError
+        : nameValidator(newValue, locale, fieldName);

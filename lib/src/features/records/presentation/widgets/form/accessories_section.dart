@@ -122,6 +122,8 @@ class AccessoriesContent extends StatelessWidget {
               unit: locale.weightUnit,
               initialValue: accessories.dumbbell,
               onChanged: (value) => accessories.dumbbell = value,
+              minValue: 0,
+              maxValue: 100,
             ),
             const SizedBox(width: 32),
             NumberInput(
@@ -129,6 +131,8 @@ class AccessoriesContent extends StatelessWidget {
               unit: locale.weightUnit,
               initialValue: accessories.tonningBall,
               onChanged: (value) => accessories.tonningBall = value,
+              minValue: 0,
+              maxValue: 100,
             ),
           ],
         ),

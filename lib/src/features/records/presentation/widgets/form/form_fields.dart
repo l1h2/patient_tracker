@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:patient_tracker/src/core/validators/input_validator.dart';
+
 import '/src/core/utils/helpers.dart';
 
 class CustomExpansionTile extends StatelessWidget {
@@ -112,15 +116,21 @@ class NumberInput extends StatelessWidget {
     required this.unit,
     this.initialValue,
     required this.onChanged,
+    this.minValue = -10000,
+    this.maxValue = 10000,
   });
 
   final String label;
   final String unit;
   final double? initialValue;
   final ValueChanged<double?> onChanged;
+  final double minValue;
+  final double maxValue;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+
     return SizedBox(
       width: 150,
       child: TextFormField(
@@ -131,6 +141,13 @@ class NumberInput extends StatelessWidget {
           suffixText: unit,
         ),
         onChanged: (value) => onChanged(double.tryParse(value)),
+        validator: (value) => numberValidator(
+          value,
+          locale,
+          label,
+          minValue: minValue,
+          maxValue: maxValue,
+        ),
       ),
     );
   }
@@ -150,12 +167,15 @@ class TextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
         initialValue: initialValue,
         decoration: InputDecoration(labelText: label),
         onChanged: onChanged,
+        validator: (value) => textValidator(value, locale, label),
       ),
     );
   }

@@ -7,14 +7,16 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../bloc/records_bloc.dart';
 
+import '/src/core/utils/helpers.dart';
 import '/src/core/widgets/error_widgets.dart';
 
 class DatePicker extends StatelessWidget {
   DatePicker({
     super.key,
+    required AppLocalizations locale,
     required this.recordsBloc,
   }) : dateController = TextEditingController(
-          text: recordsBloc.currentRecords.date.toString().split(' ')[0],
+          text: getDateString(locale, recordsBloc.currentRecords.date),
         );
 
   final RecordsBloc recordsBloc;
@@ -26,7 +28,7 @@ class DatePicker extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextField(
+      child: TextFormField(
         controller: dateController,
         readOnly: true,
         decoration: const InputDecoration(
@@ -39,7 +41,7 @@ class DatePicker extends StatelessWidget {
               builder: (context) {
                 return Dialog(
                   child: CustomCalendar(
-                    initialDate: DateTime.parse(dateController.text),
+                    initialDate: recordsBloc.currentRecords.date,
                     recordsBloc: recordsBloc,
                   ),
                 );
@@ -119,7 +121,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
       listener: (context, state) {
         if (state is GetRecordsSuccess) {
           Navigator.pop(context);
-          Navigator.pop(context, _selectedDay.toString().split(' ')[0]);
+          Navigator.pop(context, getDateString(locale, _selectedDay));
         } else if (state is GetRecordsFailure) {
           Navigator.pop(context);
           ErrorScaffoldMessenger.of(context).showSnackBar(
@@ -140,6 +142,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   firstDay: firstDate,
                   lastDay: lastDate,
                   focusedDay: _focusedDay.value,
+                  locale: locale.localeName,
                   availableGestures: AvailableGestures.horizontalSwipe,
                   selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
                   availableCalendarFormats: const {

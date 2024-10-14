@@ -55,6 +55,14 @@ class User {
     );
   }
 
+  void updateFromUser(User user) => this
+    ..id = user.id
+    ..email = user.email
+    ..certificate = user.certificate
+    ..name = user.name
+    ..isDarkMode = user.isDarkMode
+    ..companies.addAll(user.companies);
+
   void clear() => this
     ..id = ''
     ..email = ''
