@@ -11,29 +11,27 @@ final class PatientsInitial extends PatientsState {}
 
 final class PatientsLoading extends PatientsState {}
 
-final class FoundPatients extends PatientsState {
-  final List<Patient> patients;
+final class GettingRecords extends PatientsState {}
 
-  const FoundPatients(this.patients);
-
-  @override
-  List<Object> get props => [patients];
-}
+final class FoundPatients extends PatientsState {}
 
 final class SearchingPatients extends PatientsState {}
 
 final class AddPatientSuccess extends PatientsState {}
 
+final class UpdatePatientSuccess extends PatientsState {}
+
 final class DeletePatientSuccess extends PatientsState {}
 
 final class GetRecordsSuccess extends PatientsState {
-  final Patient patient;
-  final Records records;
+  final String companyId;
+  final String patientId;
+  final DateTime date;
 
-  const GetRecordsSuccess(this.patient, this.records);
+  const GetRecordsSuccess(this.companyId, this.patientId, this.date);
 
   @override
-  List<Object> get props => [patient, records];
+  List<Object> get props => [companyId, patientId, date];
 }
 
 final class NoChangesToSave extends PatientsState {}

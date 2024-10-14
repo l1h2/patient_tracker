@@ -10,7 +10,7 @@ class FirebaseHomeRepository implements HomeRepository {
   FirebaseHomeRepository(this._service);
 
   @override
-  Future<void> addCompany(HomeParams params) async {
+  Future<String> addCompany(HomeParams params) async {
     return await _service.addCompany(params);
   }
 
@@ -20,16 +20,16 @@ class FirebaseHomeRepository implements HomeRepository {
   }
 
   @override
-  Future<Company> updateCompany(
+  Future<void> updateCompany(
     String userId,
-    Company company,
+    String companyId,
     String name,
   ) async {
-    return await _service.updateCompany(userId, company, name);
+    await _service.updateCompany(userId, companyId, name);
   }
 
   @override
   Future<void> deleteCompany(String userId, String companyId) async {
-    return await _service.deleteCompany(userId, companyId);
+    await _service.deleteCompany(userId, companyId);
   }
 }

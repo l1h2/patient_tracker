@@ -10,68 +10,48 @@ sealed class PatientsEvent extends Equatable {
 class AddPatient extends PatientsEvent {
   final String name;
   final bool isMale;
-  final String userId;
-  final String companyId;
 
-  const AddPatient(this.name, this.isMale, this.userId, this.companyId);
+  const AddPatient(this.name, this.isMale);
 
   @override
-  List<Object> get props => [name, isMale, userId, companyId];
+  List<Object> get props => [name, isMale];
 }
 
-class GetPatients extends PatientsEvent {
-  final String userId;
-  final Company company;
-
-  const GetPatients(this.userId, this.company);
-
-  @override
-  List<Object> get props => [userId, company];
-}
+class GetPatients extends PatientsEvent {}
 
 class GetRecords extends PatientsEvent {
-  final User user;
-  final Company company;
-  final Patient patient;
+  final String patientId;
   final DateTime date;
 
   const GetRecords({
-    required this.user,
-    required this.company,
-    required this.patient,
+    required this.patientId,
     required this.date,
   });
 
   @override
-  List<Object> get props => [user, company, patient, date];
+  List<Object> get props => [patientId, date];
 }
 
 class UpdatePatient extends PatientsEvent {
-  final String userId;
-  final Company company;
-  final Patient patient;
+  final String patientId;
   final String name;
   final bool isMale;
 
   const UpdatePatient({
-    required this.userId,
-    required this.company,
-    required this.patient,
+    required this.patientId,
     required this.name,
     required this.isMale,
   });
 
   @override
-  List<Object> get props => [userId, company, patient, name, isMale];
+  List<Object> get props => [patientId, name, isMale];
 }
 
 class DeletePatient extends PatientsEvent {
-  final String userId;
-  final Company company;
-  final Patient patient;
+  final String patientId;
 
-  const DeletePatient(this.userId, this.company, this.patient);
+  const DeletePatient(this.patientId);
 
   @override
-  List<Object> get props => [userId, company, patient];
+  List<Object> get props => [patientId];
 }

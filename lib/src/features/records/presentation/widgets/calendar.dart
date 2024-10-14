@@ -7,27 +7,17 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../bloc/records_bloc.dart';
 
-import '/src/core/models/company_model.dart';
-import '/src/core/models/patient_model.dart';
-import '/src/core/models/user_model.dart';
 import '/src/core/widgets/error_widgets.dart';
 
 class DatePicker extends StatelessWidget {
   DatePicker({
     super.key,
-    required DateTime currentDate,
     required this.recordsBloc,
-    required this.user,
-    required this.company,
-    required this.patient,
   }) : dateController = TextEditingController(
-          text: currentDate.toString().split(' ')[0],
+          text: recordsBloc.currentRecords.date.toString().split(' ')[0],
         );
 
   final RecordsBloc recordsBloc;
-  final User user;
-  final Company company;
-  final Patient patient;
   final TextEditingController dateController;
 
   @override
@@ -51,9 +41,6 @@ class DatePicker extends StatelessWidget {
                   child: CustomCalendar(
                     initialDate: DateTime.parse(dateController.text),
                     recordsBloc: recordsBloc,
-                    user: user,
-                    company: company,
-                    patient: patient,
                   ),
                 );
               },
@@ -69,16 +56,10 @@ class CustomCalendar extends StatefulWidget {
     super.key,
     required this.initialDate,
     required this.recordsBloc,
-    required this.user,
-    required this.company,
-    required this.patient,
   });
 
   final DateTime initialDate;
   final RecordsBloc recordsBloc;
-  final User user;
-  final Company company;
-  final Patient patient;
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -172,7 +153,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   pageJumpingEnabled: true,
                   onHeaderTapped: (focusedDay) => _selectYear(context),
                   onHeaderLongPressed: (focusedDay) => _selectYear(context),
-                  holidayPredicate: (day) => widget.patient.recordDates.any(
+                  holidayPredicate: (day) =>
+                      widget.recordsBloc.patient!.recordDates.any(
                     (recordDate) => isSameDay(day, recordDate),
                   ),
                   onDaySelected: _selectDay,
@@ -192,14 +174,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
       _selectedDay = selectedDay;
       _focusedDay.value = focusedDay;
     });
-    widget.recordsBloc.add(
-      GetRecords(
-        user: widget.user,
-        company: widget.company,
-        patient: widget.patient,
-        date: _selectedDay,
-      ),
-    );
+    widget.recordsBloc.add(GetRecords(date: _selectedDay));
 
     await showDialog(
       context: context,
@@ -208,7 +183,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
           backgroundColor: Colors.transparent,
           body: ModalProgressHUD(
             inAsyncCall: true,
-            child: SizedBox(width: 0),
+            child: SizedBox(),
           ),
         );
       },

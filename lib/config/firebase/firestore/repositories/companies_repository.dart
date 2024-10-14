@@ -6,8 +6,8 @@ class CompaniesRepository {
 
   final CompaniesDao _companiesDao;
 
-  Future<void> createCompany(CompanyDocument company) async {
-    await _companiesDao.createCompany(company.toMap());
+  Future<String> createCompany(CompanyDocument company) async {
+    return await _companiesDao.createCompany(company.toMap());
   }
 
   Future<CompanyDocument?> readCompany(String companyId) async {

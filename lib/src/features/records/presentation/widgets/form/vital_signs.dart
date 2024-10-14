@@ -6,17 +6,14 @@ import '/src/core/models/records_model.dart';
 import 'form_fields.dart';
 
 class VitalSignsSection extends StatelessWidget {
-  const VitalSignsSection({
-    super.key,
-    required this.locale,
-    required this.vitalSigns,
-  });
+  const VitalSignsSection({super.key, required this.vitalSigns});
 
-  final AppLocalizations locale;
   final VitalSigns vitalSigns;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+
     return CustomExpansionTile(
       title: locale.vitalSigns,
       child: VitalSignsContents(locale: locale, vitalSigns: vitalSigns),

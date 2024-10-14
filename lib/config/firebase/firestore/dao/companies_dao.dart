@@ -11,8 +11,10 @@ class CompaniesDao {
   final FirestoreDao _baseDao = locator<FirestoreDao>();
   final String _collectionPath;
 
-  Future<void> createCompany(Map<String, dynamic> data) async {
-    await _baseDao.createDocument(_collectionPath, data);
+  Future<String> createCompany(Map<String, dynamic> data) async {
+    return await _baseDao.createDocument(_collectionPath, data).then((doc) {
+      return doc.id;
+    });
   }
 
   Future<Map<String, dynamic>?> readCompany(String companyId) async {

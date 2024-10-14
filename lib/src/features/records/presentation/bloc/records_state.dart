@@ -13,14 +13,7 @@ final class RecordsLoading extends RecordsState {}
 
 final class SearchingRecords extends RecordsState {}
 
-final class GetRecordsSuccess extends RecordsState {
-  final Records records;
-
-  const GetRecordsSuccess(this.records);
-
-  @override
-  List<Object> get props => [records];
-}
+final class GetRecordsSuccess extends RecordsState {}
 
 final class NoRecordsFound extends RecordsState {}
 

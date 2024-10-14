@@ -6,19 +6,15 @@ import '/src/core/models/records_model.dart';
 import 'form_fields.dart';
 
 class WarmUpSection extends StatelessWidget {
-  const WarmUpSection({
-    super.key,
-    required this.locale,
-    required this.theme,
-    required this.warmUp,
-  });
+  const WarmUpSection({super.key, required this.warmUp});
 
-  final AppLocalizations locale;
-  final ThemeData theme;
   final WarmUp warmUp;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+
     return CustomExpansionTile(
       title: locale.warmUp,
       child: Padding(

@@ -26,14 +26,14 @@ class MainBlocProvider extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => SplashBloc(locator.get())),
-        BlocProvider(create: (_) => SettingsBloc(locator.get())),
+        BlocProvider(create: (_) => SettingsBloc(locator.get(), locator.get())),
         BlocProvider(create: (_) => LoginBloc(locator.get())),
         BlocProvider(create: (_) => ForgotPasswordBloc(locator.get())),
         BlocProvider(create: (_) => LogoutBloc(locator.get())),
         BlocProvider(create: (_) => PasswordBloc(locator.get())),
-        BlocProvider(create: (_) => HomeBloc(locator.get())),
-        BlocProvider(create: (_) => PatientsBloc(locator.get())),
-        BlocProvider(create: (_) => RecordsBloc(locator.get())),
+        BlocProvider(create: (_) => HomeBloc(locator.get(), locator.get())),
+        BlocProvider(create: (_) => PatientsBloc(locator.get(), locator.get())),
+        BlocProvider(create: (_) => RecordsBloc(locator.get(), locator.get())),
       ],
       child: child,
     );

@@ -569,7 +569,7 @@
   "@deleteRecord": {
     "description": "Delete Record"
   },
-  "deletionConfirmation": "Are you sure you want to delete this {doc}?\n\nThis action can''t be undone.",
+  "deletionConfirmation": "Are you sure you want to delete this {doc}?\n\nThis action can't be undone.",
   "@deletionConfirmation": {
     "description": "Deletion Confirmation",
     "placeholders": {
@@ -675,7 +675,7 @@
   "@noChanges": {
     "description": "No Changes"
   },
-  "emptyForm": "Can''t save an empty form",
+  "emptyForm": "Can't save an empty form",
   "@emptyForm": {
     "description": "Empty Form"
   },
@@ -690,11 +690,11 @@
       }
     }
   },
-  "unchangedError": "New value can''t be the same as the current value",
+  "unchangedError": "New value can't be the same as the current value",
   "@unchangedError": {
     "description": "Unchanged Error"
   },
-  "maxLengthError": "{field} can''t have more than {num_chars} characters",
+  "maxLengthError": "{field} can't have more than {num_chars} characters",
   "@maxLengthError": {
     "description": "Max Length Error",
     "placeholders": {
@@ -710,7 +710,7 @@
       }
     }
   },
-  "fieldEmptyError": "{field} can''t be empty",
+  "fieldEmptyError": "{field} can't be empty",
   "@fieldEmptyError": {
     "description": "Field Empty Error",
     "placeholders": {

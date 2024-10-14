@@ -6,17 +6,14 @@ import '/src/core/models/records_model.dart';
 import 'form_fields.dart';
 
 class AccessoriesSection extends StatelessWidget {
-  const AccessoriesSection({
-    super.key,
-    required this.locale,
-    required this.accessories,
-  });
+  const AccessoriesSection({super.key, required this.accessories});
 
-  final AppLocalizations locale;
   final Accessories accessories;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+
     return CustomExpansionTile(
       title: locale.accessoriesUsed,
       child: Padding(

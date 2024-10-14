@@ -10,9 +10,8 @@ class UserRepository {
     _user = user;
   }
 
-  User? getUser() {
-    return _user;
-  }
+  User? get user => _user;
+  String? get userId => _user?.id;
 
   void updateUser({required Map<String, dynamic> newAttrs}) {
     if (_user == null || newAttrs.isEmpty) return;
@@ -40,219 +39,186 @@ class UserRepository {
   }
 
   Company? getCompany(String companyId) {
-    if (_user == null) return null;
-    return _user!.companies[companyId];
+    return _user?.companies[companyId];
   }
 
-  void updateCompany(Company company) {
-    if (_user == null) return;
+  void updateCompany(String companyId, String name) {
+    final Company? company = _user?.companies[companyId];
 
-    final Company? existingCompany = _user!.companies[company.id];
+    if (company == null) return;
 
-    if (existingCompany == null) return;
-
-    _user!.companies[company.id] = existingCompany.copyWith(company);
+    company.name = name;
   }
 
   void updateCompanies(List<Company> companies) {
     if (_user == null) return;
 
+    _user!.companies.clear();
+
     for (final company in companies) {
-      updateCompany(company);
       addCompany(company);
     }
   }
 
-  void removeCompany(Company company) {
+  void removeCompany(String companyId) {
     if (_user == null) return;
-    _user!.companies.remove(company.id);
+    _user!.companies.remove(companyId);
   }
 
-  void addPatient(Company company, Patient patient) {
-    if (_user == null) return;
+  void addPatient(String companyId, Patient patient) {
+    final Company? company = _user?.companies[companyId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (company == null) return;
 
-    if (currentCompany == null) return;
+    if (company.patients.containsKey(patient.id)) return;
 
-    if (currentCompany.patients.containsKey(patient.id)) return;
-
-    currentCompany.patients[patient.id] = patient;
+    company.patients[patient.id] = patient;
   }
 
-  List<Patient> getPatients(Company company) {
-    if (_user == null) return [];
+  List<Patient> getPatients(String companyId) {
+    final Company? company = _user?.companies[companyId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (company == null) return [];
 
-    if (currentCompany == null) return [];
-
-    final List<Patient> patients = currentCompany.patients.values.toList();
+    final List<Patient> patients = company.patients.values.toList();
     patients.sort((a, b) => a.name.compareTo(b.name));
     return patients;
   }
 
-  Patient? getPatient(Company company, String patientId) {
-    if (_user == null) return null;
+  Patient? getPatient(String companyId, String patientId) {
+    final Company? company = _user?.companies[companyId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (company == null) return null;
 
-    if (currentCompany == null) return null;
-
-    return currentCompany.patients[patientId];
+    return company.patients[patientId];
   }
 
-  void updatePatient(Company company, Patient patient) {
-    if (_user == null) return;
+  void updatePatient(
+    String companyId,
+    String patientId,
+    String name,
+    bool isMale,
+  ) {
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (patient == null) return;
 
-    if (currentCompany == null) return;
-
-    final Patient? existingPatient = currentCompany.patients[patient.id];
-
-    if (existingPatient == null) return;
-
-    currentCompany.patients[patient.id] = existingPatient.copyWith(patient);
+    patient.name = name;
+    patient.isMale = isMale;
   }
 
   void updatePatientRecords(
-    Company company,
-    Patient patient,
-    Records records,
+    String companyId,
+    String patientId,
+    Records? records,
     Set<DateTime> recordDates,
   ) {
-    if (_user == null) return;
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (patient == null) return;
 
-    if (currentCompany == null) return;
+    patient.records.clear();
+    patient.recordDates.clear();
 
-    final Patient? existingPatient = currentCompany.patients[patient.id];
-
-    if (existingPatient == null) return;
-
-    final newPatient = Patient(
-      id: existingPatient.id,
-      name: existingPatient.name,
-      isMale: existingPatient.isMale,
-      records: records.id == null ? {} : {records.id!: records},
-      recordDates: recordDates,
-    );
-
-    currentCompany.patients[patient.id] = existingPatient.copyWith(newPatient);
+    if (records != null) patient.records[records.id!] = records;
+    patient.recordDates.addAll(recordDates);
   }
 
-  void updatePatients(Company company, List<Patient> patients) {
-    if (_user == null) return;
+  void updatePatients(String companyId, List<Patient> patients) {
+    final Company? company = _user?.companies[companyId];
+
+    if (company == null) return;
+
+    company.patients.clear();
 
     for (final patient in patients) {
-      updatePatient(company, patient);
-      addPatient(company, patient);
+      addPatient(companyId, patient);
     }
   }
 
-  void removePatient(Company company, Patient patient) {
-    if (_user == null) return;
+  void removePatient(String companyId, String patientId) {
+    final Company? company = _user?.companies[companyId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (company == null) return;
 
-    if (currentCompany == null) return;
-
-    currentCompany.patients.remove(patient.id);
+    company.patients.remove(patientId);
   }
 
-  List<Records> getRecordsList(Company company, Patient patient) {
-    if (_user == null) return [];
+  List<Records> getRecordsList(String companyId, String patientId) {
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (patient == null) return [];
 
-    if (currentCompany == null) return [];
-
-    final Patient? currentPatient = currentCompany.patients[patient.id];
-
-    if (currentPatient == null) return [];
-
-    final List<Records> records = currentPatient.records.values.toList();
+    final List<Records> records = patient.records.values.toList();
     records.sort((a, b) => a.date.compareTo(b.date));
     return records;
   }
 
-  Records? getRecords(Company company, Patient patient, String recordId) {
-    if (_user == null) return null;
+  void addRecords(String companyId, String patientId, Records records) {
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (patient == null) return;
 
-    if (currentCompany == null) return null;
+    patient.records[records.id!] = records;
+    patient.recordDates.add(records.date);
+  }
 
-    final Patient? currentPatient = currentCompany.patients[patient.id];
+  Records? getRecords(String companyId, String patientId, String recordId) {
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    if (currentPatient == null) return null;
+    if (patient == null) return null;
 
-    return currentPatient.records[recordId];
+    return patient.records[recordId];
   }
 
   Records? getRecordsFromDate(
-    User user,
-    Company company,
-    Patient patient,
+    String companyId,
+    String patientId,
     DateTime date,
   ) {
-    if (_user == null) return null;
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (patient == null) return null;
 
-    if (currentCompany == null) return null;
-
-    final Patient? currentPatient = currentCompany.patients[patient.id];
-
-    if (currentPatient == null) return null;
-
-    return currentPatient.records.values.firstWhere(
-      (records) => records.date == date,
-      orElse: () => Records.empty(user, patient, date),
-    );
-  }
-
-  void updateRecords(Company company, Patient patient, Records records) {
-    if (_user == null) return;
-
-    final Company? currentCompany = _user!.companies[company.id];
-
-    if (currentCompany == null) return;
-
-    final Patient? currentPatient = currentCompany.patients[patient.id];
-
-    if (currentPatient == null) return;
-
-    currentPatient.records[records.id!] = records;
-    currentPatient.recordDates.add(records.date);
-  }
-
-  void updateRecordsFromList(
-    Company company,
-    Patient patient,
-    List<Records> recordsList,
-  ) {
-    if (_user == null) return;
-
-    for (final records in recordsList) {
-      updateRecords(company, patient, records);
+    try {
+      return patient.records.values.firstWhere(
+        (records) => records.date == date,
+      );
+    } on StateError {
+      return null;
     }
   }
 
-  void removeRecords(Company company, Patient patient, Records records) {
-    if (_user == null) return;
+  void updateRecordsFromRecords(
+    String companyId,
+    String patientId,
+    Records records,
+  ) {
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
 
-    final Company? currentCompany = _user!.companies[company.id];
+    if (patient == null) return;
 
-    if (currentCompany == null) return;
+    final Records? existingRecords = patient.records[records.id!];
 
-    final Patient? currentPatient = currentCompany.patients[patient.id];
+    if (existingRecords == null) {
+      patient.records[records.id!] = records.copy();
+    } else {
+      existingRecords.updateWith(records);
+    }
 
-    if (currentPatient == null) return;
+    patient.recordDates.add(records.date);
+  }
 
-    currentPatient.records.remove(records.id);
-    currentPatient.recordDates.remove(records.date);
+  void removeRecords(
+    String companyId,
+    String patientId,
+    Records records,
+  ) {
+    final Patient? patient = _user?.companies[companyId]?.patients[patientId];
+
+    if (patient == null) return;
+
+    patient.records.remove(records.id);
+    patient.recordDates.remove(records.date);
   }
 }

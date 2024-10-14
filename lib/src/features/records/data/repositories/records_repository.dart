@@ -21,6 +21,6 @@ class FirebaseRecordsRepository implements RecordsRepository {
 
   @override
   Future<void> deleteRecords(DeleteRecordsParams params) async {
-    return await _service.deleteRecords(params);
+    await _service.deleteRecords(params);
   }
 }

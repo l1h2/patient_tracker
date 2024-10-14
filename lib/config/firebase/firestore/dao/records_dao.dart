@@ -21,7 +21,7 @@ class RecordsDao {
     return await _baseDao.readDocument(
       _collectionPath,
       recordId,
-      RecordAttrs.id,
+      RecordsAttrs.id,
     );
   }
 
@@ -33,12 +33,12 @@ class RecordsDao {
       _collectionPath,
       fieldName,
       value,
-      RecordAttrs.id,
+      RecordsAttrs.id,
     );
   }
 
   Future<List<Map<String, dynamic>>> readRecords() async {
-    return await _baseDao.readDocuments(_collectionPath, RecordAttrs.id);
+    return await _baseDao.readDocuments(_collectionPath, RecordsAttrs.id);
   }
 
   Future<void> updateRecord(

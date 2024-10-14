@@ -7,9 +7,6 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../bloc/patients_bloc.dart';
 
-import '/config/locator/setup.dart';
-import '/src/core/models/company_model.dart';
-import '/src/core/repositories/user_repository.dart';
 import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/main_app_bar.dart';
@@ -18,14 +15,11 @@ import '/src/core/widgets/selection_checkbox.dart';
 
 @RoutePage()
 class AddPatientScreen extends StatelessWidget {
-  AddPatientScreen({super.key, required this.company});
-
-  final Company company;
+  AddPatientScreen({super.key});
 
   final _patientNameController = TextEditingController();
   final _genderController = BoolController();
   final _formKey = GlobalKey<FormState>();
-  final String _userId = locator<UserRepository>().getUser()!.id;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +40,6 @@ class AddPatientScreen extends StatelessWidget {
               ),
             ),
           );
-          patientsBloc.add(GetPatients(_userId, company));
           router.maybePop();
         } else if (state is AddPatientFailure) {
           ErrorScaffoldMessenger.of(context).showSnackBar(
@@ -94,8 +87,6 @@ class AddPatientScreen extends StatelessWidget {
                               AddPatient(
                                 _patientNameController.text,
                                 _genderController.boolean,
-                                _userId,
-                                company.id,
                               ),
                             );
                           }

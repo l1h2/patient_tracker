@@ -3,22 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '/src/core/models/company_model.dart';
-import '/src/core/models/user_model.dart';
+import '../bloc/patients_bloc.dart';
+
+import '/src/core/widgets/deletion_dialog.dart';
 import '/src/features/home/presentation/bloc/home_bloc.dart';
 import 'edit_company_modal.dart';
 
 class RecordsActionMenu extends StatefulWidget {
-  const RecordsActionMenu({
-    super.key,
-    required this.locale,
-    required this.user,
-    required this.company,
-  });
-
-  final AppLocalizations locale;
-  final User user;
-  final Company company;
+  const RecordsActionMenu({super.key});
 
   @override
   State<RecordsActionMenu> createState() => _RecordsActionMenuState();
@@ -29,6 +21,10 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
+    final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
+
     return PopupMenuButton(
       icon: _isMenuOpen ? const Icon(Icons.close) : const Icon(Icons.more_vert),
       onOpened: () => setState(() => _isMenuOpen = true),
@@ -38,18 +34,16 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
       onSelected: (String result) {
         switch (result) {
           case MenuOptions.editCompany:
-            editCompanyDialog(
-              context: context,
-              userId: widget.user.id,
-              company: widget.company,
-            );
+            editCompanyDialog(context: context);
             setState(() => _isMenuOpen = false);
             break;
           case MenuOptions.deleteCompany:
-            deleteCompanyDialog(
+            deleteDocumentDialog(
               context: context,
-              userId: widget.user.id,
-              company: widget.company,
+              docName: locale.patient,
+              onDelete: () => homeBloc.add(
+                DeleteCompany(patientsBloc.companyId),
+              ),
             );
             setState(() => _isMenuOpen = false);
             break;
@@ -62,7 +56,7 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
             children: [
               const Icon(Icons.edit),
               const SizedBox(width: 10),
-              Text(widget.locale.editCompany),
+              Text(locale.editCompany),
             ],
           ),
         ),
@@ -73,7 +67,7 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
             children: [
               const Icon(Icons.delete),
               const SizedBox(width: 10),
-              Text(widget.locale.deleteCompany),
+              Text(locale.deleteCompany),
             ],
           ),
         ),
@@ -85,51 +79,4 @@ class _RecordsActionMenuState extends State<RecordsActionMenu> {
 class MenuOptions {
   static const editCompany = 'editCompany';
   static const deleteCompany = 'deleteCompany';
-}
-
-void deleteCompanyDialog({
-  required BuildContext context,
-  required String userId,
-  required Company company,
-}) {
-  final AppLocalizations locale = AppLocalizations.of(context)!;
-  final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
-
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(locale.deleteCompany),
-        content: Text(
-          locale.deletionConfirmation(locale.company.toLowerCase()),
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 46,
-                width: 120,
-                child: FilledButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(locale.cancel),
-                ),
-              ),
-              SizedBox(
-                height: 46,
-                width: 120,
-                child: OutlinedButton(
-                  onPressed: () {
-                    homeBloc.add(DeleteCompany(userId, company));
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(locale.delete),
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-    },
-  );
 }

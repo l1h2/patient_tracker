@@ -7,8 +7,6 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../bloc/home_bloc.dart';
 
-import '/config/locator/setup.dart';
-import '/src/core/repositories/user_repository.dart';
 import '/src/core/validators/name_validator.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/main_app_bar.dart';
@@ -20,7 +18,6 @@ class AddCompanyScreen extends StatelessWidget {
 
   final _companyNameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final String _userId = locator<UserRepository>().getUser()!.id;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +38,6 @@ class AddCompanyScreen extends StatelessWidget {
               ),
             ),
           );
-          homeBloc.add(GetCompanies(_userId));
           router.maybePop();
         } else if (state is AddCompanyFailure) {
           ErrorScaffoldMessenger.of(context).showSnackBar(
@@ -79,7 +75,7 @@ class AddCompanyScreen extends StatelessWidget {
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             homeBloc.add(
-                              AddCompany(_companyNameController.text, _userId),
+                              AddCompany(_companyNameController.text),
                             );
                           }
                         },

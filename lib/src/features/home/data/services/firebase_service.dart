@@ -7,9 +7,9 @@ import 'home_service.dart';
 
 class HomeFirebaseService implements HomeService {
   @override
-  Future<void> addCompany(HomeParams params) async {
+  Future<String> addCompany(HomeParams params) async {
     final companyRepo = CompaniesRepository(params.userId);
-    await companyRepo.createCompany(CompanyDocument(name: params.name));
+    return await companyRepo.createCompany(CompanyDocument(name: params.name));
   }
 
   @override
@@ -20,17 +20,15 @@ class HomeFirebaseService implements HomeService {
   }
 
   @override
-  Future<Company> updateCompany(
+  Future<void> updateCompany(
     String userId,
-    Company company,
+    String companyId,
     String name,
   ) async {
     final companiesRepo = CompaniesRepository(userId);
     await companiesRepo.updateCompany(
-      CompanyDocument(id: company.id, name: name),
+      CompanyDocument(id: companyId, name: name),
     );
-    company.name = name;
-    return company;
   }
 
   @override

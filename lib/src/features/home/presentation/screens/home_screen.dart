@@ -8,10 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/profile_button.dart';
 
-import '/config/locator/setup.dart';
 import '/config/routes/router.gr.dart';
-import '/src/core/models/company_model.dart';
-import '/src/core/repositories/user_repository.dart';
 import '/src/core/widgets/entity_list.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/main_app_bar.dart';
@@ -21,8 +18,6 @@ import '/src/core/widgets/scrollable_scaffold.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final String _userId = locator<UserRepository>().getUser()!.id;
-  final List<Company> _companies = locator<UserRepository>().getCompanies();
   final _searchController = TextEditingController();
 
   @override
@@ -36,10 +31,7 @@ class HomeScreen extends StatelessWidget {
 
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) {
-        if (state is FoundCompanies) {
-          _companies.clear();
-          _companies.addAll(state.companies);
-        } else if (state is HomeFailure) {
+        if (state is HomeFailure) {
           ErrorScaffoldMessenger.of(context).showSnackBar(
             state.error,
             theme,
@@ -70,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 if (state is SearchingCompanies)
                   const CupertinoActivityIndicator(radius: 16)
-                else if (_companies.isEmpty)
+                else if (homeBloc.companies.isEmpty)
                   Column(
                     children: [
                       Text(
@@ -84,18 +76,18 @@ class HomeScreen extends StatelessWidget {
                         width: screenSize.width * 0.8,
                         child: OutlinedButton(
                           child: Text(locale.refresh),
-                          onPressed: () => homeBloc.add(GetCompanies(_userId)),
+                          onPressed: () => homeBloc.add(GetCompanies()),
                         ),
                       ),
                     ],
                   ),
-                if (_companies.isNotEmpty)
+                if (homeBloc.companies.isNotEmpty)
                   EntityList(
-                    items: _companies,
+                    items: homeBloc.companies,
                     searchController: _searchController,
                     getName: (company) => company.name,
                     onItemTap: (company) => router.push(
-                      PatientsRoute(company: company),
+                      PatientsRoute(companyId: company.id),
                     ),
                   )
               ],

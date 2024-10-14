@@ -19,7 +19,7 @@ class RecordsRepository {
 
   Future<RecordsDocument?> readRecordByDate(DateTime date) async {
     final Map<String, dynamic>? data = await _recordsDao.readRecordByField(
-      RecordAttrs.date,
+      RecordsAttrs.date,
       date,
     );
     if (data == null) return null;

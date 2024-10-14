@@ -11,9 +11,9 @@ class Company {
     Map<String, Patient>? patients,
   }) : patients = patients ?? {};
 
-  Company copyWith(Company company) => Company(
+  Company copyWith(String name) => Company(
         id: id,
-        name: company.name,
-        patients: company.patients.isEmpty ? patients : company.patients,
+        name: name,
+        patients: patients,
       );
 }

@@ -10,7 +10,7 @@ class HomeUseCase implements UseCase<void, HomeParams> {
   final HomeRepository _repository;
 
   @override
-  Future<void> call(HomeParams params) async {
+  Future<String> call(HomeParams params) async {
     return await _repository.addCompany(params);
   }
 
@@ -18,15 +18,15 @@ class HomeUseCase implements UseCase<void, HomeParams> {
     return await _repository.getCompanies(userId);
   }
 
-  Future<Company> updateCompany(
+  Future<void> updateCompany(
     String userId,
-    Company company,
+    String companyId,
     String name,
   ) async {
-    return await _repository.updateCompany(userId, company, name);
+    await _repository.updateCompany(userId, companyId, name);
   }
 
   Future<void> deleteCompany(String userId, String companyId) async {
-    return await _repository.deleteCompany(userId, companyId);
+    await _repository.deleteCompany(userId, companyId);
   }
 }

@@ -1,9 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '/src/core/models/company_model.dart';
-import '/src/core/models/patient_model.dart';
 import '/src/core/models/records_model.dart';
-import '/src/core/models/user_model.dart';
 
 class PatientParams extends Equatable {
   final String name;
@@ -23,39 +20,39 @@ class PatientParams extends Equatable {
 }
 
 class GetRecordsParams extends Equatable {
-  final User user;
-  final Company company;
-  final Patient patient;
+  final String userId;
+  final String companyId;
+  final String patientId;
   final DateTime date;
 
   const GetRecordsParams({
-    required this.user,
-    required this.company,
-    required this.patient,
+    required this.userId,
+    required this.companyId,
+    required this.patientId,
     required this.date,
   });
 
   @override
-  List<Object> get props => [user, company, patient, date];
+  List<Object> get props => [userId, companyId, patientId, date];
 }
 
 class UpdatePatientParams extends Equatable {
   final String userId;
   final String companyId;
-  final Patient patient;
+  final String patientId;
   final String name;
   final bool isMale;
 
   const UpdatePatientParams({
     required this.userId,
     required this.companyId,
-    required this.patient,
+    required this.patientId,
     required this.name,
     required this.isMale,
   });
 
   @override
-  List<Object> get props => [userId, companyId, patient, name, isMale];
+  List<Object> get props => [userId, companyId, patientId, name, isMale];
 }
 
 class DeletePatientParams extends Equatable {

@@ -141,7 +141,7 @@ class Records {
         comments: getDefaultValue(comments, records.comments),
       );
 
-  void update(Records records) => this
+  void updateWith(Records records) => this
     ..id = records.id
     ..date = records.date
     ..therapist = records.therapist
@@ -149,16 +149,16 @@ class Records {
     ..patient = records.patient
     ..isMale = records.isMale
     ..isPhysiotherapy = records.isPhysiotherapy
-    ..vitalSigns.update(records.vitalSigns)
-    ..warmUp.update(records.warmUp)
-    ..barrel.update(records.barrel)
-    ..cadillac.update(records.cadillac)
-    ..stepChair.update(records.stepChair)
-    ..reformer.update(records.reformer)
-    ..columpio.update(records.columpio)
-    ..solo.update(records.solo)
-    ..accessories.update(records.accessories)
-    ..physiotherapy.update(records.physiotherapy)
+    ..vitalSigns.updateWith(records.vitalSigns)
+    ..warmUp.updateWith(records.warmUp)
+    ..barrel.updateWith(records.barrel)
+    ..cadillac.updateWith(records.cadillac)
+    ..stepChair.updateWith(records.stepChair)
+    ..reformer.updateWith(records.reformer)
+    ..columpio.updateWith(records.columpio)
+    ..solo.updateWith(records.solo)
+    ..accessories.updateWith(records.accessories)
+    ..physiotherapy.updateWith(records.physiotherapy)
     ..intercurrences = records.intercurrences
     ..comments = records.comments;
 }
@@ -195,7 +195,7 @@ class VitalSigns {
         ),
       );
 
-  void update(VitalSigns vitalSigns) => this
+  void updateWith(VitalSigns vitalSigns) => this
     ..pressure = vitalSigns.pressure
     ..heartRate = vitalSigns.heartRate
     ..oxygenSaturation = vitalSigns.oxygenSaturation;
@@ -264,7 +264,7 @@ class WarmUp {
         other: getDefaultValue(other, warmUp.other),
       );
 
-  void update(WarmUp warmUp) => this
+  void updateWith(WarmUp warmUp) => this
     ..functionalAerobic = warmUp.functionalAerobic
     ..plyometricReformer = warmUp.plyometricReformer
     ..plyometricWall = warmUp.plyometricWall
@@ -404,7 +404,7 @@ class Exercises {
         other: getDefaultValue(other, exercises.other),
       );
 
-  void update(Exercises exercises) => this
+  void updateWith(Exercises exercises) => this
     ..stretchCadAnt = exercises.stretchCadAnt
     ..stretchCadPost = exercises.stretchCadPost
     ..stretchCadLat = exercises.stretchCadLat
@@ -538,7 +538,7 @@ class Accessories {
         tonningBall: getDefaultValue(tonningBall, accessories.tonningBall),
       );
 
-  void update(Accessories accessories) => this
+  void updateWith(Accessories accessories) => this
     ..ball = accessories.ball
     ..bosu = accessories.bosu
     ..comboBox = accessories.comboBox
@@ -727,7 +727,7 @@ class Physiotherapy {
         ultrasound: getDefaultValue(ultrasound, physiotherapy.ultrasound),
       );
 
-  void update(Physiotherapy physiotherapy) => this
+  void updateWith(Physiotherapy physiotherapy) => this
     ..stretching = physiotherapy.stretching
     ..cryotherapy = physiotherapy.cryotherapy
     ..thermotherapy = physiotherapy.thermotherapy

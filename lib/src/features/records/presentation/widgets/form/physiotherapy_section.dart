@@ -6,19 +6,15 @@ import '/src/core/models/records_model.dart';
 import 'form_fields.dart';
 
 class PhysiotherapySection extends StatelessWidget {
-  const PhysiotherapySection({
-    super.key,
-    required this.locale,
-    required this.theme,
-    required this.physiotherapy,
-  });
+  const PhysiotherapySection({super.key, required this.physiotherapy});
 
-  final AppLocalizations locale;
-  final ThemeData theme;
   final Physiotherapy physiotherapy;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+
     return CustomExpansionTile(
       title: locale.physiotherapy,
       child: PhysiotherapyContent(

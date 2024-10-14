@@ -9,29 +9,22 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../bloc/patients_bloc.dart';
 import '../widgets/action_menu.dart';
 
-import '/config/locator/setup.dart';
 import '/config/routes/router.gr.dart';
-import '/src/core/models/company_model.dart';
-import '/src/core/models/patient_model.dart';
-import '/src/core/models/user_model.dart';
-import '/src/core/repositories/user_repository.dart';
 import '/src/core/widgets/entity_list.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/main_app_bar.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
+import '/src/core/widgets/selection_checkbox.dart';
 import '/src/features/home/presentation/bloc/home_bloc.dart';
 
 @RoutePage()
 class PatientsScreen extends StatelessWidget {
-  PatientsScreen({super.key, required Company company})
-      : _patients = locator<UserRepository>().getPatients(company),
-        _company = locator<UserRepository>().getCompany(company.id)!;
+  PatientsScreen({super.key, required this.companyId});
 
-  final Company _company;
-  final List<Patient> _patients;
+  final String companyId;
 
   final _searchController = TextEditingController();
-  final User _user = locator<UserRepository>().getUser()!;
+  final _initController = BoolController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +35,19 @@ class PatientsScreen extends StatelessWidget {
     final double padding = screenSize.width * 0.05;
     final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
 
+    if (!_initController.boolean) {
+      patientsBloc.init(companyId);
+      _initController.boolean = true;
+    }
+
     return BlocConsumer<PatientsBloc, PatientsState>(
       listener: (context, state) {
-        if (state is FoundPatients) {
-          _patients.clear();
-          _patients.addAll(state.patients);
-        } else if (state is GetRecordsSuccess) {
+        if (state is GetRecordsSuccess) {
           router.push(
             RecordsRoute(
-              company: _company,
-              patient: state.patient,
-              currentRecords: state.records,
+              companyId: state.companyId,
+              patientId: state.patientId,
+              date: state.date,
             ),
           );
         } else if (state is PatientsFailure) {
@@ -65,26 +60,19 @@ class PatientsScreen extends StatelessWidget {
       builder: (context, state) {
         return BlocConsumer<HomeBloc, HomeState>(
           listener: (context, homeState) {
-            if (homeState is DeleteCompanySuccess) {
-              router.maybePop();
-            }
+            if (homeState is DeleteCompanySuccess) router.maybePop();
           },
           builder: (context, homeState) {
             return ModalProgressHUD(
-              inAsyncCall: homeState is SearchingCompanies,
+              inAsyncCall:
+                  homeState is SearchingCompanies || state is GettingRecords,
               child: ScrollableScaffold(
                 appBar: MainAppBar(
-                  title: _company.name,
-                  actionButton: RecordsActionMenu(
-                    locale: locale,
-                    user: _user,
-                    company: _company,
-                  ),
+                  title: patientsBloc.company?.name ?? '',
+                  actionButton: const RecordsActionMenu(),
                 ),
                 floatingActionButton: FloatingActionButton(
-                  onPressed: () => router.push(
-                    AddPatientRoute(company: _company),
-                  ),
+                  onPressed: () => router.push(AddPatientRoute()),
                   child: const Icon(Icons.add),
                 ),
                 content: Padding(
@@ -106,7 +94,7 @@ class PatientsScreen extends StatelessWidget {
                       const SizedBox(height: 20),
                       if (state is SearchingPatients)
                         const CupertinoActivityIndicator(radius: 16)
-                      else if (_patients.isEmpty)
+                      else if (patientsBloc.patients.isEmpty)
                         Column(
                           children: [
                             Text(
@@ -121,15 +109,15 @@ class PatientsScreen extends StatelessWidget {
                               child: OutlinedButton(
                                 child: Text(locale.refresh),
                                 onPressed: () => patientsBloc.add(
-                                  GetPatients(_user.id, _company),
+                                  GetPatients(),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      if (_patients.isNotEmpty)
+                      if (patientsBloc.patients.isNotEmpty)
                         EntityList(
-                          items: _patients,
+                          items: patientsBloc.patients,
                           searchController: _searchController,
                           getName: (patient) => patient.name,
                           onItemTap: (patient) {
@@ -141,9 +129,7 @@ class PatientsScreen extends StatelessWidget {
                             ).toUtc();
                             patientsBloc.add(
                               GetRecords(
-                                user: _user,
-                                company: _company,
-                                patient: patient,
+                                patientId: patient.id,
                                 date: todayMidnight,
                               ),
                             );

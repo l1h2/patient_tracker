@@ -9,44 +9,33 @@ sealed class HomeEvent extends Equatable {
 
 class AddCompany extends HomeEvent {
   final String name;
-  final String userId;
 
-  const AddCompany(this.name, this.userId);
-
-  @override
-  List<Object> get props => [name, userId];
-}
-
-class GetCompanies extends HomeEvent {
-  final String userId;
-
-  const GetCompanies(this.userId);
+  const AddCompany(this.name);
 
   @override
-  List<Object> get props => [userId];
+  List<Object> get props => [name];
 }
+
+class GetCompanies extends HomeEvent {}
 
 class UpdateCompany extends HomeEvent {
-  final String userId;
-  final Company company;
+  final String companyId;
   final String name;
 
   const UpdateCompany({
-    required this.userId,
-    required this.company,
+    required this.companyId,
     required this.name,
   });
 
   @override
-  List<Object> get props => [userId, company, name];
+  List<Object> get props => [companyId, name];
 }
 
 class DeleteCompany extends HomeEvent {
-  final String userId;
-  final Company company;
+  final String companyId;
 
-  const DeleteCompany(this.userId, this.company);
+  const DeleteCompany(this.companyId);
 
   @override
-  List<Object> get props => [userId, company];
+  List<Object> get props => [companyId];
 }

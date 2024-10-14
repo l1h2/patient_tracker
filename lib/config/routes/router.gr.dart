@@ -9,11 +9,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i12;
-import 'package:flutter/cupertino.dart' as _i15;
+import 'package:flutter/cupertino.dart' as _i14;
 import 'package:flutter/material.dart' as _i13;
-import 'package:patient_tracker/src/core/models/company_model.dart' as _i14;
-import 'package:patient_tracker/src/core/models/patient_model.dart' as _i16;
-import 'package:patient_tracker/src/core/models/records_model.dart' as _i17;
 import 'package:patient_tracker/src/features/auth/change_password/presentation/screens/change_password_screen.dart'
     as _i3;
 import 'package:patient_tracker/src/features/auth/forgot_password/presentation/screens/forgot_password_screen.dart'
@@ -77,14 +74,10 @@ class AddCompanyRouteArgs {
 class AddPatientRoute extends _i12.PageRouteInfo<AddPatientRouteArgs> {
   AddPatientRoute({
     _i13.Key? key,
-    required _i14.Company company,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           AddPatientRoute.name,
-          args: AddPatientRouteArgs(
-            key: key,
-            company: company,
-          ),
+          args: AddPatientRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -93,28 +86,21 @@ class AddPatientRoute extends _i12.PageRouteInfo<AddPatientRouteArgs> {
   static _i12.PageInfo page = _i12.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AddPatientRouteArgs>();
-      return _i2.AddPatientScreen(
-        key: args.key,
-        company: args.company,
-      );
+      final args = data.argsAs<AddPatientRouteArgs>(
+          orElse: () => const AddPatientRouteArgs());
+      return _i2.AddPatientScreen(key: args.key);
     },
   );
 }
 
 class AddPatientRouteArgs {
-  const AddPatientRouteArgs({
-    this.key,
-    required this.company,
-  });
+  const AddPatientRouteArgs({this.key});
 
   final _i13.Key? key;
 
-  final _i14.Company company;
-
   @override
   String toString() {
-    return 'AddPatientRouteArgs{key: $key, company: $company}';
+    return 'AddPatientRouteArgs{key: $key}';
   }
 }
 
@@ -192,7 +178,7 @@ class ForgotPasswordRouteArgs {
 /// [_i5.HomeScreen]
 class HomeRoute extends _i12.PageRouteInfo<HomeRouteArgs> {
   HomeRoute({
-    _i15.Key? key,
+    _i14.Key? key,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           HomeRoute.name,
@@ -215,7 +201,7 @@ class HomeRoute extends _i12.PageRouteInfo<HomeRouteArgs> {
 class HomeRouteArgs {
   const HomeRouteArgs({this.key});
 
-  final _i15.Key? key;
+  final _i14.Key? key;
 
   @override
   String toString() {
@@ -281,14 +267,14 @@ class LogoutRoute extends _i12.PageRouteInfo<void> {
 /// [_i8.PatientsScreen]
 class PatientsRoute extends _i12.PageRouteInfo<PatientsRouteArgs> {
   PatientsRoute({
-    _i15.Key? key,
-    required _i14.Company company,
+    _i14.Key? key,
+    required String companyId,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           PatientsRoute.name,
           args: PatientsRouteArgs(
             key: key,
-            company: company,
+            companyId: companyId,
           ),
           initialChildren: children,
         );
@@ -301,7 +287,7 @@ class PatientsRoute extends _i12.PageRouteInfo<PatientsRouteArgs> {
       final args = data.argsAs<PatientsRouteArgs>();
       return _i8.PatientsScreen(
         key: args.key,
-        company: args.company,
+        companyId: args.companyId,
       );
     },
   );
@@ -310,16 +296,16 @@ class PatientsRoute extends _i12.PageRouteInfo<PatientsRouteArgs> {
 class PatientsRouteArgs {
   const PatientsRouteArgs({
     this.key,
-    required this.company,
+    required this.companyId,
   });
 
-  final _i15.Key? key;
+  final _i14.Key? key;
 
-  final _i14.Company company;
+  final String companyId;
 
   @override
   String toString() {
-    return 'PatientsRouteArgs{key: $key, company: $company}';
+    return 'PatientsRouteArgs{key: $key, companyId: $companyId}';
   }
 }
 
@@ -328,17 +314,17 @@ class PatientsRouteArgs {
 class RecordsRoute extends _i12.PageRouteInfo<RecordsRouteArgs> {
   RecordsRoute({
     _i13.Key? key,
-    required _i14.Company company,
-    required _i16.Patient patient,
-    required _i17.Records currentRecords,
+    required String companyId,
+    required String patientId,
+    required DateTime date,
     List<_i12.PageRouteInfo>? children,
   }) : super(
           RecordsRoute.name,
           args: RecordsRouteArgs(
             key: key,
-            company: company,
-            patient: patient,
-            currentRecords: currentRecords,
+            companyId: companyId,
+            patientId: patientId,
+            date: date,
           ),
           initialChildren: children,
         );
@@ -351,9 +337,9 @@ class RecordsRoute extends _i12.PageRouteInfo<RecordsRouteArgs> {
       final args = data.argsAs<RecordsRouteArgs>();
       return _i9.RecordsScreen(
         key: args.key,
-        company: args.company,
-        patient: args.patient,
-        currentRecords: args.currentRecords,
+        companyId: args.companyId,
+        patientId: args.patientId,
+        date: args.date,
       );
     },
   );
@@ -362,22 +348,22 @@ class RecordsRoute extends _i12.PageRouteInfo<RecordsRouteArgs> {
 class RecordsRouteArgs {
   const RecordsRouteArgs({
     this.key,
-    required this.company,
-    required this.patient,
-    required this.currentRecords,
+    required this.companyId,
+    required this.patientId,
+    required this.date,
   });
 
   final _i13.Key? key;
 
-  final _i14.Company company;
+  final String companyId;
 
-  final _i16.Patient patient;
+  final String patientId;
 
-  final _i17.Records currentRecords;
+  final DateTime date;
 
   @override
   String toString() {
-    return 'RecordsRouteArgs{key: $key, company: $company, patient: $patient, currentRecords: $currentRecords}';
+    return 'RecordsRouteArgs{key: $key, companyId: $companyId, patientId: $patientId, date: $date}';
   }
 }
 

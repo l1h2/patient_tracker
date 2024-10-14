@@ -5,15 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '/src/core/models/records_model.dart';
 
 class CommentsSection extends StatefulWidget {
-  const CommentsSection({
-    super.key,
-    required this.locale,
-    required this.theme,
-    required this.records,
-  });
+  const CommentsSection({super.key, required this.records});
 
-  final AppLocalizations locale;
-  final ThemeData theme;
   final Records records;
 
   @override
@@ -32,6 +25,9 @@ class _CommentsSectionState extends State<CommentsSection> {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -40,13 +36,13 @@ class _CommentsSectionState extends State<CommentsSection> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                widget.locale.intercurrences,
-                style: widget.theme.textTheme.titleMedium,
+                locale.intercurrences,
+                style: theme.textTheme.titleMedium,
               ),
               const SizedBox(width: 10),
               CheckboxMenuButton(
                 value: widget.records.intercurrences ?? false,
-                child: Text(widget.locale.yesAbr),
+                child: Text(locale.yesAbr),
                 onChanged: (value) {
                   setState(() {
                     _intercurrences = value ?? false;
@@ -56,7 +52,7 @@ class _CommentsSectionState extends State<CommentsSection> {
               ),
               CheckboxMenuButton(
                 value: !(widget.records.intercurrences ?? false),
-                child: Text(widget.locale.noAbr),
+                child: Text(locale.noAbr),
                 onChanged: (value) {
                   setState(() {
                     _intercurrences = !(value ?? false);
@@ -68,7 +64,7 @@ class _CommentsSectionState extends State<CommentsSection> {
           ),
           TextFormField(
             initialValue: widget.records.comments ?? '',
-            decoration: InputDecoration(labelText: widget.locale.comments),
+            decoration: InputDecoration(labelText: locale.comments),
             maxLines: null,
             keyboardType: TextInputType.multiline,
             onChanged: (value) => widget.records.comments = value,

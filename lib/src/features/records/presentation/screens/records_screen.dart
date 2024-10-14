@@ -10,31 +10,26 @@ import '../widgets/action_menu.dart';
 import '../widgets/calendar.dart';
 import '../widgets/form/records_form.dart';
 
-import '/config/locator/setup.dart';
-import '/src/core/models/company_model.dart';
-import '/src/core/models/patient_model.dart';
-import '/src/core/models/records_model.dart';
-import '/src/core/models/user_model.dart';
-import '/src/core/repositories/user_repository.dart';
 import '/src/core/widgets/error_widgets.dart';
 import '/src/core/widgets/main_app_bar.dart';
 import '/src/core/widgets/scrollable_scaffold.dart';
+import '/src/core/widgets/selection_checkbox.dart';
 import '/src/features/patients/presentation/bloc/patients_bloc.dart' as pb;
 
 @RoutePage()
 class RecordsScreen extends StatelessWidget {
   RecordsScreen({
     super.key,
-    required this.company,
-    required this.patient,
-    required this.currentRecords,
+    required this.companyId,
+    required this.patientId,
+    required this.date,
   });
 
-  final Company company;
-  final Patient patient;
-  final Records currentRecords;
+  final String companyId;
+  final String patientId;
+  final DateTime date;
 
-  final User _user = locator<UserRepository>().getUser()!;
+  final _initController = BoolController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +37,11 @@ class RecordsScreen extends StatelessWidget {
     final ThemeData theme = Theme.of(context);
     final StackRouter router = AutoRouter.of(context);
     final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
+
+    if (!_initController.boolean) {
+      recordsBloc.init(companyId: companyId, patientId: patientId, date: date);
+      _initController.boolean = true;
+    }
 
     return BlocConsumer<RecordsBloc, RecordsState>(
       listener: (context, state) {
@@ -75,8 +75,6 @@ class RecordsScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is GetRecordsSuccess) currentRecords.update(state.records);
-
         return BlocConsumer<pb.PatientsBloc, pb.PatientsState>(
           listener: (context, patientsState) {
             if (patientsState is pb.DeletePatientSuccess) router.maybePop();
@@ -87,32 +85,13 @@ class RecordsScreen extends StatelessWidget {
                   state is RecordsLoading,
               child: ScrollableScaffold(
                 appBar: MainAppBar(
-                  title: patient.name,
-                  actionButton: RecordsActionMenu(
-                    locale: locale,
-                    user: _user,
-                    company: company,
-                    patient: patient,
-                    records: currentRecords,
-                  ),
+                  title: recordsBloc.patient?.name ?? '',
+                  actionButton: const RecordsActionMenu(),
                 ),
                 content: Column(
                   children: [
-                    DatePicker(
-                      currentDate: currentRecords.date,
-                      recordsBloc: recordsBloc,
-                      user: _user,
-                      company: company,
-                      patient: patient,
-                    ),
-                    RecordsForm(
-                      locale: locale,
-                      recordsBloc: recordsBloc,
-                      user: _user,
-                      company: company,
-                      patient: patient,
-                      records: currentRecords,
-                    ),
+                    DatePicker(recordsBloc: recordsBloc),
+                    RecordsForm(),
                   ],
                 ),
               ),

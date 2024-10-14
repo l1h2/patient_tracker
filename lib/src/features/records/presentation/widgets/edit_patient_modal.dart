@@ -3,21 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '/src/core/models/company_model.dart';
-import '/src/core/models/patient_model.dart';
+import '../bloc/records_bloc.dart';
+
 import '/src/core/validators/not_empty_validator.dart';
 import '/src/core/widgets/selection_checkbox.dart';
 import '/src/features/patients/presentation/bloc/patients_bloc.dart';
 
-void editPatientDialog({
-  required BuildContext context,
-  required String userId,
-  required Company company,
-  required Patient patient,
-}) {
+void editPatientDialog({required BuildContext context}) {
+  final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
+  final nameController = TextEditingController(text: recordsBloc.patient!.name);
+  final genderController = BoolController(boolean: recordsBloc.patient!.isMale);
   final key = GlobalKey<FormState>();
-  final nameController = TextEditingController(text: patient.name);
-  final genderController = BoolController(boolean: patient.isMale);
 
   showModalBottomSheet(
     context: context,
@@ -69,17 +65,16 @@ void editPatientDialog({
                   TextButton(
                     child: Text(locale.save),
                     onPressed: () {
-                      if (patient.name == nameController.text &&
-                          patient.isMale == genderController.boolean) {
+                      if (recordsBloc.patient!.name == nameController.text &&
+                          recordsBloc.patient!.isMale ==
+                              genderController.boolean) {
                         showErrorDialog(context: context);
                         return;
                       }
                       if (key.currentState?.validate() ?? false) {
                         patientsBloc.add(
                           UpdatePatient(
-                            userId: userId,
-                            company: company,
-                            patient: patient,
+                            patientId: recordsBloc.patient!.id,
                             name: nameController.text,
                             isMale: genderController.boolean,
                           ),

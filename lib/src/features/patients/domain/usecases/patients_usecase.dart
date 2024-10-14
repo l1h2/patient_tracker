@@ -10,7 +10,7 @@ class PatientsUseCase implements UseCase<void, PatientParams> {
   final PatientsRepository _repository;
 
   @override
-  Future<void> call(PatientParams params) async {
+  Future<String> call(PatientParams params) async {
     return await _repository.addPatient(params);
   }
 
@@ -18,8 +18,8 @@ class PatientsUseCase implements UseCase<void, PatientParams> {
     return await _repository.getPatients(userId, companyId);
   }
 
-  Future<Patient> updatePatient(UpdatePatientParams params) async {
-    return await _repository.updatePatient(params);
+  Future<void> updatePatient(UpdatePatientParams params) async {
+    await _repository.updatePatient(params);
   }
 
   Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
@@ -27,6 +27,6 @@ class PatientsUseCase implements UseCase<void, PatientParams> {
   }
 
   Future<void> deletePatient(DeletePatientParams params) async {
-    return await _repository.deletePatient(params);
+    await _repository.deletePatient(params);
   }
 }

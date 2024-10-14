@@ -8,19 +8,18 @@ import 'form_fields.dart';
 class ExerciseSection extends StatelessWidget {
   const ExerciseSection({
     super.key,
-    required this.locale,
-    required this.theme,
     required this.title,
     required this.exercises,
   });
 
-  final AppLocalizations locale;
-  final ThemeData theme;
   final String title;
   final Exercises exercises;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations locale = AppLocalizations.of(context)!;
+    final ThemeData theme = Theme.of(context);
+
     return CustomExpansionTile(
       title: title,
       child: Padding(

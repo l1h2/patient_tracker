@@ -11,18 +11,13 @@ final class HomeInitial extends HomeState {}
 
 final class HomeLoading extends HomeState {}
 
-final class FoundCompanies extends HomeState {
-  final List<Company> companies;
-
-  const FoundCompanies(this.companies);
-
-  @override
-  List<Object> get props => [companies];
-}
+final class FoundCompanies extends HomeState {}
 
 final class SearchingCompanies extends HomeState {}
 
 final class AddCompanySuccess extends HomeState {}
+
+final class UpdateCompanySuccess extends HomeState {}
 
 final class DeleteCompanySuccess extends HomeState {}
 

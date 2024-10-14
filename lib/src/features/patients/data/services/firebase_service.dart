@@ -11,7 +11,7 @@ import 'patients_service.dart';
 
 class PatientsFirebaseService implements PatientsService {
   @override
-  Future<void> addPatient(PatientParams params) async {
+  Future<String> addPatient(PatientParams params) async {
     final patientsRepo = PatientsRepository(params.userId, params.companyId);
     final String patientId = await patientsRepo.createPatient(
       PatientDocument(name: params.name, isMale: params.isMale),
@@ -20,6 +20,8 @@ class PatientsFirebaseService implements PatientsService {
     await RecordDatesRepository(patientId).createRecordDates(
       RecordDatesDocument(patientId: patientId, recordDates: {}),
     );
+
+    return patientId;
   }
 
   @override
@@ -30,28 +32,24 @@ class PatientsFirebaseService implements PatientsService {
   }
 
   @override
-  Future<Patient> updatePatient(UpdatePatientParams params) async {
+  Future<void> updatePatient(UpdatePatientParams params) async {
     final patientsRepo = PatientsRepository(params.userId, params.companyId);
     await patientsRepo.updatePatient(
       PatientDocument(
-        id: params.patient.id,
+        id: params.patientId,
         name: params.name,
         isMale: params.isMale,
       ),
     );
-
-    params.patient.name = params.name;
-    params.patient.isMale = params.isMale;
-    return params.patient;
   }
 
   @override
   Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
-    final recordDatesRepo = RecordDatesRepository(params.patient.id);
+    final recordDatesRepo = RecordDatesRepository(params.patientId);
     final recordsRepo = RecordsRepository(
-      params.user.id,
-      params.company.id,
-      params.patient.id,
+      params.userId,
+      params.companyId,
+      params.patientId,
     );
 
     final Set<DateTime> recordDates =

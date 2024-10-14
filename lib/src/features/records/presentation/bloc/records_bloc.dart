@@ -4,51 +4,70 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/records_entity.dart';
 import '../../domain/usecases/records_usecase.dart';
 
-import '/config/locator/setup.dart';
 import '/src/core/models/company_model.dart';
 import '/src/core/models/patient_model.dart';
 import '/src/core/models/records_model.dart';
-import '/src/core/models/user_model.dart';
 import '/src/core/repositories/user_repository.dart';
 
 part 'records_event.dart';
 part 'records_state.dart';
 
 class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
-  RecordsBloc(this._recordsUseCase) : super(RecordsInitial()) {
+  RecordsBloc(
+    this._recordsUseCase,
+    this._userRepo,
+  ) : super(RecordsInitial()) {
     on<SaveRecords>(_onSaveRecords);
     on<GetRecords>(_onGetRecords);
     on<DeleteRecords>(_onDeleteRecords);
   }
 
   final RecordsUseCase _recordsUseCase;
-  final UserRepository _userRepository = locator<UserRepository>();
+  final UserRepository _userRepo;
+
+  late String companyId;
+  late String patientId;
+  late Records currentRecords;
+
+  void init({
+    required String companyId,
+    required String patientId,
+    required DateTime date,
+  }) {
+    this.companyId = companyId;
+    this.patientId = patientId;
+    currentRecords = _userRepo.getRecordsFromDate(companyId, patientId, date) ??
+        Records.empty(
+          _userRepo.user!,
+          _userRepo.getPatient(companyId, patientId)!,
+          date,
+        );
+  }
+
+  Company get company => _userRepo.getCompany(companyId)!;
+  Patient? get patient => _userRepo.getPatient(companyId, patientId);
 
   void _onSaveRecords(SaveRecords event, Emitter<RecordsState> emit) async {
     emit(RecordsLoading());
 
     late Records newRecords;
     final Records emptyRecords = Records.empty(
-      event.user,
-      event.patient,
-      event.records.date,
+      _userRepo.user!,
+      patient!,
+      currentRecords.date,
     );
 
-    if (event.records.id == null) {
-      if (event.records.isEqual(emptyRecords, considerDefaults: false)) {
+    if (currentRecords.id == null) {
+      if (currentRecords.isEqual(emptyRecords, considerDefaults: false)) {
         emit(EmptyRecords());
         return;
       }
 
-      newRecords = event.records.copy();
+      newRecords = currentRecords.copy();
     } else {
-      newRecords = _userRepository
-          .getRecords(
-            event.company,
-            event.patient,
-            event.records.id!,
-          )!
-          .getChanges(event.records);
+      newRecords = _userRepo
+          .getRecords(companyId, patientId, currentRecords.id!)!
+          .getChanges(currentRecords);
 
       if (newRecords.isEqual(emptyRecords)) {
         emit(NoChangesToSave());
@@ -59,18 +78,18 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
     try {
       final String recordsId = await _recordsUseCase(
         RecordsParams(
-          userId: event.user.id,
-          companyId: event.company.id,
-          patientId: event.patient.id,
+          userId: _userRepo.userId!,
+          companyId: companyId,
+          patientId: patientId,
           records: newRecords,
         ),
       );
 
-      event.records.id = recordsId;
-      _userRepository.updateRecords(
-        event.company,
-        event.patient,
-        event.records.copy(),
+      currentRecords.id = recordsId;
+      _userRepo.updateRecordsFromRecords(
+        companyId,
+        patientId,
+        currentRecords,
       );
 
       emit(RecordsSuccess());
@@ -83,37 +102,35 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
     emit(SearchingRecords());
 
     final Records emptyRecords = Records.empty(
-      event.user,
-      event.patient,
+      _userRepo.user!,
+      patient!,
       event.date,
     );
 
-    if (!event.patient.recordDates.contains(event.date)) {
-      emit(GetRecordsSuccess(emptyRecords));
+    if (!patient!.recordDates.contains(event.date)) {
+      currentRecords.updateWith(emptyRecords);
+      emit(GetRecordsSuccess());
       return;
     }
 
-    final Patient patient = _userRepository.getPatient(
-      event.company,
-      event.patient.id,
-    )!;
-
-    final Records localRecords = patient.records.values.firstWhere(
-      (record) => record.date == event.date,
-      orElse: () => emptyRecords,
+    final Records? localRecords = _userRepo.getRecordsFromDate(
+      companyId,
+      patientId,
+      event.date,
     );
 
-    if (!localRecords.isEqual(emptyRecords)) {
-      emit(GetRecordsSuccess(localRecords));
+    if (localRecords != null) {
+      currentRecords.updateWith(localRecords);
+      emit(GetRecordsSuccess());
       return;
     }
 
     try {
       final Records? records = await _recordsUseCase.getRecords(
         GetRecordsParams(
-          userId: event.user.id,
-          companyId: event.company.id,
-          patientId: event.patient.id,
+          userId: _userRepo.userId!,
+          companyId: companyId,
+          patientId: patientId,
           date: event.date,
         ),
       );
@@ -123,8 +140,9 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
         return;
       }
 
-      _userRepository.updateRecords(event.company, event.patient, records);
-      emit(GetRecordsSuccess(records));
+      _userRepo.addRecords(companyId, patientId, records);
+      currentRecords.updateWith(records);
+      emit(GetRecordsSuccess());
     } catch (e) {
       emit(GetRecordsFailure(e.toString()));
     }
@@ -139,30 +157,29 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
     try {
       await _recordsUseCase.deleteRecords(
         DeleteRecordsParams(
-          userId: event.user.id,
-          companyId: event.company.id,
-          patientId: event.patient.id,
-          recordsId: event.records.id!,
-          date: event.records.date,
+          userId: _userRepo.userId!,
+          companyId: companyId,
+          patientId: patientId,
+          recordsId: currentRecords.id!,
+          date: currentRecords.date,
         ),
       );
 
-      _userRepository.removeRecords(
-        event.company,
-        event.patient,
-        event.records,
+      _userRepo.removeRecords(
+        companyId,
+        patientId,
+        currentRecords,
+      );
+
+      currentRecords.updateWith(
+        Records.empty(
+          _userRepo.user!,
+          patient!,
+          currentRecords.date,
+        ),
       );
 
       emit(DeleteRecordsSuccess());
-      emit(
-        GetRecordsSuccess(
-          Records.empty(
-            event.user,
-            event.patient,
-            event.records.date,
-          ),
-        ),
-      );
     } catch (e) {
       emit(RecordsFailure(e.toString()));
     }

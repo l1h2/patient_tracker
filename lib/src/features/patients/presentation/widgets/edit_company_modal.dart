@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '/src/core/models/company_model.dart';
+import '../bloc/patients_bloc.dart';
+
 import '/src/core/validators/name_validator.dart';
 import '/src/features/home/presentation/bloc/home_bloc.dart';
 
-void editCompanyDialog({
-  required BuildContext context,
-  required String userId,
-  required Company company,
-}) {
+void editCompanyDialog({required BuildContext context}) {
+  final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
+  final nameController = TextEditingController(
+    text: patientsBloc.company!.name,
+  );
   final key = GlobalKey<FormState>();
-  final nameController = TextEditingController(text: company.name);
 
   showModalBottomSheet(
     context: context,
@@ -46,7 +46,7 @@ void editCompanyDialog({
                 textAlign: TextAlign.center,
                 validator: (value) => newNameValidator(
                   value,
-                  company.name,
+                  patientsBloc.company!.name,
                   locale,
                   locale.companyName,
                 ),
@@ -64,8 +64,7 @@ void editCompanyDialog({
                       if (key.currentState!.validate()) {
                         homeBloc.add(
                           UpdateCompany(
-                            userId: userId,
-                            company: company,
+                            companyId: patientsBloc.companyId,
                             name: nameController.text,
                           ),
                         );

@@ -10,7 +10,7 @@ class FirebasePatientsRepository implements PatientsRepository {
   const FirebasePatientsRepository(this._service);
 
   @override
-  Future<void> addPatient(PatientParams params) async {
+  Future<String> addPatient(PatientParams params) async {
     return await _service.addPatient(params);
   }
 
@@ -20,8 +20,8 @@ class FirebasePatientsRepository implements PatientsRepository {
   }
 
   @override
-  Future<Patient> updatePatient(UpdatePatientParams params) async {
-    return await _service.updatePatient(params);
+  Future<void> updatePatient(UpdatePatientParams params) async {
+    await _service.updatePatient(params);
   }
 
   @override
@@ -31,6 +31,6 @@ class FirebasePatientsRepository implements PatientsRepository {
 
   @override
   Future<void> deletePatient(DeletePatientParams params) async {
-    return await _service.deletePatient(params);
+    await _service.deletePatient(params);
   }
 }
