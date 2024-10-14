@@ -497,6 +497,7 @@ class Accessories {
   final bool? elasticBand;
   final double? dumbbell;
   final double? tonningBall;
+  final double? shinGuard;
 
   const Accessories({
     this.ball,
@@ -516,6 +517,7 @@ class Accessories {
     this.elasticBand,
     this.dumbbell,
     this.tonningBall,
+    this.shinGuard,
   });
 
   factory Accessories.fromMap(Map<String, dynamic>? map) => Accessories(
@@ -536,6 +538,7 @@ class Accessories {
         elasticBand: map?[AccessoriesAttrs.elasticBand],
         dumbbell: map?[AccessoriesAttrs.dumbbell],
         tonningBall: map?[AccessoriesAttrs.tonningBall],
+        shinGuard: map?[AccessoriesAttrs.shinGuard],
       );
 
   factory Accessories.fromModel(model.Accessories accessories) => Accessories(
@@ -556,6 +559,7 @@ class Accessories {
         elasticBand: accessories.elasticBand,
         dumbbell: accessories.dumbbell,
         tonningBall: accessories.tonningBall,
+        shinGuard: accessories.shinGuard,
       );
 
   Map<String, dynamic>? toMap({bool isCreate = false}) => getValidMap(
@@ -577,6 +581,7 @@ class Accessories {
           AccessoriesAttrs.elasticBand: elasticBand,
           AccessoriesAttrs.dumbbell: dumbbell,
           AccessoriesAttrs.tonningBall: tonningBall,
+          AccessoriesAttrs.shinGuard: shinGuard,
         },
         isCreate: isCreate,
       );
@@ -599,6 +604,7 @@ class Accessories {
         elasticBand: elasticBand,
         dumbbell: dumbbell,
         tonningBall: tonningBall,
+        shinGuard: shinGuard,
       );
 }
 
@@ -617,9 +623,10 @@ class AccessoriesAttrs {
   static const String stressBall = 'stressBall';
   static const String massager = 'massager';
   static const String baton = 'baton';
-  static const String elasticBand = 'elasticBand';
+  static const String elasticBand = 'elasticBandAndMiniband';
   static const String dumbbell = 'dumbbell';
   static const String tonningBall = 'tonningBall';
+  static const String shinGuard = 'shinGuard';
 }
 
 class Physiotherapy {

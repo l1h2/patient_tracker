@@ -445,6 +445,7 @@ class Accessories {
   bool? elasticBand;
   double? dumbbell;
   double? tonningBall;
+  double? shinGuard;
 
   Accessories({
     this.ball,
@@ -464,6 +465,7 @@ class Accessories {
     this.elasticBand,
     this.dumbbell,
     this.tonningBall,
+    this.shinGuard,
   });
 
   Accessories copy() => Accessories(
@@ -484,6 +486,7 @@ class Accessories {
         elasticBand: elasticBand,
         dumbbell: dumbbell,
         tonningBall: tonningBall,
+        shinGuard: shinGuard,
       );
 
   bool isEqual(Accessories accessories) => [
@@ -504,6 +507,7 @@ class Accessories {
         elasticBand == accessories.elasticBand,
         dumbbell == accessories.dumbbell,
         tonningBall == accessories.tonningBall,
+        shinGuard == accessories.shinGuard,
       ].every((element) => element);
 
   Accessories getChanges(Accessories accessories) => Accessories(
@@ -536,6 +540,7 @@ class Accessories {
         elasticBand: getDefaultValue(elasticBand, accessories.elasticBand),
         dumbbell: getDefaultValue(dumbbell, accessories.dumbbell),
         tonningBall: getDefaultValue(tonningBall, accessories.tonningBall),
+        shinGuard: getDefaultValue(shinGuard, accessories.shinGuard),
       );
 
   void updateWith(Accessories accessories) => this
@@ -555,7 +560,8 @@ class Accessories {
     ..baton = accessories.baton
     ..elasticBand = accessories.elasticBand
     ..dumbbell = accessories.dumbbell
-    ..tonningBall = accessories.tonningBall;
+    ..tonningBall = accessories.tonningBall
+    ..shinGuard = accessories.shinGuard;
 }
 
 class Physiotherapy {

@@ -429,9 +429,9 @@
   "@baton": {
     "description": "Baton"
   },
-  "elasticBand": "Elastic Band",
-  "@elasticBand": {
-    "description": "Elastic Band"
+  "elasticBandAndMiniband": "Elastic Band and Miniband",
+  "@elasticBandAndMiniband": {
+    "description": "Elastic Band and Miniband"
   },
   "dumbbell": "Dumbbell",
   "@dumbbell": {
@@ -440,6 +440,10 @@
   "tonningBall": "Tonning Ball",
   "@tonningBall": {
     "description": "Tonning Ball"
+  },
+  "shinGuard": "Shin Guard",
+  "@shinGuard": {
+    "description": "Shin Guard"
   },
   "weightUnit": "kg",
   "@weightUnit": {

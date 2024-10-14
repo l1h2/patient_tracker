@@ -417,7 +417,7 @@
   "@abdominalWheel": {
     "description": "Abdominal Wheel"
   },
-  "stressBall": "Bola Cravo",
+  "stressBall": "Bola Pequena",
   "@stressBall": {
     "description": "Stress Ball"
   },
@@ -429,9 +429,9 @@
   "@baton": {
     "description": "Baton"
   },
-  "elasticBand": "Faixas Elásticas",
-  "@elasticBand": {
-    "description": "Elastic Band"
+  "elasticBandAndMiniband": "Faixas Elásticas e Mini Band",
+  "@elasticBandAndMiniband": {
+    "description": "Elastic Band and Miniband"
   },
   "dumbbell": "Halteres",
   "@dumbbell": {
@@ -440,6 +440,10 @@
   "tonningBall": "Tonning Ball",
   "@tonningBall": {
     "description": "Tonning Ball"
+  },
+  "shinGuard": "Caneleira",
+  "@shinGuard": {
+    "description": "Shin Guard"
   },
   "weightUnit": "kg",
   "@weightUnit": {

@@ -111,7 +111,7 @@ class AccessoriesContent extends StatelessWidget {
         ),
         CustomCheckbox(
           value: accessories.elasticBand,
-          title: locale.elasticBand,
+          title: locale.elasticBandAndMiniband,
           onChanged: (value) => accessories.elasticBand = value,
         ),
         Row(
@@ -134,6 +134,21 @@ class AccessoriesContent extends StatelessWidget {
               minValue: 0,
               maxValue: 100,
             ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            NumberInput(
+              label: locale.shinGuard,
+              unit: locale.weightUnit,
+              initialValue: accessories.shinGuard,
+              onChanged: (value) => accessories.shinGuard = value,
+              minValue: 0,
+              maxValue: 100,
+            ),
+            const SizedBox(width: 32),
+            const SizedBox(width: 150),
           ],
         ),
       ],
