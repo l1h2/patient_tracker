@@ -9,8 +9,6 @@ import '/src/core/models/records_model.dart';
 import 'accessories_section.dart';
 import 'comments_section.dart';
 import 'exercises.dart';
-import 'general_information.dart';
-import 'physiotherapy_section.dart';
 import 'vital_signs.dart';
 import 'warm_up.dart';
 
@@ -33,7 +31,7 @@ class RecordsForm extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(10, 20, 10, 80),
         child: Column(
           children: [
-            GeneralInformation(records: records),
+            // GeneralInformation(records: records),
             const SizedBox(height: 10),
             VitalSignsSection(vitalSigns: records.vitalSigns),
             WarmUpSection(warmUp: records.warmUp),
@@ -56,7 +54,7 @@ class RecordsForm extends StatelessWidget {
             ),
             ExerciseSection(title: locale.solo, exercises: records.solo),
             AccessoriesSection(accessories: records.accessories),
-            PhysiotherapySection(physiotherapy: records.physiotherapy),
+            // PhysiotherapySection(physiotherapy: records.physiotherapy),
             CommentsSection(records: records),
             const SizedBox(height: 30),
             SizedBox(
