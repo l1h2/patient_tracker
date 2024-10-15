@@ -17,8 +17,14 @@ class PhysiotherapySection extends StatelessWidget {
 
     return CustomExpansionTile(
       title: locale.physiotherapy,
-      child: PhysiotherapyContent(
-          locale: locale, theme: theme, physiotherapy: physiotherapy),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: PhysiotherapyContent(
+          locale: locale,
+          theme: theme,
+          physiotherapy: physiotherapy,
+        ),
+      ),
     );
   }
 }

@@ -329,9 +329,17 @@
   "@abdominal": {
     "description": "Abdominal"
   },
+  "abdominalAbr": "Abd.",
+  "@abdominalAbr": {
+    "description": "Abdominal Abbreviation"
+  },
   "paravertebral": "Paravertebral",
   "@paravertebral": {
     "description": "Paravertebral"
+  },
+  "paravertebralAbr": "Paravert.",
+  "@paravertebralAbr": {
+    "description": "Paravertebral Abbreviation"
   },
   "mobilityTraining": "Mobility Training",
   "@mobilityTraining": {

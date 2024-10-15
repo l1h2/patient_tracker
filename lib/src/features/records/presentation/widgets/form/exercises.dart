@@ -23,7 +23,7 @@ class ExerciseSection extends StatelessWidget {
     return CustomExpansionTile(
       title: title,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         child:
             ExerciseContent(locale: locale, theme: theme, exercises: exercises),
       ),
@@ -190,7 +190,7 @@ class Strengthening extends StatelessWidget {
               Expanded(
                 child: CustomCheckbox(
                   value: exercises.strengthAbd,
-                  title: locale.abdominal,
+                  title: locale.abdominalAbr,
                   onChanged: (value) => exercises.strengthAbd = value,
                 ),
               ),
@@ -208,7 +208,7 @@ class Strengthening extends StatelessWidget {
               Expanded(
                 child: CustomCheckbox(
                   value: exercises.strengthPara,
-                  title: locale.paravertebral,
+                  title: locale.paravertebralAbr,
                   onChanged: (value) => exercises.strengthPara = value,
                 ),
               ),

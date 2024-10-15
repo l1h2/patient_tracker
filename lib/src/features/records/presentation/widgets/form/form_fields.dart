@@ -53,7 +53,7 @@ class Subsection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -132,7 +132,7 @@ class NumberInput extends StatelessWidget {
     final AppLocalizations locale = AppLocalizations.of(context)!;
 
     return SizedBox(
-      width: 150,
+      width: 100,
       child: TextFormField(
         initialValue: getNumberString(initialValue),
         keyboardType: TextInputType.number,

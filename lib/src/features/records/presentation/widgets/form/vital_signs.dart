@@ -38,7 +38,7 @@ class VitalSignsContents extends StatelessWidget {
       runSpacing: 10,
       children: [
         NumberInput(
-          label: locale.arterialPressure,
+          label: locale.pressureAbr,
           unit: locale.pressureUnit,
           initialValue: vitalSigns.pressure,
           onChanged: (value) => vitalSigns.pressure = value,
@@ -46,7 +46,7 @@ class VitalSignsContents extends StatelessWidget {
           maxValue: 1000,
         ),
         NumberInput(
-          label: locale.heartRate,
+          label: locale.heartRateAbr,
           unit: locale.heartRateUnit,
           initialValue: vitalSigns.heartRate,
           onChanged: (value) => vitalSigns.heartRate = value,
@@ -54,7 +54,7 @@ class VitalSignsContents extends StatelessWidget {
           maxValue: 1000,
         ),
         NumberInput(
-          label: locale.oxygenSaturation,
+          label: locale.saturationAbr,
           unit: locale.saturationUnit,
           initialValue: vitalSigns.oxygenSaturation,
           onChanged: (value) => vitalSigns.oxygenSaturation = value,

@@ -18,29 +18,32 @@ void deleteDocumentDialog({
           locale.deletionConfirmation(docName.toLowerCase()),
         ),
         actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                height: 46,
-                width: 120,
-                child: FilledButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text(locale.cancel),
+          Center(
+            child: Wrap(
+              spacing: 16,
+              runSpacing: 12,
+              children: [
+                SizedBox(
+                  height: 46,
+                  width: 120,
+                  child: FilledButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(locale.cancel),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 46,
-                width: 120,
-                child: OutlinedButton(
-                  onPressed: () {
-                    onDelete();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(locale.delete),
+                SizedBox(
+                  height: 46,
+                  width: 120,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      onDelete();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(locale.delete),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       );

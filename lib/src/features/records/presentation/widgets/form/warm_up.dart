@@ -18,7 +18,7 @@ class WarmUpSection extends StatelessWidget {
     return CustomExpansionTile(
       title: locale.warmUp,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         child: WarmUpContent(locale: locale, theme: theme, warmUp: warmUp),
       ),
     );

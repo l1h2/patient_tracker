@@ -17,7 +17,7 @@ class AccessoriesSection extends StatelessWidget {
     return CustomExpansionTile(
       title: locale.accessoriesUsed,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         child: AccessoriesContent(accessories: accessories, locale: locale),
       ),
     );
@@ -114,42 +114,37 @@ class AccessoriesContent extends StatelessWidget {
           title: locale.elasticBandAndMiniband,
           onChanged: (value) => accessories.elasticBand = value,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            NumberInput(
-              label: locale.dumbbell,
-              unit: locale.weightUnit,
-              initialValue: accessories.dumbbell,
-              onChanged: (value) => accessories.dumbbell = value,
-              minValue: 0,
-              maxValue: 100,
-            ),
-            const SizedBox(width: 32),
-            NumberInput(
-              label: locale.tonningBall,
-              unit: locale.weightUnit,
-              initialValue: accessories.tonningBall,
-              onChanged: (value) => accessories.tonningBall = value,
-              minValue: 0,
-              maxValue: 100,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            NumberInput(
-              label: locale.shinGuard,
-              unit: locale.weightUnit,
-              initialValue: accessories.shinGuard,
-              onChanged: (value) => accessories.shinGuard = value,
-              minValue: 0,
-              maxValue: 100,
-            ),
-            const SizedBox(width: 32),
-            const SizedBox(width: 150),
-          ],
+        Center(
+          child: Wrap(
+            spacing: 32,
+            runSpacing: 10,
+            children: [
+              NumberInput(
+                label: locale.dumbbell,
+                unit: locale.weightUnit,
+                initialValue: accessories.dumbbell,
+                onChanged: (value) => accessories.dumbbell = value,
+                minValue: 0,
+                maxValue: 100,
+              ),
+              NumberInput(
+                label: locale.tonningBall,
+                unit: locale.weightUnit,
+                initialValue: accessories.tonningBall,
+                onChanged: (value) => accessories.tonningBall = value,
+                minValue: 0,
+                maxValue: 100,
+              ),
+              NumberInput(
+                label: locale.shinGuard,
+                unit: locale.weightUnit,
+                initialValue: accessories.shinGuard,
+                onChanged: (value) => accessories.shinGuard = value,
+                minValue: 0,
+                maxValue: 100,
+              ),
+            ],
+          ),
         ),
       ],
     );

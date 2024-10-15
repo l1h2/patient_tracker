@@ -30,62 +30,64 @@ void editPatientDialog({required BuildContext context}) {
           20,
           MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: Form(
-          key: key,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                locale.editPatient,
-                style: theme.textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(hintText: locale.patientName),
-                textAlign: TextAlign.center,
-                validator: (value) => notEmptyValidator(
-                  value,
-                  locale.patientName,
-                  locale,
+        child: SingleChildScrollView(
+          child: Form(
+            key: key,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  locale.editPatient,
+                  style: theme.textTheme.headlineSmall,
                 ),
-              ),
-              SelectionCheckbox(
-                trueText: locale.maleAbr,
-                falseText: locale.femaleAbr,
-                controller: genderController,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    child: Text(locale.cancel),
-                    onPressed: () => Navigator.pop(context),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(hintText: locale.patientName),
+                  textAlign: TextAlign.center,
+                  validator: (value) => notEmptyValidator(
+                    value,
+                    locale.patientName,
+                    locale,
                   ),
-                  TextButton(
-                    child: Text(locale.save),
-                    onPressed: () {
-                      if (recordsBloc.patient!.name == nameController.text &&
-                          recordsBloc.patient!.isMale ==
-                              genderController.boolean) {
-                        showErrorDialog(context: context);
-                        return;
-                      }
-                      if (key.currentState?.validate() ?? false) {
-                        patientsBloc.add(
-                          UpdatePatient(
-                            patientId: recordsBloc.patient!.id,
-                            name: nameController.text,
-                            isMale: genderController.boolean,
-                          ),
-                        );
-                        Navigator.pop(context);
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ],
+                ),
+                SelectionCheckbox(
+                  trueText: locale.maleAbr,
+                  falseText: locale.femaleAbr,
+                  controller: genderController,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      child: Text(locale.cancel),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    TextButton(
+                      child: Text(locale.save),
+                      onPressed: () {
+                        if (recordsBloc.patient!.name == nameController.text &&
+                            recordsBloc.patient!.isMale ==
+                                genderController.boolean) {
+                          showErrorDialog(context: context);
+                          return;
+                        }
+                        if (key.currentState?.validate() ?? false) {
+                          patientsBloc.add(
+                            UpdatePatient(
+                              patientId: recordsBloc.patient!.id,
+                              name: nameController.text,
+                              isMale: genderController.boolean,
+                            ),
+                          );
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );
