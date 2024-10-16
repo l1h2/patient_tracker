@@ -24,7 +24,8 @@ class CompaniesRepository {
     if (user == null) return [];
 
     final List<Company> companies = user!.companies.values.toList();
-    companies.sort((a, b) => a.name.compareTo(b.name));
+    companies
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return companies;
   }
 

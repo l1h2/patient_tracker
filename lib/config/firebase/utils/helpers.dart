@@ -20,9 +20,7 @@ Map<String, dynamic>? getValidMap(
   Map<String, dynamic>? map, {
   required bool isCreate,
 }) {
-  if (map == null) {
-    return null;
-  }
+  if (map == null) return null;
 
   final keysToRemove = <String>[];
 

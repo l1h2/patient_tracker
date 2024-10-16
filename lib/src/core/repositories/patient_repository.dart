@@ -30,7 +30,8 @@ class PatientsRepository {
     if (company == null) return [];
 
     final List<Patient> patients = company.patients.values.toList();
-    patients.sort((a, b) => a.name.compareTo(b.name));
+    patients
+        .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
     return patients;
   }
 

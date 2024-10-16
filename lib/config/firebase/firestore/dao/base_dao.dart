@@ -158,6 +158,34 @@ class FirestoreDao {
     await _db.collection(collectionPath).doc(documentId).delete();
   }
 
+  Future<void> deleteCollection(String collectionPath) async {
+    final QuerySnapshot querySnapshot =
+        await _db.collection(collectionPath).get();
+
+    for (final document in querySnapshot.docs) {
+      await document.reference.delete();
+    }
+  }
+
+  Future<void> deleteDocumentAndSubcollections(
+    String collectionPath,
+    String documentId,
+  ) async {
+    final DocumentReference documentRef =
+        _db.collection(collectionPath).doc(documentId);
+    final QuerySnapshot subcollections =
+        await _db.collectionGroup(documentId).get();
+
+    for (final subcollectionDoc in subcollections.docs) {
+      await deleteDocumentAndSubcollections(
+        subcollectionDoc.reference.parent.path,
+        subcollectionDoc.id,
+      );
+    }
+
+    await documentRef.delete();
+  }
+
   Map<String, dynamic> _getDocumentData(
     DocumentSnapshot document,
     String idFieldName,

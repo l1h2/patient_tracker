@@ -10,7 +10,11 @@ import '/src/core/widgets/selection_checkbox.dart';
 import '/src/features/patients/presentation/bloc/patients_bloc.dart';
 
 void editPatientDialog({required BuildContext context}) {
+  final AppLocalizations locale = AppLocalizations.of(context)!;
+  final ThemeData theme = Theme.of(context);
+  final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
   final RecordsBloc recordsBloc = BlocProvider.of<RecordsBloc>(context);
+
   final nameController = TextEditingController(text: recordsBloc.patient!.name);
   final genderController = BoolController(boolean: recordsBloc.patient!.isMale);
   final key = GlobalKey<FormState>();
@@ -19,10 +23,6 @@ void editPatientDialog({required BuildContext context}) {
     context: context,
     isScrollControlled: true,
     builder: (context) {
-      final AppLocalizations locale = AppLocalizations.of(context)!;
-      final ThemeData theme = Theme.of(context);
-      final PatientsBloc patientsBloc = BlocProvider.of<PatientsBloc>(context);
-
       return Padding(
         padding: EdgeInsets.fromLTRB(
           20,

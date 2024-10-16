@@ -50,6 +50,9 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
   void _onSaveRecords(SaveRecords event, Emitter<RecordsState> emit) async {
     emit(RecordsLoading());
 
+    currentRecords.patient = patient!.name;
+    currentRecords.isMale = patient!.isMale;
+
     late Records newRecords;
     final Records emptyRecords = Records.empty(
       _userRepo.user!,
@@ -65,11 +68,14 @@ class RecordsBloc extends Bloc<RecordsEvent, RecordsState> {
 
       newRecords = currentRecords.copy();
     } else {
-      newRecords = _userRepo
-          .getRecords(companyId, patientId, currentRecords.id!)!
-          .getChanges(currentRecords);
+      final Records localRecords =
+          _userRepo.getRecords(companyId, patientId, currentRecords.id!)!;
 
-      if (newRecords.isEqual(emptyRecords)) {
+      newRecords = localRecords.getChanges(currentRecords);
+
+      if (currentRecords.patient == localRecords.patient &&
+          currentRecords.isMale == localRecords.isMale &&
+          newRecords.isEqual(emptyRecords)) {
         emit(NoChangesToSave());
         return;
       }

@@ -37,6 +37,6 @@ class CompaniesDao {
   }
 
   Future<void> deleteCompany(String companyId) async {
-    await _baseDao.deleteDocument(_collectionPath, companyId);
+    await _baseDao.deleteDocumentAndSubcollections(_collectionPath, companyId);
   }
 }

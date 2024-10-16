@@ -53,7 +53,7 @@ class RecordsDocument {
         therapist: map[RecordsAttrs.therapist],
         certificate: map[RecordsAttrs.certificate],
         patient: map[RecordsAttrs.patient],
-        isMale: map[RecordsAttrs.isMale],
+        isMale: map[RecordsAttrs.isMale] ?? false,
         isPhysiotherapy: map[RecordsAttrs.isPhysiotherapy],
         vitalSigns: VitalSigns.fromMap(map[RecordsAttrs.vitalSigns]),
         warmUp: WarmUp.fromMap(map[RecordsAttrs.warmUp]),

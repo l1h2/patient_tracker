@@ -37,6 +37,6 @@ class PatientsDao {
   }
 
   Future<void> deletePatient(String patientId) async {
-    await _baseDao.deleteDocument(_collectionPath, patientId);
+    await _baseDao.deleteDocumentAndSubcollections(_collectionPath, patientId);
   }
 }

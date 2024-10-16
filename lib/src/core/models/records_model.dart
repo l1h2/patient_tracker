@@ -98,8 +98,8 @@ class Records {
         date == records.date,
         therapist == records.therapist,
         certificate == records.certificate,
-        patient == records.patient,
-        isMale == records.isMale,
+        considerDefaults ? patient == records.patient : true,
+        considerDefaults ? isMale == records.isMale : true,
         considerDefaults ? isPhysiotherapy == records.isPhysiotherapy : true,
         vitalSigns.isEqual(records.vitalSigns),
         warmUp.isEqual(records.warmUp),
@@ -120,8 +120,8 @@ class Records {
         date: date,
         therapist: therapist,
         certificate: certificate,
-        patient: patient,
-        isMale: isMale,
+        patient: records.patient,
+        isMale: records.isMale,
         isPhysiotherapy: isPhysiotherapy == records.isPhysiotherapy
             ? null
             : records.isPhysiotherapy,
