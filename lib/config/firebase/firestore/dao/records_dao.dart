@@ -57,4 +57,8 @@ class RecordsDao {
   Future<void> deleteRecord(String recordId) async {
     await _baseDao.deleteDocument(_collectionPath, recordId);
   }
+
+  Future<void> deleteAllRecords() async {
+    await _baseDao.deleteCollection(_collectionPath);
+  }
 }

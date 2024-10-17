@@ -1,14 +1,23 @@
 import '../collections/records.dart';
 import '../dao/records_dao.dart';
 
+import 'record_dates_repository.dart';
+
 class RecordsRepository {
   RecordsRepository(String userId, String companyId, String patientId)
-      : _recordsDao = RecordsDao(userId, companyId, patientId);
+      : _recordsDao = RecordsDao(userId, companyId, patientId),
+        _recordDatesRepo = RecordDatesRepository(userId, companyId, patientId);
 
   final RecordsDao _recordsDao;
+  final RecordDatesRepository _recordDatesRepo;
 
   Future<String> createRecord(RecordsDocument record) async {
-    return await _recordsDao.createRecord(record.toMap(isCreate: true)!);
+    final String recordId = await _recordsDao.createRecord(
+      record.toMap(isCreate: true)!,
+    );
+    await _recordDatesRepo.addRecordDates({record.date});
+
+    return recordId;
   }
 
   Future<RecordsDocument?> readRecord(String recordId) async {
@@ -35,7 +44,12 @@ class RecordsRepository {
     await _recordsDao.updateRecord(record.id!, record.toMap()!);
   }
 
-  Future<void> deleteRecord(String recordId) async {
+  Future<void> deleteRecord(String recordId, DateTime date) async {
     await _recordsDao.deleteRecord(recordId);
+    await _recordDatesRepo.removeRecordDates({date});
+  }
+
+  Future<void> deleteAllRecords() async {
+    await _recordsDao.deleteAllRecords();
   }
 }

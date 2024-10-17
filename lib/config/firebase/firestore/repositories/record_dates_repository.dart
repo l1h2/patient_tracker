@@ -2,8 +2,8 @@ import '../collections/record_dates.dart';
 import '../dao/record_dates_dao.dart';
 
 class RecordDatesRepository {
-  RecordDatesRepository(String patientId)
-      : _recordDatesDao = RecordDatesDao(patientId);
+  RecordDatesRepository(String userId, String companyId, String patientId)
+      : _recordDatesDao = RecordDatesDao(userId, companyId, patientId);
 
   final RecordDatesDao _recordDatesDao;
 

@@ -14,5 +14,6 @@ class CollectionPaths {
       '${companies(userId)}/$companyId/${Collections.patients}';
   static String records(String userId, String companyId, String patientId) =>
       '${patients(userId, companyId)}/$patientId/${Collections.records}';
-  static String recordDates = Collections.recordDates;
+  static String recordDates(String userId, String companyId) =>
+      '${companies(userId)}/$companyId/${Collections.recordDates}';
 }

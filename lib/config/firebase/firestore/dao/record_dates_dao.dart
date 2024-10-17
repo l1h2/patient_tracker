@@ -6,19 +6,20 @@ import 'base_dao.dart';
 
 class RecordDatesDao {
   final FirestoreDao _baseDao = locator<FirestoreDao>();
-  final String _collectionPath = CollectionPaths.recordDates;
-  final String _patientId;
+  final String _collectionPath;
+  final String patientId;
 
-  RecordDatesDao(this._patientId);
+  RecordDatesDao(String userId, String companyId, this.patientId)
+      : _collectionPath = CollectionPaths.recordDates(userId, companyId);
 
   Future<void> createRecordDates(Map<String, dynamic> data) async {
-    await _baseDao.createDocumentWithId(_collectionPath, _patientId, data);
+    await _baseDao.createDocumentWithId(_collectionPath, patientId, data);
   }
 
   Future<Map<String, dynamic>?> readRecordDates() async {
     return await _baseDao.readDocument(
       _collectionPath,
-      _patientId,
+      patientId,
       RecordDatesAttrs.patientId,
     );
   }
@@ -31,13 +32,13 @@ class RecordDatesDao {
   }
 
   Future<void> updateRecordDates(Map<String, dynamic> data) async {
-    await _baseDao.updateDocument(_collectionPath, _patientId, data);
+    await _baseDao.updateDocument(_collectionPath, patientId, data);
   }
 
   Future<void> addRecordDates(Set<DateTime> recordDates) async {
     await _baseDao.appendToArray(
       _collectionPath,
-      _patientId,
+      patientId,
       RecordDatesAttrs.recordDates,
       recordDates.toList(),
     );
@@ -46,13 +47,13 @@ class RecordDatesDao {
   Future<void> removeRecordDates(Set<DateTime> recordDates) async {
     await _baseDao.removeFromArray(
       _collectionPath,
-      _patientId,
+      patientId,
       RecordDatesAttrs.recordDates,
       recordDates.toList(),
     );
   }
 
   Future<void> deleteRecordDates() async {
-    await _baseDao.deleteDocument(_collectionPath, _patientId);
+    await _baseDao.deleteDocument(_collectionPath, patientId);
   }
 }

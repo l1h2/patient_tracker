@@ -25,6 +25,6 @@ class UsersDao {
   }
 
   Future<void> deleteUser(String userId) async {
-    await _baseDao.deleteDocumentAndSubcollections(_collectionPath, userId);
+    await _baseDao.deleteDocument(_collectionPath, userId);
   }
 }

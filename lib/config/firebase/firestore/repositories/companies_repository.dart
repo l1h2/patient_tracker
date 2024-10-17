@@ -1,9 +1,11 @@
 import '../collections/companies.dart';
 import '../dao/companies_dao.dart';
+import 'patients_repository.dart';
 
 class CompaniesRepository {
-  CompaniesRepository(String userId) : _companiesDao = CompaniesDao(userId);
+  CompaniesRepository(this.userId) : _companiesDao = CompaniesDao(userId);
 
+  final String userId;
   final CompaniesDao _companiesDao;
 
   Future<String> createCompany(CompanyDocument company) async {
@@ -27,6 +29,9 @@ class CompaniesRepository {
   }
 
   Future<void> deleteCompany(String companyId) async {
+    final patientsRepo = PatientsRepository(userId, companyId);
+
+    await patientsRepo.deleteAllPatients();
     await _companiesDao.deleteCompany(companyId);
   }
 }

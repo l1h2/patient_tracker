@@ -17,7 +17,11 @@ class PatientsFirebaseService implements PatientsService {
       PatientDocument(name: params.name, isMale: params.isMale),
     );
 
-    await RecordDatesRepository(patientId).createRecordDates(
+    await RecordDatesRepository(
+      params.userId,
+      params.companyId,
+      patientId,
+    ).createRecordDates(
       RecordDatesDocument(patientId: patientId, recordDates: {}),
     );
 
@@ -45,7 +49,11 @@ class PatientsFirebaseService implements PatientsService {
 
   @override
   Future<GetRecordsReturn> getRecords(GetRecordsParams params) async {
-    final recordDatesRepo = RecordDatesRepository(params.patientId);
+    final recordDatesRepo = RecordDatesRepository(
+      params.userId,
+      params.companyId,
+      params.patientId,
+    );
     final recordsRepo = RecordsRepository(
       params.userId,
       params.companyId,
