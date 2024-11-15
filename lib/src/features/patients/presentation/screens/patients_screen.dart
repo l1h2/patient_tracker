@@ -124,11 +124,11 @@ class PatientsScreen extends StatelessWidget {
                             getName: (patient) => patient.name,
                             onItemTap: (patient) {
                               DateTime now = DateTime.now();
-                              DateTime todayMidnight = DateTime(
+                              DateTime todayMidnight = DateTime.utc(
                                 now.year,
                                 now.month,
                                 now.day,
-                              ).toUtc();
+                              );
                               patientsBloc.add(
                                 GetRecords(
                                   patientId: patient.id,
